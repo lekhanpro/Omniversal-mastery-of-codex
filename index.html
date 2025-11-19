@@ -49,24 +49,35 @@
         50% { transform: translateY(-8px); }
       }
       
+      /* Speeds */
+      .animate-spin-medium {
+        animation: spin 12s linear infinite;
+      }
+      .animate-reverse-spin-medium {
+        animation: reverse-spin 12s linear infinite;
+      }
+
       .animate-spin-slow {
+        animation: spin 40s linear infinite;
+      }
+      .animate-reverse-spin-slow {
+        animation: reverse-spin 40s linear infinite;
+      }
+      
+      .animate-spin-slower {
         animation: spin 60s linear infinite;
       }
-      .animate-spin-slower {
-        animation: spin 90s linear infinite;
-      }
-      /* We need the reverse animation to match the speed of the parent exactly to keep icons upright */
-      .animate-reverse-spin-slow {
-        animation: spin 60s linear infinite reverse;
-      }
       .animate-reverse-spin-slower {
-        animation: spin 90s linear infinite reverse;
+        animation: reverse-spin 60s linear infinite;
       }
+
       .animate-float {
         animation: float 6s ease-in-out infinite;
       }
 
       /* Pause interactions */
+      .pause-on-hover:hover .animate-spin-medium,
+      .pause-on-hover:hover .animate-reverse-spin-medium,
       .pause-on-hover:hover .animate-spin-slow,
       .pause-on-hover:hover .animate-spin-slower,
       .pause-on-hover:hover .animate-reverse-spin-slow,

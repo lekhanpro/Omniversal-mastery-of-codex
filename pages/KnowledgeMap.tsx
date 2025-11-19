@@ -3,6 +3,7 @@ import { domains } from '../data';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getIcon } from '../components/Icons';
+import { ArrowLeft } from 'lucide-react';
 
 const KnowledgeMap: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -44,8 +45,11 @@ const KnowledgeMap: React.FC = () => {
 
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center py-12 md:py-0 md:h-[calc(100vh-64px)]">
         
-        {/* Header for Mobile/Context */}
-        <div className="md:absolute md:top-8 md:left-8 text-center md:text-left mb-8 md:mb-0 z-20">
+        {/* Header / Navigation */}
+        <div className="md:absolute md:top-8 md:left-8 flex flex-col items-center md:items-start mb-8 md:mb-0 z-30">
+            <Link to="/" className="flex items-center text-neon-blue mb-2 hover:underline font-mono text-sm">
+                <ArrowLeft className="w-4 h-4 mr-1" /> Back to Codex
+            </Link>
             <h1 className="text-2xl md:text-3xl font-bold text-white font-mono tracking-tight">
               <span className="text-neon-blue">NEURAL</span> CONSTELLATION
             </h1>
@@ -59,13 +63,22 @@ const KnowledgeMap: React.FC = () => {
           <div className="relative w-[900px] h-[900px] flex items-center justify-center scale-75 lg:scale-90 xl:scale-100 transition-transform duration-500 pause-on-hover">
             
             {/* Central Hub */}
-            <Link to="/" className="absolute z-30 w-48 h-48 rounded-full bg-black/90 border border-neon-blue/50 shadow-[0_0_60px_rgba(0,243,255,0.2)] flex items-center justify-center text-center backdrop-blur-xl group cursor-pointer hover:scale-105 transition-transform duration-500">
-               <div className="absolute inset-0 rounded-full border-2 border-neon-blue/20 animate-spin-slower"></div>
-               <div className="absolute inset-2 rounded-full border border-neon-purple/20 animate-reverse-spin-slow"></div>
+            <Link to="/" className="absolute z-30 w-56 h-56 rounded-full bg-black/90 border border-neon-blue/50 shadow-[0_0_60px_rgba(0,243,255,0.3)] flex items-center justify-center text-center backdrop-blur-xl group cursor-pointer hover:scale-110 transition-transform duration-500">
                
-               <div className="relative z-10">
-                  <div className="text-neon-blue text-xs font-mono tracking-widest mb-1">SYSTEM CORE</div>
-                  <div className="text-white font-bold text-lg leading-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">OMNIVERSAL<br/>MASTERY OF<br/>CODEX</div>
+               {/* Pulsing Border Animation - Enhanced */}
+               <div className="absolute -inset-1 rounded-full border-2 border-neon-blue/80 animate-pulse shadow-[0_0_15px_#00f3ff]"></div>
+               
+               {/* Pulsing Glow Effects */}
+               <div className="absolute -inset-2 rounded-full bg-neon-blue/20 blur-md animate-pulse-slow group-hover:bg-neon-blue/30 transition-colors duration-500"></div>
+               <div className="absolute -inset-8 rounded-full bg-neon-blue/10 blur-xl animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+
+               {/* Spinning Rings */}
+               <div className="absolute inset-0 rounded-full border-2 border-neon-blue/30 border-t-neon-blue animate-spin-slower"></div>
+               <div className="absolute inset-4 rounded-full border border-neon-purple/30 border-b-neon-purple animate-reverse-spin-slow"></div>
+               
+               <div className="relative z-10 pointer-events-none">
+                  <div className="text-neon-blue text-xs font-mono tracking-widest mb-2 group-hover:text-white transition-colors">SYSTEM CORE</div>
+                  <div className="text-white font-bold text-xl leading-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent group-hover:text-white transition-all">OMNIVERSAL<br/>MASTERY OF<br/>CODEX</div>
                </div>
             </Link>
 
@@ -101,11 +114,15 @@ const KnowledgeMap: React.FC = () => {
                       style={{ left: `calc(50% + ${pos.x}px)`, top: `calc(50% + ${pos.y}px)` }}
                     >
                        {/* Counter-rotate the icon container so it stays upright */}
-                       <div className="w-full h-full animate-reverse-spin-slow">
+                       <div className="w-full h-full animate-reverse-spin-slow relative">
                          <div className="w-full h-full animate-float" style={{ animationDelay: `${idx * -0.5}s` }}>
                            <Link to={domain.isLocked ? '#' : `/domain/${domain.id}`} className="relative block w-full h-full group">
+                              
+                              {/* Spinning Outer Ring for Local Rotation Effect */}
+                              <div className="absolute -inset-2 rounded-full border border-dashed border-neon-blue/30 animate-spin-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                               <div className={`
-                                w-full h-full rounded-full flex items-center justify-center border bg-black/90 backdrop-blur-md transition-all duration-300
+                                w-full h-full rounded-full flex items-center justify-center border bg-black/90 backdrop-blur-md transition-all duration-300 relative z-10
                                 ${domain.isLocked ? 'border-gray-800 text-gray-600' : 'border-neon-blue/40 text-neon-blue group-hover:border-neon-blue group-hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]'}
                               `}>
                                  {getIcon(domain.icon, "w-6 h-6")}
@@ -126,8 +143,7 @@ const KnowledgeMap: React.FC = () => {
                 })}
             </div>
 
-            {/* OUTER ORBIT GROUP (Reverse Rotation relative to inner, but technically same direction just slower, handled by CSS classes) */}
-            {/* Actually, let's make it counter-rotate for visual interest */}
+            {/* OUTER ORBIT GROUP */}
             <div className="absolute inset-0 pointer-events-none animate-spin-slower" style={{ animationDirection: 'reverse' }}>
                 {/* Ring */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -162,8 +178,12 @@ const KnowledgeMap: React.FC = () => {
                        <div className="w-full h-full animate-spin-slower">
                          <div className="w-full h-full animate-float" style={{ animationDelay: `${idx * -0.7}s` }}>
                            <Link to={domain.isLocked ? '#' : `/domain/${domain.id}`} className="relative block w-full h-full group">
+                              
+                              {/* Spinning Outer Ring for Local Rotation Effect */}
+                              <div className="absolute -inset-2 rounded-full border border-dashed border-neon-purple/30 animate-spin-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                               <div className={`
-                                w-full h-full rounded-full flex items-center justify-center border bg-black/90 backdrop-blur-md transition-all duration-300
+                                w-full h-full rounded-full flex items-center justify-center border bg-black/90 backdrop-blur-md transition-all duration-300 relative z-10
                                 ${domain.isLocked ? 'border-gray-800 text-gray-600' : 'border-neon-purple/40 text-neon-purple group-hover:border-neon-purple group-hover:shadow-[0_0_30px_rgba(188,19,254,0.6)]'}
                               `}>
                                  {getIcon(domain.icon, "w-5 h-5")}
