@@ -62,23 +62,23 @@ const KnowledgeMap: React.FC = () => {
         {!isMobile && (
           <div className="relative w-[900px] h-[900px] flex items-center justify-center scale-75 lg:scale-90 xl:scale-100 transition-transform duration-500 pause-on-hover">
             
-            {/* Central Hub */}
-            <Link to="/" className="absolute z-30 w-56 h-56 rounded-full bg-black/90 border border-neon-blue/50 shadow-[0_0_60px_rgba(0,243,255,0.3)] flex items-center justify-center text-center backdrop-blur-xl group cursor-pointer hover:scale-110 transition-transform duration-500">
+            {/* Central Hub - Enhanced */}
+            <Link to="/" className="absolute z-30 w-60 h-60 rounded-full bg-black/90 border-2 border-neon-blue shadow-[0_0_100px_rgba(0,243,255,0.4)] flex items-center justify-center text-center backdrop-blur-xl group cursor-pointer hover:scale-105 transition-all duration-500">
                
-               {/* Pulsing Border Animation - Enhanced */}
-               <div className="absolute -inset-1 rounded-full border-2 border-neon-blue/80 animate-pulse shadow-[0_0_15px_#00f3ff]"></div>
+               {/* Pulsing Outer Border */}
+               <div className="absolute -inset-2 rounded-full border-2 border-neon-blue/50 animate-pulse"></div>
+               <div className="absolute -inset-1 rounded-full border border-neon-blue/80 blur-[2px] animate-pulse"></div>
                
-               {/* Pulsing Glow Effects */}
-               <div className="absolute -inset-2 rounded-full bg-neon-blue/20 blur-md animate-pulse-slow group-hover:bg-neon-blue/30 transition-colors duration-500"></div>
-               <div className="absolute -inset-8 rounded-full bg-neon-blue/10 blur-xl animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+               {/* Interactive Glow */}
+               <div className="absolute inset-0 rounded-full bg-neon-blue/5 group-hover:bg-neon-blue/15 transition-colors duration-500"></div>
 
-               {/* Spinning Rings */}
-               <div className="absolute inset-0 rounded-full border-2 border-neon-blue/30 border-t-neon-blue animate-spin-slower"></div>
-               <div className="absolute inset-4 rounded-full border border-neon-purple/30 border-b-neon-purple animate-reverse-spin-slow"></div>
+               {/* Spinning Elements */}
+               <div className="absolute inset-4 rounded-full border border-dashed border-neon-blue/30 animate-spin-slower"></div>
+               <div className="absolute inset-8 rounded-full border border-dotted border-neon-purple/40 animate-reverse-spin-slow"></div>
                
                <div className="relative z-10 pointer-events-none">
-                  <div className="text-neon-blue text-xs font-mono tracking-widest mb-2 group-hover:text-white transition-colors">SYSTEM CORE</div>
-                  <div className="text-white font-bold text-xl leading-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent group-hover:text-white transition-all">OMNIVERSAL<br/>MASTERY OF<br/>CODEX</div>
+                  <div className="text-neon-blue text-xs font-mono tracking-[0.25em] mb-2 group-hover:text-white transition-colors">SYSTEM CORE</div>
+                  <div className="text-white font-black text-2xl leading-tight tracking-tight drop-shadow-[0_0_10px_rgba(0,243,255,0.5)] group-hover:drop-shadow-[0_0_20px_rgba(0,243,255,0.8)] transition-all">OMNIVERSAL<br/>MASTERY<br/>CODEX</div>
                </div>
             </Link>
 
