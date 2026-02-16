@@ -416,11 +416,31 @@ export const domains: Domain[] = [
     icon: "Mic",
     pillars: ["Verbal", "Non-Verbal", "Persuasion", "Writing", "Social Intelligence", "Narrative"],
     subdomains: [
-      { title: "Verbal Mastery", points: ["Vocal projection", "Tonality", "Rhetoric", "Public speaking", "Articulation", "Pacing", "Pausing", "Emphasis", "Voice modulation", "Storytelling voice", "Debate techniques", "Impromptu speaking", "Presentation skills", "Speech writing", "Vocal warm-ups", "Breathing techniques"] },
-      { title: "Non-Verbal", points: ["Body language", "Micro-expressions", "Proxemics", "Eye contact", "Gestures", "Posture", "Facial expressions", "Hand movements", "Personal space", "Touch", "Appearance", "Dress code", "Cultural differences", "Power poses", "Mirroring", "Congruence"] },
+      { title: "Verbal Mastery", points: ["Vocal projection", "Tonality", "Rhetoric", "Public speaking", "Articulation", "Pacing", "Pausing", "Emphasis", "Voice modulation", "Storytelling voice", "Debate techniques", "Impromptu speaking", "Presentation skills", "Speech writing", "Vocal warm-ups", "Breathing techniques", "Diction", "Enunciation", "Vocal resonance", "Pitch control", "Volume dynamics", "Speech rhythm", "Accent modification", "Vocal authority"] },
+      { title: "Non-Verbal Communication", points: ["Body language", "Micro-expressions", "Proxemics", "Eye contact", "Gestures", "Posture", "Facial expressions", "Hand movements", "Personal space", "Touch", "Appearance", "Dress code", "Cultural differences", "Power poses", "Mirroring", "Congruence", "Gait analysis", "Handshake dynamics", "Seating positions", "Territorial behavior", "Emotional leakage", "Baseline behavior", "Cluster analysis", "Context reading"] },
       { title: "Persuasion Psychology", points: ["Cialdini’s principles", "Framing", "Cognitive biases", "Negotiation"] },
       { title: "Narrative Engineering", points: ["Story structure", "Hero’s journey", "Metaphor", "Copywriting"] },
-      { title: "Conflict Resolution", points: ["De-escalation", "Mediation", "Diplomacy", "High-stakes conversation"] }
+      { title: "Conflict Resolution", points: ["De-escalation", "Mediation", "Diplomacy", "High-stakes conversation", "Active listening", "Empathy building", "Interest-based negotiation", "BATNA (Best Alternative)", "Win-win solutions", "Compromise strategies", "Arbitration", "Facilitation", "Conflict styles", "Emotional regulation", "Perspective-taking", "Reframing", "Apology techniques", "Forgiveness processes", "Boundary setting", "Assertiveness"] },
+      {
+        title: "Writing & Composition",
+        points: ["Clear writing", "Persuasive writing", "Technical writing", "Creative writing", "Business writing", "Email etiquette", "Report writing", "Proposal writing", "Grant writing", "Academic writing", "Journalistic writing", "Editing techniques", "Grammar mastery", "Style guides", "Tone adaptation", "Audience analysis", "Structure & organization", "Conciseness", "Active voice", "Storytelling in writing"]
+      },
+      {
+        title: "Social Intelligence",
+        points: ["Emotional intelligence", "Empathy", "Social awareness", "Relationship management", "Networking", "Rapport building", "Trust development", "Social cues reading", "Group dynamics", "Influence without authority", "Political savvy", "Cultural sensitivity", "Interpersonal boundaries", "Social adaptability", "Charisma development", "Likability factors", "Social calibration", "Conversation skills"]
+      },
+      {
+        title: "Negotiation Mastery",
+        points: ["Preparation strategies", "Opening moves", "Information gathering", "Value creation", "Concession patterns", "Closing techniques", "Multi-party negotiation", "Cross-cultural negotiation", "Salary negotiation", "Contract negotiation", "Hostage negotiation", "Diplomatic negotiation", "Leverage identification", "Power dynamics", "Timing strategies", "Walk-away power", "Creative solutions", "Deadlock breaking"]
+      },
+      {
+        title: "Presentation & Public Speaking",
+        points: ["Audience analysis", "Speech structure", "Opening techniques", "Closing techniques", "Visual aids", "Slide design", "Stage presence", "Audience engagement", "Q&A handling", "Storytelling in presentations", "Data visualization", "Humor usage", "Vocal variety", "Movement & gestures", "Eye contact patterns", "Handling nervousness", "Impromptu speaking", "Panel discussions", "Virtual presentations"]
+      },
+      {
+        title: "Influence & Leadership Communication",
+        points: ["Vision casting", "Inspirational speaking", "Motivational techniques", "Change communication", "Crisis communication", "Stakeholder management", "Executive presence", "Thought leadership", "Personal branding", "Authentic communication", "Vulnerability in leadership", "Feedback delivery", "Difficult conversations", "Team communication", "Organizational communication", "Strategic messaging"]
+      }
     ],
     tracks: [
       { name: "Communication Architect", description: "Expert in speech, writing, clarity." },
@@ -436,11 +456,61 @@ export const domains: Domain[] = [
     icon: "ShieldAlert",
     pillars: ["Cybernetics", "Security", "Ethical Hacking", "Network Arch", "Digital Warfare", "SecEng"],
     subdomains: [
-      { title: "Cybernetics", points: ["Feedback loops", "System stability", "Information theory", "Entropy"] },
-      { title: "Offensive Security", points: ["Penetration testing", "Exploit development", "Social engineering", "Red teaming"] },
-      { title: "Defensive Security", points: ["Blue teaming", "Incident response", "Forensics", "Cryptography"] },
-      { title: "Network Security", points: ["Protocols (TCP/IP)", "Firewalls", "VPNs", "Traffic analysis"] },
-      { title: "Cyber Warfare", points: ["APT groups", "Digital sovereignty", "PsyOps", "Critical infrastructure"] }
+      { 
+        title: "Cybernetics & Control Theory", 
+        points: ["Feedback loops", "System stability", "Information theory", "Entropy", "Homeostasis", "Negative feedback", "Positive feedback", "Control systems", "Adaptive systems", "Self-organizing systems", "Cybernetic models", "System dynamics", "Regulation mechanisms", "Communication theory", "Signal processing", "Noise reduction", "System optimization", "Complexity management"]
+      },
+      { 
+        title: "Offensive Security & Penetration Testing", 
+        points: ["Penetration testing", "Exploit development", "Social engineering", "Red teaming", "Vulnerability assessment", "Web application testing", "Network penetration", "Wireless hacking", "Physical security testing", "Password cracking", "Privilege escalation", "Lateral movement", "Persistence techniques", "Evasion techniques", "Payload development", "Zero-day research", "Bug bounty hunting", "Attack simulation"]
+      },
+      { 
+        title: "Defensive Security & Blue Team", 
+        points: ["Blue teaming", "Incident response", "Forensics", "Cryptography", "Security monitoring", "Threat hunting", "SIEM systems", "Intrusion detection", "Intrusion prevention", "Endpoint protection", "Security hardening", "Patch management", "Vulnerability management", "Security baselines", "Defense in depth", "Security architecture", "Access control", "Identity management"]
+      },
+      { 
+        title: "Network Security", 
+        points: ["Protocols (TCP/IP)", "Firewalls", "VPNs", "Traffic analysis", "Network segmentation", "DMZ design", "IDS/IPS", "Network monitoring", "Packet analysis", "Port security", "Network access control", "Wireless security", "DNS security", "DDoS mitigation", "Network forensics", "SSL/TLS", "Network hardening", "Zero trust architecture"]
+      },
+      { 
+        title: "Cyber Warfare & Intelligence", 
+        points: ["APT groups", "Digital sovereignty", "PsyOps", "Critical infrastructure", "Nation-state actors", "Cyber espionage", "Information warfare", "Cyber attribution", "Threat intelligence", "OSINT", "Dark web intelligence", "Malware analysis", "Reverse engineering", "Cyber kill chain", "MITRE ATT&CK", "Indicators of compromise", "Threat modeling", "Geopolitical cyber strategy"]
+      },
+      {
+        title: "Application Security",
+        points: ["Secure coding", "OWASP Top 10", "SQL injection", "XSS prevention", "CSRF protection", "Authentication", "Authorization", "Session management", "Input validation", "Output encoding", "Security testing", "Code review", "Static analysis", "Dynamic analysis", "API security", "Mobile app security", "Container security", "DevSecOps"]
+      },
+      {
+        title: "Cryptography & Encryption",
+        points: ["Symmetric encryption", "Asymmetric encryption", "Hash functions", "Digital signatures", "PKI", "Key management", "Cryptographic protocols", "SSL/TLS", "Blockchain cryptography", "Quantum cryptography", "Cryptanalysis", "Steganography", "Homomorphic encryption", "Zero-knowledge proofs", "Secure communication", "End-to-end encryption"]
+      },
+      {
+        title: "Security Operations & Incident Response",
+        points: ["SOC operations", "Incident handling", "Threat detection", "Alert triage", "Containment strategies", "Eradication techniques", "Recovery procedures", "Post-incident analysis", "Playbook development", "Security automation", "SOAR platforms", "Threat intelligence integration", "Metrics & reporting", "Continuous monitoring", "Security orchestration"]
+      },
+      {
+        title: "Digital Forensics & Investigation",
+        points: ["Evidence collection", "Chain of custody", "Disk forensics", "Memory forensics", "Network forensics", "Mobile forensics", "Cloud forensics", "Malware forensics", "Timeline analysis", "Artifact analysis", "Log analysis", "Data recovery", "Anti-forensics detection", "Expert testimony", "Forensic tools", "Legal considerations"]
+      },
+      {
+        title: "Security Governance & Compliance",
+        points: ["Security policies", "Risk management", "Compliance frameworks", "ISO 27001", "NIST", "PCI DSS", "HIPAA", "GDPR", "Security audits", "Risk assessment", "Business continuity", "Disaster recovery", "Security awareness training", "Third-party risk", "Vendor management", "Security metrics"]
+      },
+      {
+        title: "Cloud Security",
+        points: ["Cloud architecture security", "AWS security", "Azure security", "GCP security", "Container security", "Kubernetes security", "Serverless security", "Cloud access security", "Data protection", "Identity & access management", "Cloud compliance", "Cloud monitoring", "Multi-cloud security", "Cloud forensics", "Cloud incident response"]
+      },
+      {
+        title: "IoT & Embedded Security",
+        points: ["IoT vulnerabilities", "Firmware analysis", "Hardware security", "Embedded systems", "SCADA security", "Industrial control systems", "Smart device security", "Automotive security", "Medical device security", "Radio frequency security", "Side-channel attacks", "Physical attacks", "Secure boot", "Trusted execution"]
+      }
+    ],
+    advancedLayers: [
+      { name: "Cybernetic Intelligence", description: "Understanding control and information systems." },
+      { name: "Offensive Mastery", description: "Expert-level penetration testing and exploitation." },
+      { name: "Defensive Mastery", description: "Building impenetrable security architectures." },
+      { name: "Intelligence & Warfare", description: "Nation-state level cyber operations." },
+      { name: "Integrated Security Mastery", description: "Complete security lifecycle management." }
     ],
     tracks: [
       { name: "Cybersecurity Engineer", description: "Defense, architecture, SOC operations." },
@@ -456,11 +526,61 @@ export const domains: Domain[] = [
     icon: "Telescope",
     pillars: ["Futures Thinking", "Emerging Tech", "Foresight", "Scenarios", "Risk", "Long-Termism"],
     subdomains: [
-      { title: "Futures Thinking", points: ["Horizon scanning", "Trend analysis", "Wildcards", "Black swans"] },
-      { title: "Scenario Planning", points: ["Backcasting", "World-building", "Simulation", "Wargaming"] },
-      { title: "Emerging Tech", points: ["Nanotech", "Biotech", "Spacefaring", "Energy transition"] },
-      { title: "Civilizational Risks", points: ["Existential risk (X-Risk)", "Great Filter", "AI Alignment", "Climate resilience"] },
-      { title: "Post-Humanism", points: ["Transhumanism", "Brain-machine interfaces", "Genetic engineering", "Longevity"] }
+      { 
+        title: "Futures Thinking & Methodology", 
+        points: ["Horizon scanning", "Trend analysis", "Wildcards", "Black swans", "Weak signals", "Emerging issues", "Megatrends", "Drivers of change", "STEEP analysis", "Futures wheel", "Delphi method", "Cross-impact analysis", "Morphological analysis", "Causal layered analysis", "Three horizons framework", "Futures cone", "Preferred futures", "Probable futures", "Possible futures", "Plausible futures"]
+      },
+      { 
+        title: "Scenario Planning & Strategic Foresight", 
+        points: ["Backcasting", "World-building", "Simulation", "Wargaming", "Scenario development", "Scenario matrices", "Narrative scenarios", "Quantitative scenarios", "Alternative futures", "Scenario testing", "Strategic implications", "Decision-making under uncertainty", "Robust strategies", "Adaptive planning", "Contingency planning", "Future-proofing", "Scenario workshops", "Stakeholder engagement"]
+      },
+      { 
+        title: "Emerging Technologies", 
+        points: ["Nanotech", "Biotech", "Spacefaring", "Energy transition", "Quantum computing", "Advanced AI", "Synthetic biology", "Gene editing", "Brain-computer interfaces", "Advanced materials", "Fusion energy", "Renewable energy", "Energy storage", "3D printing", "Robotics", "Autonomous systems", "Blockchain", "Metaverse technologies", "AR/VR", "6G networks"]
+      },
+      { 
+        title: "Civilizational & Existential Risks", 
+        points: ["Existential risk (X-Risk)", "Great Filter", "AI Alignment", "Climate resilience", "Nuclear war", "Pandemics", "Asteroid impact", "Supervolcano", "Ecological collapse", "Technological catastrophe", "Societal collapse", "Resource depletion", "Biodiversity loss", "Ocean acidification", "Tipping points", "Cascading failures", "Global catastrophic risks", "Risk mitigation strategies"]
+      },
+      { 
+        title: "Transhumanism & Human Enhancement", 
+        points: ["Transhumanism", "Brain-machine interfaces", "Genetic engineering", "Longevity", "Life extension", "Cognitive enhancement", "Physical enhancement", "Cybernetic implants", "Neural implants", "Biohacking", "Nootropics", "Cryonics", "Mind uploading", "Digital consciousness", "Posthuman futures", "Enhancement ethics", "Human augmentation", "Designer babies"]
+      },
+      {
+        title: "Innovation & Technology Forecasting",
+        points: ["Technology roadmapping", "S-curves", "Hype cycles", "Diffusion of innovations", "Technology adoption", "Disruptive innovation", "Sustaining innovation", "Innovation ecosystems", "R&D trends", "Patent analysis", "Technology scouting", "Innovation metrics", "Technology convergence", "Platform technologies", "Enabling technologies", "Technology assessment"]
+      },
+      {
+        title: "Long-Term Thinking & Strategy",
+        points: ["Long-termism philosophy", "Intergenerational ethics", "Cathedral thinking", "100-year plans", "1000-year thinking", "Deep time", "Legacy planning", "Institutional longevity", "Long-term value", "Future generations", "Time horizons", "Temporal discounting", "Patient capital", "Long-term governance", "Civilizational continuity", "Deep adaptation"]
+      },
+      {
+        title: "Global Trends & Megatrends",
+        points: ["Demographic shifts", "Urbanization", "Climate change", "Resource scarcity", "Technological acceleration", "Globalization", "Deglobalization", "Geopolitical shifts", "Economic transformation", "Social change", "Cultural evolution", "Power transitions", "Inequality trends", "Migration patterns", "Health trends", "Education evolution"]
+      },
+      {
+        title: "Future of Work & Society",
+        points: ["Automation impact", "AI & employment", "Gig economy", "Remote work", "Universal basic income", "Post-scarcity economics", "Leisure society", "Meaning & purpose", "Social structures", "Community evolution", "Digital nomadism", "Skills of the future", "Lifelong learning", "Career fluidity", "Work-life integration"]
+      },
+      {
+        title: "Space Futures & Cosmic Civilization",
+        points: ["Space colonization", "Mars settlement", "Lunar bases", "Asteroid mining", "Space economy", "Interplanetary trade", "Space governance", "Kardashev scale", "Dyson spheres", "Interstellar travel", "Generation ships", "Terraforming", "Space habitats", "Off-world manufacturing", "Cosmic perspective"]
+      },
+      {
+        title: "Environmental Futures",
+        points: ["Climate scenarios", "Renewable transition", "Circular economy", "Regenerative systems", "Ecosystem restoration", "Rewilding", "Carbon removal", "Geoengineering", "Sustainable cities", "Green technology", "Climate adaptation", "Resilient infrastructure", "Nature-based solutions", "Planetary boundaries", "Earth system governance"]
+      },
+      {
+        title: "Consciousness & Reality Futures",
+        points: ["Consciousness evolution", "Collective intelligence", "Noosphere", "Global brain", "Telepathy research", "Psi phenomena", "Altered states", "Psychedelic renaissance", "Meditation technology", "Consciousness uploading", "Simulated realities", "Virtual worlds", "Augmented reality", "Mixed reality", "Reality engineering"]
+      }
+    ],
+    advancedLayers: [
+      { name: "Foresight Mastery", description: "Expert-level futures thinking and scenario planning." },
+      { name: "Technology Intelligence", description: "Deep understanding of emerging technologies." },
+      { name: "Risk Intelligence", description: "Identifying and mitigating existential threats." },
+      { name: "Strategic Foresight", description: "Long-term planning and decision-making." },
+      { name: "Civilizational Architecture", description: "Designing humanity's long-term trajectory." }
     ],
     tracks: [
       { name: "Futurist & Analyst", description: "Predict and map the future." },
