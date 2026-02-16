@@ -263,11 +263,38 @@ export const domains: Domain[] = [
     icon: "Atom",
     pillars: ["Physics", "Chemistry", "Biology", "Math Modeling", "Systems Thinking", "Scientific Reasoning"],
     subdomains: [
-      { title: "Physics", points: ["Quantum mechanics", "Relativity", "Thermodynamics", "Fluid dynamics"] },
-      { title: "Chemistry", points: ["Atomic structure", "Reaction kinetics", "Organic chemistry", "Materials science"] },
-      { title: "Biology", points: ["Genetics", "Neurobiology", "Evolutionary biology", "Bioenergetics"] },
-      { title: "Mathematics", points: ["Calculus", "Linear Algebra", "Probability", "Topology"] },
-      { title: "Complexity Science", points: ["Chaos theory", "Network theory", "Emergence", "Feedback loops"] }
+      { 
+        title: "Physics", 
+        points: ["Quantum mechanics", "Relativity", "Thermodynamics", "Fluid dynamics", "Classical mechanics", "Electromagnetism", "Statistical mechanics", "Particle physics", "Nuclear physics", "Astrophysics", "Condensed matter", "Optics", "Acoustics", "Plasma physics", "Quantum field theory", "String theory", "General relativity", "Special relativity"]
+      },
+      { 
+        title: "Chemistry", 
+        points: ["Atomic structure", "Reaction kinetics", "Organic chemistry", "Materials science", "Inorganic chemistry", "Physical chemistry", "Analytical chemistry", "Biochemistry", "Electrochemistry", "Thermochemistry", "Chemical bonding", "Molecular orbital theory", "Spectroscopy", "Chromatography", "Polymer chemistry", "Catalysis", "Green chemistry"]
+      },
+      { 
+        title: "Biology", 
+        points: ["Genetics", "Neurobiology", "Evolutionary biology", "Bioenergetics", "Molecular biology", "Cell biology", "Ecology", "Microbiology", "Immunology", "Developmental biology", "Physiology", "Anatomy", "Biochemistry", "Bioinformatics", "Systems biology", "Synthetic biology", "Marine biology", "Botany"]
+      },
+      { 
+        title: "Mathematics", 
+        points: ["Calculus", "Linear Algebra", "Probability", "Topology", "Differential equations", "Number theory", "Abstract algebra", "Real analysis", "Complex analysis", "Discrete mathematics", "Graph theory", "Combinatorics", "Statistics", "Numerical analysis", "Optimization", "Game theory", "Set theory", "Logic"]
+      },
+      { 
+        title: "Complexity Science", 
+        points: ["Chaos theory", "Network theory", "Emergence", "Feedback loops", "Self-organization", "Fractals", "Nonlinear dynamics", "Agent-based modeling", "System dynamics", "Cellular automata", "Power laws", "Phase transitions", "Criticality", "Resilience", "Adaptation", "Evolution"]
+      },
+      {
+        title: "Earth Sciences",
+        points: ["Geology", "Meteorology", "Oceanography", "Climatology", "Seismology", "Volcanology", "Hydrology", "Glaciology", "Atmospheric science", "Geophysics", "Paleontology", "Mineralogy", "Petrology", "Plate tectonics", "Earth's magnetic field"]
+      },
+      {
+        title: "Astronomy & Cosmology",
+        points: ["Solar system", "Stellar evolution", "Galaxies", "Black holes", "Dark matter", "Dark energy", "Big Bang theory", "Cosmic microwave background", "Exoplanets", "Astrobiology", "Space-time", "Gravitational waves", "Cosmic inflation", "Multiverse theories"]
+      },
+      {
+        title: "Scientific Method & Research",
+        points: ["Hypothesis formation", "Experimental design", "Data collection", "Statistical analysis", "Peer review", "Scientific writing", "Research ethics", "Reproducibility", "Meta-analysis", "Literature review", "Lab techniques", "Instrumentation", "Error analysis", "Scientific communication"]
+      }
     ],
     tracks: [
       { name: "Pure Scientist", description: "Deep physics/chemistry/biology mastery." },
@@ -283,11 +310,42 @@ export const domains: Domain[] = [
     icon: "TrendingUp",
     pillars: ["Strategy", "Entrepreneurship", "Finance", "Operations", "Marketing", "Leadership"],
     subdomains: [
-      { title: "Business Strategy", points: ["Game theory", "Blue ocean strategy", "Value chain analysis", "Moats"] },
-      { title: "Entrepreneurship", points: ["Lean startup", "MVP", "Product-market fit", "Scaling"] },
-      { title: "Financial Architecture", points: ["P&L management", "Valuation (DCF)", "Capital allocation", "Unit economics"] },
-      { title: "Investment", points: ["Portfolio theory", "Derivatives", "Macro-economics", "Venture capital"] },
-      { title: "Marketing", points: ["Consumer psychology", "Brand positioning", "Growth hacking", "Funnel architecture"] }
+      { 
+        title: "Business Strategy", 
+        points: ["Game theory", "Blue ocean strategy", "Value chain analysis", "Moats", "Competitive advantage", "Porter's five forces", "SWOT analysis", "Strategic positioning", "Disruptive innovation", "Platform strategy", "Network effects", "Ecosystem strategy", "Strategic planning", "Scenario planning", "Business model canvas"]
+      },
+      { 
+        title: "Entrepreneurship", 
+        points: ["Lean startup", "MVP", "Product-market fit", "Scaling", "Customer development", "Pivot strategies", "Fundraising", "Pitch decks", "Term sheets", "Cap tables", "Startup metrics", "Growth hacking", "Customer acquisition", "Retention strategies", "Exit strategies", "IPO process"]
+      },
+      { 
+        title: "Financial Architecture", 
+        points: ["P&L management", "Valuation (DCF)", "Capital allocation", "Unit economics", "Financial modeling", "Cash flow analysis", "Balance sheets", "Income statements", "Financial ratios", "Working capital", "EBITDA", "ROI/ROE", "Break-even analysis", "Budgeting", "Forecasting", "Financial planning"]
+      },
+      { 
+        title: "Investment", 
+        points: ["Portfolio theory", "Derivatives", "Macro-economics", "Venture capital", "Private equity", "Hedge funds", "Asset allocation", "Risk management", "Options trading", "Futures", "Bonds", "Equities", "Real estate", "Commodities", "Alternative investments", "Value investing", "Growth investing"]
+      },
+      { 
+        title: "Marketing", 
+        points: ["Consumer psychology", "Brand positioning", "Growth hacking", "Funnel architecture", "Content marketing", "SEO/SEM", "Social media marketing", "Email marketing", "Influencer marketing", "Viral marketing", "Product marketing", "B2B marketing", "B2C marketing", "Marketing analytics", "Customer segmentation", "Positioning", "Messaging"]
+      },
+      {
+        title: "Operations Management",
+        points: ["Supply chain", "Logistics", "Inventory management", "Quality control", "Process optimization", "Lean manufacturing", "Six Sigma", "Project management", "Agile methodology", "Scrum", "Kanban", "Resource allocation", "Capacity planning", "Vendor management", "Operations strategy"]
+      },
+      {
+        title: "Leadership & Management",
+        points: ["Team building", "Organizational culture", "Change management", "Performance management", "Talent acquisition", "Employee retention", "Coaching", "Mentoring", "Conflict resolution", "Decision making", "Delegation", "Strategic thinking", "Emotional intelligence", "Communication skills", "Vision setting"]
+      },
+      {
+        title: "Sales & Business Development",
+        points: ["Sales process", "Lead generation", "Prospecting", "Qualification", "Negotiation", "Closing techniques", "Account management", "Relationship building", "Sales forecasting", "CRM systems", "Sales enablement", "Channel partnerships", "Strategic alliances", "Deal structuring", "Contract negotiation"]
+      },
+      {
+        title: "Economics",
+        points: ["Microeconomics", "Macroeconomics", "Supply and demand", "Market structures", "Elasticity", "Game theory", "Behavioral economics", "International trade", "Monetary policy", "Fiscal policy", "Inflation", "Unemployment", "GDP", "Economic indicators", "Market efficiency"]
+      }
     ],
     tracks: [
       { name: "Business Strategist", description: "Competitive strategy + systems thinking." },
@@ -303,11 +361,46 @@ export const domains: Domain[] = [
     icon: "Scale",
     pillars: ["Philosophy", "Self-Mastery", "Meaning", "Ethics", "Logic", "Existentialism"],
     subdomains: [
-      { title: "Metaphysics", points: ["Ontology", "Free will vs determinism", "Consciousness"] },
-      { title: "Epistemology", points: ["Rationalism vs Empiricism", "Scientific method", "Truth theories"] },
-      { title: "Logic & Reasoning", points: ["Formal logic", "Fallacies", "First principles", "Mental models"] },
-      { title: "Stoicism & Wisdom", points: ["Emotional regulation", "Virtue ethics", "Mindfulness", "Resilience"] },
-      { title: "Existentialism", points: ["Authenticity", "Responsibility", "Meaning construction", "Absurdism"] }
+      { 
+        title: "Metaphysics", 
+        points: ["Ontology", "Free will vs determinism", "Consciousness", "Reality", "Existence", "Being", "Time", "Space", "Causality", "Identity", "Universals", "Particulars", "Substance", "Essence", "Possibility", "Necessity"]
+      },
+      { 
+        title: "Epistemology", 
+        points: ["Rationalism vs Empiricism", "Scientific method", "Truth theories", "Knowledge", "Belief", "Justification", "Skepticism", "Foundationalism", "Coherentism", "Reliabilism", "Perception", "Memory", "Testimony", "A priori knowledge", "A posteriori knowledge"]
+      },
+      { 
+        title: "Logic & Reasoning", 
+        points: ["Formal logic", "Fallacies", "First principles", "Mental models", "Propositional logic", "Predicate logic", "Modal logic", "Inductive reasoning", "Deductive reasoning", "Abductive reasoning", "Argument analysis", "Critical thinking", "Logical paradoxes", "Syllogisms", "Truth tables"]
+      },
+      { 
+        title: "Stoicism & Wisdom", 
+        points: ["Emotional regulation", "Virtue ethics", "Mindfulness", "Resilience", "Dichotomy of control", "Negative visualization", "Memento mori", "Amor fati", "Premeditatio malorum", "Stoic exercises", "Marcus Aurelius", "Epictetus", "Seneca", "Practical wisdom", "Equanimity"]
+      },
+      { 
+        title: "Existentialism", 
+        points: ["Authenticity", "Responsibility", "Meaning construction", "Absurdism", "Freedom", "Angst", "Bad faith", "Existence precedes essence", "Sartre", "Camus", "Kierkegaard", "Heidegger", "Nietzsche", "Death awareness", "Life purpose"]
+      },
+      {
+        title: "Ethics & Moral Philosophy",
+        points: ["Utilitarianism", "Deontology", "Virtue ethics", "Consequentialism", "Moral relativism", "Moral realism", "Applied ethics", "Bioethics", "Business ethics", "Environmental ethics", "Animal rights", "Justice", "Rights", "Duties", "Moral dilemmas"]
+      },
+      {
+        title: "Political Philosophy",
+        points: ["Social contract", "Justice", "Liberty", "Equality", "Democracy", "Authoritarianism", "Liberalism", "Conservatism", "Socialism", "Anarchism", "Libertarianism", "Rawls", "Nozick", "Hobbes", "Locke", "Rousseau"]
+      },
+      {
+        title: "Philosophy of Mind",
+        points: ["Mind-body problem", "Dualism", "Materialism", "Functionalism", "Qualia", "Intentionality", "Mental causation", "Artificial intelligence", "Personal identity", "Self-consciousness", "Free will", "Mental states", "Cognitive science", "Phenomenology"]
+      },
+      {
+        title: "Eastern Philosophy",
+        points: ["Buddhism", "Taoism", "Confucianism", "Hinduism", "Zen", "Vedanta", "Yoga philosophy", "Meditation", "Mindfulness", "Non-duality", "Karma", "Dharma", "Enlightenment", "Middle way", "Wu wei"]
+      },
+      {
+        title: "Self-Mastery & Personal Development",
+        points: ["Habit formation", "Goal setting", "Time management", "Productivity", "Focus", "Discipline", "Motivation", "Self-awareness", "Emotional intelligence", "Growth mindset", "Journaling", "Reflection", "Self-improvement", "Life design", "Identity crafting"]
+      }
     ],
     tracks: [
       { name: "Philosopher-Engineer", description: "Clarity + logic + real-world application." },
@@ -323,8 +416,8 @@ export const domains: Domain[] = [
     icon: "Mic",
     pillars: ["Verbal", "Non-Verbal", "Persuasion", "Writing", "Social Intelligence", "Narrative"],
     subdomains: [
-      { title: "Verbal Mastery", points: ["Vocal projection", "Tonality", "Rhetoric", "Public speaking"] },
-      { title: "Non-Verbal", points: ["Body language", "Micro-expressions", "Proxemics", "Eye contact"] },
+      { title: "Verbal Mastery", points: ["Vocal projection", "Tonality", "Rhetoric", "Public speaking", "Articulation", "Pacing", "Pausing", "Emphasis", "Voice modulation", "Storytelling voice", "Debate techniques", "Impromptu speaking", "Presentation skills", "Speech writing", "Vocal warm-ups", "Breathing techniques"] },
+      { title: "Non-Verbal", points: ["Body language", "Micro-expressions", "Proxemics", "Eye contact", "Gestures", "Posture", "Facial expressions", "Hand movements", "Personal space", "Touch", "Appearance", "Dress code", "Cultural differences", "Power poses", "Mirroring", "Congruence"] },
       { title: "Persuasion Psychology", points: ["Cialdini’s principles", "Framing", "Cognitive biases", "Negotiation"] },
       { title: "Narrative Engineering", points: ["Story structure", "Hero’s journey", "Metaphor", "Copywriting"] },
       { title: "Conflict Resolution", points: ["De-escalation", "Mediation", "Diplomacy", "High-stakes conversation"] }
