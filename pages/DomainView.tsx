@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { domains } from '../data';
 import { getIcon } from '../components/Icons';
 import Accordion from '../components/Accordion';
-import { ArrowLeft, ArrowRight, Box, Layers, Activity } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Box, Layers, Activity, BookOpen } from 'lucide-react';
 
 const DomainView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const domainId = parseInt(id || '0');
   const domain = domains.find(d => d.id === domainId);
+  const [activeTab, setActiveTab] = useState<'subjects' | 'resources'>('subjects');
 
   if (!domain || domain.isLocked) {
     return <Navigate to="/" />;
@@ -18,8 +19,17 @@ const DomainView: React.FC = () => {
   const prevDomain = domainId > 1 ? domainId - 1 : null;
   const nextDomain = domainId < 20 ? domainId + 1 : null;
 
+  // Default resources if not provided
+  const defaultResources = [
+    { title: "Foundational Textbook", author: "Various Authors" },
+    { title: "Advanced Course Materials", author: "Online Platforms" },
+    { title: "Research Papers & Articles", author: "Academic Journals" }
+  ];
+
+  const resources = domain.resources || defaultResources;
+
   return (
-    <div className="pb-20">
+    <div className="pb-20 relative z-10">
        {/* Header */}
        <div className="relative p-6 md:p-12 border-b border-dark-border bg-black/40 backdrop-blur-md">
           <div className="max-w-6xl mx-auto">
@@ -64,17 +74,65 @@ const DomainView: React.FC = () => {
               </div>
           </section>
 
-          {/* Section 2: Subdomains */}
+          {/* Section 2: Subdomains with Tabs */}
           <section>
               <div className="flex items-center mb-6">
                   <Layers className="w-6 h-6 text-neon-blue mr-3" />
                   <h2 className="text-2xl font-bold text-gray-100">2. Full Subdomain Expansion</h2>
               </div>
-              <div className="space-y-4">
-                  {domain.subdomains.map((topic, idx) => (
-                      <Accordion key={idx} topic={topic} index={idx} />
-                  ))}
+              
+              {/* Tabs */}
+              <div className="flex gap-4 mb-6 border-b border-dark-border">
+                <button
+                  onClick={() => setActiveTab('subjects')}
+                  className={`px-6 py-3 font-mono transition-all ${
+                    activeTab === 'subjects'
+                      ? 'text-neon-blue border-b-2 border-neon-blue'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  Subjects
+                </button>
+                <button
+                  onClick={() => setActiveTab('resources')}
+                  className={`px-6 py-3 font-mono transition-all ${
+                    activeTab === 'resources'
+                      ? 'text-neon-blue border-b-2 border-neon-blue'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  Resources
+                </button>
               </div>
+
+              {/* Tab Content */}
+              {activeTab === 'subjects' ? (
+                <div className="space-y-4">
+                    {domain.subdomains.map((topic, idx) => (
+                        <Accordion key={idx} topic={topic} index={idx} domainId={domainId} />
+                    ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {resources.map((resource, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="p-6 border-l-4 border-neon-blue bg-dark-card/50 rounded-r-lg"
+                    >
+                      <div className="flex items-start gap-4">
+                        <BookOpen className="w-6 h-6 text-neon-blue flex-shrink-0 mt-1" />
+                        <div>
+                          <h3 className="text-lg font-bold text-neon-blue mb-1">{resource.title}</h3>
+                          <p className="text-gray-400 text-sm">{resource.author}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
           </section>
 
           {/* Section 3: Advanced Layers */}

@@ -14,6 +14,11 @@ export interface MasteryTrack {
   includes?: string;
 }
 
+export interface Resource {
+  title: string;
+  author: string;
+}
+
 export interface Domain {
   id: number;
   title: string;
@@ -23,5 +28,17 @@ export interface Domain {
   subdomains: Topic[];
   advancedLayers?: MasteryLayer[];
   tracks?: MasteryTrack[];
-  isLocked?: boolean; // For domains 11-20 not fully defined in source text
+  resources?: Resource[];
+  isLocked?: boolean;
+}
+
+export interface Quote {
+  text: string;
+  author: string;
+  domain: string;
+}
+
+export interface DomainConnection {
+  from: number;
+  to: number;
 }

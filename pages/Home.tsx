@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { domains } from '../data';
 import { getIcon } from '../components/Icons';
-import { Search } from 'lucide-react';
+import { Search, Map, Quote, Calendar } from 'lucide-react';
+import ConstellationMap from '../components/ConstellationMap';
+import QuotesRotator from '../components/QuotesRotator';
+import WeeklyPlanner from '../components/WeeklyPlanner';
 
 const Home: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -14,7 +17,7 @@ const Home: React.FC = () => {
   );
 
   return (
-    <div className="p-6 md:p-12 max-w-7xl mx-auto">
+    <div className="p-6 md:p-12 max-w-7xl mx-auto relative z-10">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -44,47 +47,80 @@ const Home: React.FC = () => {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredDomains.map((domain, index) => (
-          <motion.div
-            key={domain.id}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <Link 
-              to={domain.isLocked ? '#' : `/domain/${domain.id}`}
-              className={`block h-full p-6 rounded-xl border border-dark-border bg-dark-card/40 backdrop-blur-md group relative overflow-hidden ${
-                domain.isLocked ? 'cursor-not-allowed opacity-60' : 'hover:border-neon-blue/50 hover:shadow-[0_0_20px_rgba(0,243,255,0.1)] transition-all duration-300'
-              }`}
+      {/* Domain Cards */}
+      <section id="domains" className="mb-16">
+        <h2 className="text-3xl font-bold text-neon-blue mb-8 text-center font-mono">Knowledge Domains</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredDomains.map((domain, index) => (
+            <motion.div
+              key={domain.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
             >
-               {!domain.isLocked && <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-neon-blue/10 to-transparent rounded-bl-full -mr-8 -mt-8 group-hover:-mr-4 group-hover:-mt-4 transition-all duration-500" />}
-              
-              <div className="flex items-start justify-between mb-4">
-                 <div className={`p-3 rounded-lg ${domain.isLocked ? 'bg-gray-800 text-gray-500' : 'bg-neon-blue/10 text-neon-blue'}`}>
-                    {getIcon(domain.icon)}
-                 </div>
-                 <span className="font-mono text-xs text-gray-600">D-{String(domain.id).padStart(2, '0')}</span>
-              </div>
-              
-              <h2 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-neon-blue transition-colors">
-                {domain.title}
-              </h2>
-              <p className="text-sm text-gray-400 line-clamp-3">
-                {domain.shortDescription}
-              </p>
+              <Link 
+                to={domain.isLocked ? '#' : `/domain/${domain.id}`}
+                className={`block h-full p-6 rounded-xl border border-dark-border bg-dark-card/40 backdrop-blur-md group relative overflow-hidden ${
+                  domain.isLocked ? 'cursor-not-allowed opacity-60' : 'hover:border-neon-blue/50 hover:shadow-[0_0_20px_rgba(0,243,255,0.1)] transition-all duration-300'
+                }`}
+              >
+                 {!domain.isLocked && <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-neon-blue/10 to-transparent rounded-bl-full -mr-8 -mt-8 group-hover:-mr-4 group-hover:-mt-4 transition-all duration-500" />}
+                
+                <div className="flex items-start justify-between mb-4">
+                   <div className={`p-3 rounded-lg ${domain.isLocked ? 'bg-gray-800 text-gray-500' : 'bg-neon-blue/10 text-neon-blue'}`}>
+                      {getIcon(domain.icon)}
+                   </div>
+                   <span className="font-mono text-xs text-gray-600">D-{String(domain.id).padStart(2, '0')}</span>
+                </div>
+                
+                <h2 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-neon-blue transition-colors">
+                  {domain.title}
+                </h2>
+                <p className="text-sm text-gray-400 line-clamp-3">
+                  {domain.shortDescription}
+                </p>
 
-              {domain.isLocked && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[1px]">
-                      <div className="px-3 py-1 border border-gray-700 bg-black rounded text-xs font-mono text-gray-400 uppercase">
-                          Encrypted
-                      </div>
-                  </div>
-              )}
-            </Link>
-          </motion.div>
-        ))}
-      </div>
+                {domain.isLocked && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[1px]">
+                        <div className="px-3 py-1 border border-gray-700 bg-black rounded text-xs font-mono text-gray-400 uppercase">
+                            Encrypted
+                        </div>
+                    </div>
+                )}
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Constellation Map */}
+      <section id="constellation" className="mb-16">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <Map className="w-8 h-8 text-neon-purple" />
+          <h2 className="text-3xl font-bold text-neon-purple text-center font-mono">Domain Constellation Map</h2>
+        </div>
+        <ConstellationMap />
+      </section>
+
+      {/* Quotes Rotator */}
+      <section id="quotes" className="mb-16">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <Quote className="w-8 h-8 text-neon-green" />
+          <h2 className="text-3xl font-bold text-neon-green text-center font-mono">Codex Quotes</h2>
+        </div>
+        <div className="bg-dark-card/50 rounded-xl border border-dark-border p-8">
+          <QuotesRotator />
+        </div>
+      </section>
+
+      {/* Weekly Planner */}
+      <section id="planner" className="mb-16">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <Calendar className="w-8 h-8 text-neon-blue" />
+          <h2 className="text-3xl font-bold text-neon-blue text-center font-mono">Weekly Study Planner</h2>
+        </div>
+        <WeeklyPlanner />
+      </section>
     </div>
   );
 };

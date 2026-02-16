@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lekhan's Omniversal Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #000510;
+  --bg-card: #0a0a1a;
+  --gold: #c9a84c;
+  --gold-dim: #8a7433;
+  --text-primary: #e8e8f0;
+  --text-secondary: #a0a0b8;
+  --purple-deep: #1a0050;
+  --teal-deep: #003020;
+  --amber-deep: #1a0800;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+#cosmicCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#scrollProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--gold);
+  width: 0%;
+  z-index: 999;
+  transition: width 0.1s ease;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(10, 10, 26, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.nav-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+  font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--gold);
+}
+
+.domain-jump {
+  padding: 0.5rem 1rem;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--gold-dim);
+  color: var(--text-primary);
+  font-family: 'Raleway', sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: var(--gold);
+  transition: 0.3s;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding-top: 80px;
+}
+
+.hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 4rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
+}
+
+.hero p {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg-deep);
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(201, 168, 76, 0.4);
+}
+
+section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.domain-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  position: relative;
+}
+
+.domain-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(201, 168, 76, 0.2);
+}
+
+.domain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.domain-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.subject-count-badge {
+  background: rgba(201, 168, 76, 0.2);
+  color: var(--gold);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.domain-card.expanded .subject-count-badge {
+  animation: pulse-gold 1.5s infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 rgba(201, 168, 76, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(201, 168, 76, 0.8); }
+}
+
+.progress-ring {
+  width: 60px;
+  height: 60px;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.domain-description {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.domain-expanded-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.domain-card.expanded .domain-expanded-content {
+  max-height: 2000px;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.tab {
+  padding: 0.7rem 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  transition: color 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.subjects-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.8rem;
+}
+
+.subject-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(201, 168, 76, 0.05);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.subject-item:hover {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.subject-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--gold);
+}
+
+.subject-item.checked span {
+  text-decoration: line-through;
+  color: var(--gold);
+}
+
+.subject-item.checked::after {
+  content: '✓';
+  color: var(--gold);
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.resources-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resource-item {
+  padding: 1rem;
+  background: rgba(201, 168, 76, 0.05);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+}
+
+.resource-item h4 {
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.resource-item p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+#constellationMap {
+  width: 100%;
+  height: 600px;
+  background: rgba(10, 10, 26, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.quotes-section {
+  background: rgba(10, 10, 26, 0.5);
+  border-radius: 8px;
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.quote-container {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.quote {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.quote.active {
+  position: relative;
+  opacity: 1;
+}
+
+.quote-text {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.quote-author {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.quote-domain {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.2);
+  color: var(--gold);
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.quote-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.quote-arrow {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+}
+
+.quote-arrow:hover {
+  background: var(--gold);
+  color: var(--bg-deep);
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+}
+
+.day-column {
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  transition: box-shadow 0.3s;
+}
+
+.day-column.has-domain {
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+}
+
+.day-name {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.day-column select,
+.day-column input {
+  width: 100%;
+  padding: 0.7rem;
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--text-primary);
+  border-radius: 4px;
+  font-family: 'Raleway', sans-serif;
+  margin-bottom: 0.8rem;
+}
+
+.clear-week-btn {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.8rem 2rem;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.clear-week-btn:hover {
+  background: var(--gold);
+  color: var(--bg-deep);
+}
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+@media (max-width: 680px) {
+  .hamburger {
+    display: flex;
+  }
+  
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 26, 0.98);
+    flex-direction: column;
+    padding: 2rem;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+  }
+  
+  .nav-links.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .domains-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div id="scrollProgress"></div>
+<canvas id="cosmicCanvas"></canvas>
+
+<nav>
+  <div class="nav-content">
+    <div class="nav-title">Omniversal Codex</div>
+    <ul class="nav-links">
+      <li><a href="#home" class="nav-link">Home</a></li>
+      <li><a href="#domains" class="nav-link">Domains</a></li>
+      <li><a href="#constellation" class="nav-link">Map</a></li>
+      <li><a href="#quotes" class="nav-link">Quotes</a></li>
+      <li><a href="#planner" class="nav-link">Planner</a></li>
+    </ul>
+    <select class="domain-jump" id="domainJump">
+      <option value="">Jump to Domain...</option>
+    </select>
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="content-wrapper">
+  <section class="hero" id="home">
+    <h1>Lekhan's Omniversal Codex</h1>
+    <p>A living constellation of knowledge spanning mathematics, science, philosophy, and the arts. Track your journey through the infinite domains of human understanding.</p>
+    <button class="cta-button" onclick="document.getElementById('domains').scrollIntoView({behavior:'smooth'})">Explore Domains</button>
+  </section>
+
+  <section id="domains">
+    <h2 class="section-title">Knowledge Domains</h2>
+    <div class="domains-grid" id="domainsGrid"></div>
+  </section>
+
+  <section id="constellation">
+    <h2 class="section-title">Domain Constellation Map</h2>
+    <canvas id="constellationMap"></canvas>
+  </section>
+
+  <section id="quotes">
+    <h2 class="section-title">Codex Quotes</h2>
+    <div class="quotes-section">
+      <div class="quote-container" id="quoteContainer"></div>
+      <div class="quote-controls">
+        <button class="quote-arrow" id="prevQuote">←</button>
+        <button class="quote-arrow" id="nextQuote">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="planner">
+    <h2 class="section-title">Weekly Study Planner</h2>
+    <div class="planner-grid" id="plannerGrid"></div>
+    <button class="clear-week-btn" id="clearWeek">Clear Week</button>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Lekhan's Omniversal Codex. A journey through infinite knowledge.</p>
+  </footer>
+</div>
+
+<script>
+// ===== DOMAIN DATA =====
+const domains = [
+  {
+    id: 1,
+    title: "Mathematics & Logic",
+    description: "The universal language of patterns, structures, and reasoning",
+    subjects: [
+      "Calculus", "Linear Algebra", "Abstract Algebra", "Number Theory", "Graph Theory", "Probability & Statistics",
+      "Topology", "Differential Equations", "Numerical Methods", "Information Theory", "Category Theory", 
+      "Combinatorics", "Fourier Analysis", "Boolean Algebra"
+    ],
+    resources: [
+      { title: "The Art of Problem Solving", author: "Richard Rusczyk" },
+      { title: "Introduction to Mathematical Thinking", author: "Keith Devlin" },
+      { title: "Concrete Mathematics", author: "Graham, Knuth, Patashnik" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Computer Science & Programming",
+    description: "Building systems that compute, communicate, and create",
+    subjects: [
+      "Data Structures & Algorithms", "Operating Systems", "Computer Networks", "Database Systems", 
+      "Compilers & Interpreters", "Software Engineering", "Parallel & Distributed Computing", 
+      "Cryptography & Security", "Cloud Architecture", "DevOps & CI/CD", "Web Development (Full Stack)", 
+      "Mobile Development", "Blockchain Engineering", "Quantum Computing Fundamentals"
+    ],
+    resources: [
+      { title: "Structure and Interpretation of Computer Programs", author: "Abelson & Sussman" },
+      { title: "Designing Data-Intensive Applications", author: "Martin Kleppmann" },
+      { title: "The Pragmatic Programmer", author: "Hunt & Thomas" }
+    ]
+  },
+  {
+    id: 3,
+    title: "Artificial Intelligence & ML",
+    description: "Teaching machines to learn, reason, and perceive",
+    subjects: [
+      "Machine Learning Fundamentals", "Deep Learning & Neural Networks", "Natural Language Processing", 
+      "Computer Vision", "Reinforcement Learning", "Generative AI & Diffusion Models", 
+      "Graph Neural Networks", "Meta-Learning & Few-Shot Learning", "Autonomous Agents & Multi-Agent Systems", 
+      "AI Alignment Theory", "Time Series Forecasting", "Bayesian Inference", "Knowledge Graphs"
+    ],
+    resources: [
+      { title: "Deep Learning", author: "Goodfellow, Bengio, Courville" },
+      { title: "Pattern Recognition and Machine Learning", author: "Christopher Bishop" },
+      { title: "Artificial Intelligence: A Modern Approach", author: "Russell & Norvig" }
+    ]
+  },
+  {
+    id: 4,
+    title: "Physics & Engineering",
+    description: "Understanding the fundamental laws governing reality",
+    subjects: [
+      "Classical Mechanics", "Electromagnetism", "Thermodynamics", "Quantum Mechanics", 
+      "Statistical Mechanics", "Fluid Dynamics", "Special & General Relativity", "Nuclear Physics", 
+      "Photonics & Optics", "Acoustics", "Robotics & Control Systems", "Aerospace Engineering", 
+      "Material Science", "Plasma Physics"
+    ],
+    resources: [
+      { title: "The Feynman Lectures on Physics", author: "Richard Feynman" },
+      { title: "Classical Mechanics", author: "John Taylor" },
+      { title: "Introduction to Quantum Mechanics", author: "David Griffiths" }
+    ]
+  },
+  {
+    id: 5,
+    title: "Philosophy & Critical Thinking",
+    description: "Examining the nature of existence, knowledge, and ethics",
+    subjects: [
+      "Epistemology", "Metaphysics", "Ethics & Moral Philosophy", "Logic & Reasoning", 
+      "Philosophy of Mind", "Philosophy of Science", "Political Philosophy", "Philosophy of Language", 
+      "Phenomenology", "Existentialism", "Eastern Philosophy (Vedanta, Taoism, Buddhism)", 
+      "Formal Logic Systems", "Philosophy of Mathematics", "Consciousness Studies"
+    ],
+    resources: [
+      { title: "Meditations", author: "Marcus Aurelius" },
+      { title: "The Republic", author: "Plato" },
+      { title: "Being and Time", author: "Martin Heidegger" }
+    ]
+  },
+  {
+    id: 6,
+    title: "Economics & Finance",
+    description: "The science of resource allocation and value creation",
+    subjects: [
+      "Microeconomics", "Macroeconomics", "Game Theory", "Behavioral Economics", 
+      "Econometrics", "Financial Markets", "Development Economics", "Public Policy & Welfare Economics", 
+      "Corporate Finance & Valuation", "Risk Management", "Supply Chain Economics", 
+      "Monetary Theory", "Institutional Economics", "Complexity Economics"
+    ],
+    resources: [
+      { title: "Thinking, Fast and Slow", author: "Daniel Kahneman" },
+      { title: "Capital in the Twenty-First Century", author: "Thomas Piketty" },
+      { title: "The Intelligent Investor", author: "Benjamin Graham" }
+    ]
+  },
+  {
+    id: 7,
+    title: "Language & Communication",
+    description: "The art and science of human expression",
+    subjects: [
+      "Linguistics & Syntax", "Semantics & Pragmatics", "Rhetoric & Persuasion", 
+      "Creative Writing", "Technical Writing", "Public Speaking & Oratory", 
+      "Copywriting & Persuasion Writing", "Cognitive Linguistics", "Sign Language & Nonverbal Communication", 
+      "Ancient Languages (Sanskrit, Latin)", "Translation Theory", "Discourse Analysis", "Neurolinguistics"
+    ],
+    resources: [
+      { title: "The Elements of Style", author: "Strunk & White" },
+      { title: "On Writing Well", author: "William Zinsser" },
+      { title: "The Language Instinct", author: "Steven Pinker" }
+    ]
+  },
+  {
+    id: 8,
+    title: "Biology & Life Sciences",
+    description: "Exploring the mechanisms of life and living systems",
+    subjects: [
+      "Molecular Biology", "Genetics & Genomics", "Evolutionary Biology", "Ecology", 
+      "Biochemistry", "Neuroscience", "Immunology & Virology", "Pharmacology", 
+      "Synthetic Biology", "Systems Neuroscience", "Longevity & Aging Science", 
+      "Astrobiology", "Plant Biology", "Marine Biology"
+    ],
+    resources: [
+      { title: "The Selfish Gene", author: "Richard Dawkins" },
+      { title: "Molecular Biology of the Cell", author: "Alberts et al." },
+      { title: "The Origin of Species", author: "Charles Darwin" }
+    ]
+  },
+  {
+    id: 9,
+    title: "Psychology & Human Behavior",
+    description: "Understanding the mind, behavior, and social dynamics",
+    subjects: [
+      "Cognitive Psychology", "Social Psychology", "Developmental Psychology", 
+      "Behavioral Neuroscience", "Clinical Psychology", "Evolutionary Psychology", 
+      "Positive Psychology", "Trauma & Resilience", "Personality Theory (Big Five, MBTI, Enneagram)", 
+      "Consumer Psychology", "Psycholinguistics", "Consciousness & Altered States", "Coaching & Behavior Change"
+    ],
+    resources: [
+      { title: "Thinking, Fast and Slow", author: "Daniel Kahneman" },
+      { title: "Influence: The Psychology of Persuasion", author: "Robert Cialdini" },
+      { title: "Man's Search for Meaning", author: "Viktor Frankl" }
+    ]
+  },
+  {
+    id: 10,
+    title: "Strategy, Systems & Leadership",
+    description: "Mastering complex systems and human coordination",
+    subjects: [
+      "Systems Thinking", "Strategic Planning", "Organizational Behavior", 
+      "Decision Theory", "Operations Research", "Negotiation & Conflict Resolution", 
+      "Geopolitical Strategy", "Innovation & Design Thinking", "Scenario Planning", 
+      "Network Theory", "Resilience Engineering", "Stoic Leadership Philosophy", "Biomimicry in Strategy"
+    ],
+    resources: [
+      { title: "Thinking in Systems", author: "Donella Meadows" },
+      { title: "Good Strategy Bad Strategy", author: "Richard Rumelt" },
+      { title: "The Fifth Discipline", author: "Peter Senge" }
+    ]
+  }
+];
+
+// ===== QUOTES DATA =====
+const quotes = [
+  { text: "What I cannot create, I do not understand.", author: "Richard Feynman", domain: "Physics & Engineering" },
+  { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", domain: "Philosophy & Critical Thinking" },
+  { text: "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.", author: "Albert Einstein", domain: "Physics & Engineering" },
+  { text: "We can only see a short distance ahead, but we can see plenty there that needs to be done.", author: "Alan Turing", domain: "Computer Science & Programming" },
+  { text: "The superior man thinks always of virtue; the common man thinks of comfort.", author: "Confucius", domain: "Philosophy & Critical Thinking" },
+  { text: "The present is theirs; the future, for which I really worked, is mine.", author: "Nikola Tesla", domain: "Physics & Engineering" },
+  { text: "Information is the resolution of uncertainty.", author: "Claude Shannon", domain: "Mathematics & Logic" },
+  { text: "Read Euler, read Euler, he is the master of us all.", author: "Pierre-Simon Laplace", domain: "Mathematics & Logic" },
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", domain: "Strategy, Systems & Leadership" },
+  { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein", domain: "Strategy, Systems & Leadership" },
+  { text: "The mind is not a vessel to be filled, but a fire to be kindled.", author: "Plutarch", domain: "Psychology & Human Behavior" },
+  { text: "Language is the house of being.", author: "Martin Heidegger", domain: "Language & Communication" }
+];
+
+// ===== COSMIC CANVAS ANIMATION =====
+const canvas = document.getElementById('cosmicCanvas');
+const ctx = canvas.getContext('2d');
+let width, height;
+let lastTime = 0;
+let animationTime = 0;
+
+function resizeCanvas() {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Blob class with organic Bezier curves
+class Blob {
+  constructor() {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.vx = (Math.random() - 0.5) * 0.15;
+    this.vy = (Math.random() - 0.5) * 0.15;
+    this.baseSize = 150 + Math.random() * 200;
+    this.points = 8;
+    this.anchors = [];
+    this.colorSet = this.getRandomColorSet();
+    this.alpha = 0.12 + Math.random() * 0.13;
+    this.timeOffset = Math.random() * 1000;
+    
+    for (let i = 0; i < this.points; i++) {
+      this.anchors.push({
+        angle: (i / this.points) * Math.PI * 2,
+        radiusOffset: Math.random() * 0.3 + 0.7,
+        freq: 0.0003 + Math.random() * 0.0005,
+        amp: 20 + Math.random() * 30
+      });
+    }
+  }
+  
+  getRandomColorSet() {
+    const sets = [
+      ['#0a0030', '#1a0050', '#000820'],
+      ['#1a0800', '#300a00', '#1a0800'],
+      ['#001a10', '#003020', '#001a10']
+    ];
+    return sets[Math.floor(Math.random() * sets.length)];
+  }
+  
+  update(time) {
+    this.x += this.vx;
+    this.y += this.vy;
+    
+    if (this.x < -this.baseSize || this.x > width + this.baseSize) this.vx *= -1;
+    if (this.y < -this.baseSize || this.y > height + this.baseSize) this.vy *= -1;
+  }
+  
+  draw(time) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    
+    const breathe = Math.sin(time * 0.0008 + this.timeOffset) * 0.15 + 1;
+    ctx.scale(breathe, breathe);
+    
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.baseSize);
+    gradient.addColorStop(0, this.colorSet[0]);
+    gradient.addColorStop(0.5, this.colorSet[1]);
+    gradient.addColorStop(1, this.colorSet[2]);
+    
+    ctx.fillStyle = gradient;
+    ctx.globalAlpha = this.alpha;
+    
+    ctx.beginPath();
+    for (let i = 0; i <= this.points; i++) {
+      const anchor = this.anchors[i % this.points];
+      const nextAnchor = this.anchors[(i + 1) % this.points];
+      
+      const morphOffset = Math.sin(time * anchor.freq + this.timeOffset) * anchor.amp;
+      const radius = this.baseSize * anchor.radiusOffset + morphOffset;
+      
+      const x = Math.cos(anchor.angle) * radius;
+      const y = Math.sin(anchor.angle) * radius;
+      
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        const prevAnchor = this.anchors[(i - 1) % this.points];
+        const prevMorph = Math.sin(time * prevAnchor.freq + this.timeOffset) * prevAnchor.amp;
+        const prevRadius = this.baseSize * prevAnchor.radiusOffset + prevMorph;
+        const prevX = Math.cos(prevAnchor.angle) * prevRadius;
+        const prevY = Math.sin(prevAnchor.angle) * prevRadius;
+        
+        const cp1x = prevX + Math.cos(prevAnchor.angle + Math.PI / 2) * 50;
+        const cp1y = prevY + Math.sin(prevAnchor.angle + Math.PI / 2) * 50;
+        const cp2x = x - Math.cos(anchor.angle + Math.PI / 2) * 50;
+        const cp2y = y - Math.sin(anchor.angle + Math.PI / 2) * 50;
+        
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+      }
+    }
+    ctx.closePath();
+    ctx.fill();
+    
+    ctx.restore();
+  }
+}
+
+// Star particles
+class Star {
+  constructor(tier) {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.tier = tier;
+    
+    if (tier === 'tiny') {
+      this.radius = 0.4;
+      this.opacity = 0.4;
+      this.twinkle = false;
+    } else if (tier === 'medium') {
+      this.radius = 0.8;
+      this.opacity = 0.7;
+      this.twinkle = false;
+    } else {
+      this.radius = 1.4;
+      this.baseOpacity = 1.0;
+      this.twinkle = true;
+      this.twinkleOffset = Math.random() * 1000;
+      this.hasGlow = Math.random() < 0.25;
+    }
+  }
+  
+  draw(time) {
+    ctx.save();
+    
+    if (this.twinkle) {
+      this.opacity = this.baseOpacity * (0.5 + Math.sin(time * 0.002 + this.twinkleOffset) * 0.5);
+    }
+    
+    if (this.hasGlow) {
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = '#c9a84c';
+    }
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = this.opacity;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+  }
+}
+
+// Shooting star
+class ShootingStar {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.active = false;
+    this.nextTime = animationTime + (4000 + Math.random() * 4000);
+  }
+  
+  start() {
+    this.active = true;
+    this.startTime = animationTime;
+    this.duration = 800;
+    this.x = Math.random() * width;
+    this.y = Math.random() * height * 0.5;
+    this.angle = Math.random() * Math.PI / 4 + Math.PI / 6;
+    this.length = 100 + Math.random() * 100;
+    this.speed = 3 + Math.random() * 2;
+  }
+  
+  update() {
+    if (!this.active && animationTime >= this.nextTime) {
+      this.start();
+    }
+    
+    if (this.active && animationTime - this.startTime >= this.duration) {
+      this.reset();
+    }
+  }
+  
+  draw() {
+    if (!this.active) return;
+    
+    const elapsed = animationTime - this.startTime;
+    const progress = elapsed / this.duration;
+    
+    const currentX = this.x + Math.cos(this.angle) * this.speed * elapsed;
+    const currentY = this.y + Math.sin(this.angle) * this.speed * elapsed;
+    
+    const gradient = ctx.createLinearGradient(
+      currentX, currentY,
+      currentX - Math.cos(this.angle) * this.length,
+      currentY - Math.sin(this.angle) * this.length
+    );
+    
+    gradient.addColorStop(0, 'rgba(255, 255, 255, ' + (1 - progress) + ')');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(currentX, currentY);
+    ctx.lineTo(
+      currentX - Math.cos(this.angle) * this.length,
+      currentY - Math.sin(this.angle) * this.length
+    );
+    ctx.stroke();
+  }
+}
+
+// Initialize particles
+const blobs = Array.from({ length: 8 }, () => new Blob());
+const stars = [
+  ...Array.from({ length: 60 }, () => new Star('tiny')),
+  ...Array.from({ length: 100 }, () => new Star('medium')),
+  ...Array.from({ length: 40 }, () => new Star('large'))
+];
+const shootingStars = Array.from({ length: 3 }, () => new ShootingStar());
+
+// Animation loop
+function animate(currentTime) {
+  const deltaTime = currentTime - lastTime;
+  lastTime = currentTime;
+  animationTime = currentTime;
+  
+  ctx.clearRect(0, 0, width, height);
+  
+  blobs.forEach(blob => {
+    blob.update(currentTime);
+    blob.draw(currentTime);
+  });
+  
+  stars.forEach(star => star.draw(currentTime));
+  
+  shootingStars.forEach(star => {
+    star.update();
+    star.draw();
+  });
+  
+  requestAnimationFrame(animate);
+}
+
+animate(0);
+
+// ===== DOMAIN RENDERING =====
+function getCheckedCount(domainId) {
+  const domain = domains.find(d => d.id === domainId);
+  if (!domain) return 0;
+  
+  let count = 0;
+  domain.subjects.forEach((_, idx) => {
+    const key = `codex_d${domainId}_subject_${idx}`;
+    if (localStorage.getItem(key) === 'true') count++;
+  });
+  return count;
+}
+
+function updateProgressRing(domainId) {
+  const domain = domains.find(d => d.id === domainId);
+  const checkedCount = getCheckedCount(domainId);
+  const percentage = (checkedCount / domain.subjects.length) * 100;
+  
+  const circle = document.querySelector(`#domain-${domainId} .progress-ring-circle`);
+  const radius = circle.r.baseVal.value;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (percentage / 100) * circumference;
+  
+  circle.style.strokeDasharray = `${circumference} ${circumference}`;
+  circle.style.strokeDashoffset = offset;
+}
+
+function renderDomains() {
+  const grid = document.getElementById('domainsGrid');
+  const jumpSelect = document.getElementById('domainJump');
+  
+  domains.forEach(domain => {
+    const card = document.createElement('div');
+    card.className = 'domain-card';
+    card.id = `domain-${domain.id}`;
+    
+    const checkedCount = getCheckedCount(domain.id);
+    const percentage = (checkedCount / domain.subjects.length) * 100;
+    const circumference = 54 * Math.PI;
+    const offset = circumference - (percentage / 100) * circumference;
+    
+    card.innerHTML = `
+      <div class="domain-header">
+        <div>
+          <h3 class="domain-title">${domain.title}</h3>
+          <span class="subject-count-badge">${domain.subjects.length} Subjects</span>
+        </div>
+        <svg class="progress-ring" width="60" height="60">
+          <circle class="progress-ring-circle" stroke="rgba(201,168,76,0.3)" stroke-width="4" fill="transparent" r="27" cx="30" cy="30"/>
+          <circle class="progress-ring-circle" stroke="#c9a84c" stroke-width="4" fill="transparent" r="27" cx="30" cy="30" 
+            style="stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${offset};"/>
+        </svg>
+      </div>
+      <p class="domain-description">${domain.description}</p>
+      <div class="domain-expanded-content">
+        <div class="tabs">
+          <button class="tab active" data-tab="subjects-${domain.id}">Subjects</button>
+          <button class="tab" data-tab="resources-${domain.id}">Resources</button>
+        </div>
+        <div class="tab-content active" id="subjects-${domain.id}">
+          <ul class="subjects-list">
+            ${domain.subjects.map((subject, idx) => {
+              const key = `codex_d${domain.id}_subject_${idx}`;
+              const checked = localStorage.getItem(key) === 'true';
+              return `
+                <li class="subject-item ${checked ? 'checked' : ''}" data-domain="${domain.id}" data-index="${idx}">
+                  <input type="checkbox" class="subject-checkbox" ${checked ? 'checked' : ''}>
+                  <span>${subject}</span>
+                </li>
+              `;
+            }).join('')}
+          </ul>
+        </div>
+        <div class="tab-content" id="resources-${domain.id}">
+          <ul class="resources-list">
+            ${domain.resources.map(resource => `
+              <li class="resource-item">
+                <h4>${resource.title}</h4>
+                <p>${resource.author}</p>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+    
+    grid.appendChild(card);
+    
+    const option = document.createElement('option');
+    option.value = domain.id;
+    option.textContent = domain.title;
+    jumpSelect.appendChild(option);
+  });
+  
+  // Card expand/collapse
+  document.querySelectorAll('.domain-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.subject-checkbox') || e.target.closest('.tab')) return;
+      card.classList.toggle('expanded');
+    });
+  });
+  
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = tab.dataset.tab;
+      const card = tab.closest('.domain-card');
+      
+      card.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      card.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+      
+      tab.classList.add('active');
+      document.getElementById(targetId).classList.add('active');
+    });
+  });
+  
+  // Checkbox handling
+  document.querySelectorAll('.subject-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
+      e.stopPropagation();
+      const item = checkbox.closest('.subject-item');
+      const domainId = item.dataset.domain;
+      const index = item.dataset.index;
+      const key = `codex_d${domainId}_subject_${index}`;
+      
+      if (checkbox.checked) {
+        localStorage.setItem(key, 'true');
+        item.classList.add('checked');
+      } else {
+        localStorage.removeItem(key);
+        item.classList.remove('checked');
+      }
+      
+      updateProgressRing(domainId);
+    });
+  });
+}
+
+renderDomains();
+
+// ===== CONSTELLATION MAP =====
+const constellationCanvas = document.getElementById('constellationMap');
+const constellationCtx = constellationCanvas.getContext('2d');
+
+function resizeConstellation() {
+  constellationCanvas.width = constellationCanvas.offsetWidth;
+  constellationCanvas.height = constellationCanvas.offsetHeight;
+  drawConstellation();
+}
+
+const connections = [
+  [1, 2], [1, 3], [1, 4],
+  [2, 3], [2, 10],
+  [3, 4], [3, 9],
+  [4, 8],
+  [5, 6], [5, 9], [5, 10],
+  [6, 10],
+  [7, 9],
+  [8, 9]
+];
+
+let hoveredNode = null;
+let nodePositions = [];
+
+function drawConstellation() {
+  const w = constellationCanvas.width;
+  const h = constellationCanvas.height;
+  const centerX = w / 2;
+  const centerY = h / 2;
+  const radius = Math.min(w, h) * 0.35;
+  
+  constellationCtx.clearRect(0, 0, w, h);
+  
+  nodePositions = domains.map((domain, i) => {
+    const angle = (i / domains.length) * Math.PI * 2 - Math.PI / 2;
+    return {
+      x: centerX + Math.cos(angle) * radius,
+      y: centerY + Math.sin(angle) * radius,
+      domain: domain,
+      id: domain.id
+    };
+  });
+  
+  // Draw connections
+  constellationCtx.strokeStyle = 'rgba(201, 168, 76, 0.3)';
+  constellationCtx.lineWidth = 1;
+  
+  connections.forEach(([id1, id2]) => {
+    const node1 = nodePositions.find(n => n.id === id1);
+    const node2 = nodePositions.find(n => n.id === id2);
+    
+    if (node1 && node2) {
+      constellationCtx.beginPath();
+      constellationCtx.moveTo(node1.x, node1.y);
+      constellationCtx.lineTo(node2.x, node2.y);
+      constellationCtx.stroke();
+    }
+  });
+  
+  // Draw nodes
+  nodePositions.forEach(node => {
+    const isHovered = hoveredNode === node.id;
+    const checkedCount = getCheckedCount(node.id);
+    const totalCount = node.domain.subjects.length;
+    
+    constellationCtx.save();
+    
+    // Glow effect
+    if (isHovered) {
+      constellationCtx.shadowBlur = 20;
+      constellationCtx.shadowColor = '#c9a84c';
+    }
+    
+    // Outer circle
+    constellationCtx.fillStyle = isHovered ? 'rgba(201, 168, 76, 0.4)' : 'rgba(201, 168, 76, 0.2)';
+    constellationCtx.beginPath();
+    constellationCtx.arc(node.x, node.y, 25, 0, Math.PI * 2);
+    constellationCtx.fill();
+    
+    // Inner circle (progress)
+    const progressAngle = (checkedCount / totalCount) * Math.PI * 2;
+    constellationCtx.fillStyle = '#c9a84c';
+    constellationCtx.beginPath();
+    constellationCtx.moveTo(node.x, node.y);
+    constellationCtx.arc(node.x, node.y, 15, -Math.PI / 2, -Math.PI / 2 + progressAngle);
+    constellationCtx.closePath();
+    constellationCtx.fill();
+    
+    // Center dot
+    constellationCtx.fillStyle = isHovered ? '#ffffff' : '#c9a84c';
+    constellationCtx.beginPath();
+    constellationCtx.arc(node.x, node.y, 5, 0, Math.PI * 2);
+    constellationCtx.fill();
+    
+    constellationCtx.restore();
+    
+    // Tooltip
+    if (isHovered) {
+      constellationCtx.fillStyle = 'rgba(10, 10, 26, 0.95)';
+      constellationCtx.strokeStyle = '#c9a84c';
+      constellationCtx.lineWidth = 1;
+      
+      const tooltipText = node.domain.title;
+      const subText = `${node.domain.subjects.length} subjects`;
+      constellationCtx.font = '14px Raleway';
+      const textWidth = Math.max(constellationCtx.measureText(tooltipText).width, constellationCtx.measureText(subText).width);
+      
+      const tooltipX = node.x - textWidth / 2 - 10;
+      const tooltipY = node.y - 60;
+      
+      constellationCtx.fillRect(tooltipX, tooltipY, textWidth + 20, 45);
+      constellationCtx.strokeRect(tooltipX, tooltipY, textWidth + 20, 45);
+      
+      constellationCtx.fillStyle = '#c9a84c';
+      constellationCtx.font = 'bold 14px Raleway';
+      constellationCtx.fillText(tooltipText, tooltipX + 10, tooltipY + 20);
+      
+      constellationCtx.fillStyle = '#a0a0b8';
+      constellationCtx.font = '12px Raleway';
+      constellationCtx.fillText(subText, tooltipX + 10, tooltipY + 37);
+    }
+  });
+}
+
+constellationCanvas.addEventListener('mousemove', (e) => {
+  const rect = constellationCanvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  
+  let foundNode = null;
+  nodePositions.forEach(node => {
+    const dist = Math.sqrt((mouseX - node.x) ** 2 + (mouseY - node.y) ** 2);
+    if (dist < 25) foundNode = node.id;
+  });
+  
+  if (foundNode !== hoveredNode) {
+    hoveredNode = foundNode;
+    drawConstellation();
+  }
+});
+
+constellationCanvas.addEventListener('mouseleave', () => {
+  if (hoveredNode !== null) {
+    hoveredNode = null;
+    drawConstellation();
+  }
+});
+
+window.addEventListener('resize', resizeConstellation);
+resizeConstellation();
+
+// Animate lines on scroll
+const constellationObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      drawConstellation();
+    }
+  });
+}, { threshold: 0.3 });
+
+constellationObserver.observe(document.getElementById('constellation'));
+
+// ===== QUOTES ROTATOR =====
+let currentQuoteIndex = 0;
+let quoteInterval;
+
+function renderQuotes() {
+  const container = document.getElementById('quoteContainer');
+  
+  quotes.forEach((quote, index) => {
+    const quoteDiv = document.createElement('div');
+    quoteDiv.className = `quote ${index === 0 ? 'active' : ''}`;
+    quoteDiv.innerHTML = `
+      <p class="quote-text">"${quote.text}"</p>
+      <p class="quote-author">— ${quote.author}</p>
+      <span class="quote-domain">${quote.domain}</span>
+    `;
+    container.appendChild(quoteDiv);
+  });
+}
+
+function showQuote(index) {
+  const allQuotes = document.querySelectorAll('.quote');
+  allQuotes.forEach(q => q.classList.remove('active'));
+  allQuotes[index].classList.add('active');
+  currentQuoteIndex = index;
+}
+
+function nextQuote() {
+  const next = (currentQuoteIndex + 1) % quotes.length;
+  showQuote(next);
+}
+
+function prevQuote() {
+  const prev = (currentQuoteIndex - 1 + quotes.length) % quotes.length;
+  showQuote(prev);
+}
+
+function startQuoteRotation() {
+  quoteInterval = setInterval(nextQuote, 6000);
+}
+
+function stopQuoteRotation() {
+  clearInterval(quoteInterval);
+}
+
+renderQuotes();
+startQuoteRotation();
+
+document.getElementById('nextQuote').addEventListener('click', () => {
+  stopQuoteRotation();
+  nextQuote();
+  startQuoteRotation();
+});
+
+document.getElementById('prevQuote').addEventListener('click', () => {
+  stopQuoteRotation();
+  prevQuote();
+  startQuoteRotation();
+});
+
+// ===== WEEKLY PLANNER =====
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+function renderPlanner() {
+  const grid = document.getElementById('plannerGrid');
+  
+  days.forEach((day, index) => {
+    const dayCol = document.createElement('div');
+    dayCol.className = 'day-column';
+    dayCol.id = `day-${index}`;
+    
+    const savedDomain = localStorage.getItem(`planner_day${index}_domain`) || '';
+    const savedGoal = localStorage.getItem(`planner_day${index}_goal`) || '';
+    
+    if (savedDomain) dayCol.classList.add('has-domain');
+    
+    dayCol.innerHTML = `
+      <div class="day-name">${day}</div>
+      <select class="day-domain" data-day="${index}">
+        <option value="">Select Domain...</option>
+        ${domains.map(d => `<option value="${d.id}" ${savedDomain == d.id ? 'selected' : ''}>${d.title}</option>`).join('')}
+      </select>
+      <input type="text" class="day-goal" data-day="${index}" placeholder="Today's goal..." value="${savedGoal}">
+    `;
+    
+    grid.appendChild(dayCol);
+  });
+  
+  // Save on change
+  document.querySelectorAll('.day-domain').forEach(select => {
+    select.addEventListener('change', (e) => {
+      const day = e.target.dataset.day;
+      const value = e.target.value;
+      const dayCol = document.getElementById(`day-${day}`);
+      
+      if (value) {
+        localStorage.setItem(`planner_day${day}_domain`, value);
+        dayCol.classList.add('has-domain');
+      } else {
+        localStorage.removeItem(`planner_day${day}_domain`);
+        dayCol.classList.remove('has-domain');
+      }
+    });
+  });
+  
+  document.querySelectorAll('.day-goal').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const day = e.target.dataset.day;
+      const value = e.target.value;
+      
+      if (value) {
+        localStorage.setItem(`planner_day${day}_goal`, value);
+      } else {
+        localStorage.removeItem(`planner_day${day}_goal`);
+      }
+    });
+  });
+}
+
+renderPlanner();
+
+document.getElementById('clearWeek').addEventListener('click', () => {
+  if (confirm('Are you sure you want to clear the entire week?')) {
+    days.forEach((_, index) => {
+      localStorage.removeItem(`planner_day${index}_domain`);
+      localStorage.removeItem(`planner_day${index}_goal`);
+    });
+    
+    document.getElementById('plannerGrid').innerHTML = '';
+    renderPlanner();
+  }
+});
+
+// ===== SCROLL PROGRESS BAR =====
+function updateScrollProgress() {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrollPercent = (scrollTop / scrollHeight) * 100;
+  
+  document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+}
+
+window.addEventListener('scroll', updateScrollProgress);
+
+// ===== NAVIGATION =====
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});
+
+// Domain jump
+document.getElementById('domainJump').addEventListener('change', (e) => {
+  const domainId = e.target.value;
+  if (domainId) {
+    const card = document.getElementById(`domain-${domainId}`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    e.target.value = '';
+  }
+});
+
+// Active nav link based on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinksArray = document.querySelectorAll('.nav-link');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinksArray.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${id}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, {
+  threshold: 0.3
+});
+
+sections.forEach(section => navObserver.observe(section));
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      navLinks.classList.remove('active');
+    }
+  });
+});
+
+</script>
+</body>
+</html>

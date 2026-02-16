@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { getIcon } from './Icons';
 import { domains } from '../data';
 import { Menu, X, Search, Grid, Lock } from 'lucide-react';
+import CosmicCanvas from './CosmicCanvas';
+import ScrollProgress from './ScrollProgress';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,7 +15,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-dark-bg text-gray-200 font-sans flex flex-col md:flex-row overflow-hidden">
+    <div className="min-h-screen bg-dark-bg text-gray-200 font-sans flex flex-col md:flex-row overflow-hidden relative">
+      <CosmicCanvas />
+      <ScrollProgress />
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-dark-card border-b border-dark-border z-50">
         <Link to="/" className="text-neon-blue font-mono font-bold tracking-wider">LEKHAN'S CODEX</Link>
@@ -86,8 +90,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto overflow-x-hidden relative bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
-         <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-950 to-slate-900 -z-10" />
+      <main className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto overflow-x-hidden relative">
          {children}
       </main>
     </div>
