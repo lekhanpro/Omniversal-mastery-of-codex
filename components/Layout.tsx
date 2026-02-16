@@ -54,16 +54,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Grid className="w-5 h-5 mr-3" />
                 <span className="font-mono text-sm">Dashboard</span>
              </Link>
-              <Link 
-                to="/knowledge-map"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/knowledge-map' ? 'bg-neon-purple/10 border-neon-purple text-neon-purple' : 'hover:bg-white/5 hover:text-white'
-                }`}
+              
+              <a 
+                href="/knowledge-map.html"
+                className="flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent hover:bg-white/5 hover:text-white"
               >
-                <Search className="w-5 h-5 mr-3" />
-                <span className="font-mono text-sm">Knowledge Map</span>
-             </Link>
+                <span className="mr-3">🗺️</span>
+                <span className="font-mono text-sm">3D Knowledge Map</span>
+             </a>
+              
+              <a 
+                href="/oracle.html"
+                className="flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent hover:bg-white/5 hover:text-white"
+              >
+                <span className="mr-3">🔮</span>
+                <span className="font-mono text-sm">The Oracle (AI Chat)</span>
+             </a>
 
              <div className="mb-2 text-xs font-bold text-gray-600 uppercase tracking-widest px-3">Domains</div>
              

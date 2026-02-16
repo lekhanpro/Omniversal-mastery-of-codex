@@ -4,7 +4,7 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!knowledge-map\\.html|oracle\\.html).*)",
       "destination": "/index.html"
     }
   ]
