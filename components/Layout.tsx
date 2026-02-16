@@ -55,21 +55,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="font-mono text-sm">Dashboard</span>
              </Link>
               
-              <a 
-                href="/knowledge-map.html"
-                className="flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent hover:bg-white/5 hover:text-white"
+              <Link 
+                to="/knowledge-map"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/knowledge-map' ? 'bg-neon-purple/10 border-neon-purple text-neon-purple' : 'hover:bg-white/5 hover:text-white'
+                }`}
               >
                 <span className="mr-3">🗺️</span>
-                <span className="font-mono text-sm">3D Knowledge Map</span>
-             </a>
-              
-              <a 
-                href="/oracle.html"
-                className="flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent hover:bg-white/5 hover:text-white"
-              >
-                <span className="mr-3">🔮</span>
-                <span className="font-mono text-sm">The Oracle (AI Chat)</span>
-             </a>
+                <span className="font-mono text-sm">Knowledge Map</span>
+             </Link>
 
              <div className="mb-2 text-xs font-bold text-gray-600 uppercase tracking-widest px-3">Domains</div>
              

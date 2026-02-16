@@ -3,7 +3,7 @@ import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-d
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import DomainView from './pages/DomainView';
-import KnowledgeMap from './pages/KnowledgeMap';
+import KnowledgeMapNew from './pages/KnowledgeMapNew';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -18,13 +18,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/domain/:id" element={<DomainView />} />
-          <Route path="/knowledge-map" element={<KnowledgeMap />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/domain/:id" element={<Layout><DomainView /></Layout>} />
+        <Route path="/knowledge-map" element={<KnowledgeMapNew />} />
+      </Routes>
     </Router>
   );
 };
