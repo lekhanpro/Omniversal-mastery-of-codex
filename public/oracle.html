@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Oracle - Omniversal Codex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #050812;
+      color: #fff;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .sidebar {
+      background: rgba(8, 15, 35, 0.92);
+      backdrop-filter: blur(14px);
+      border-right: 1px solid rgba(201, 168, 76, 0.25);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-left {
+      width: 260px;
+    }
+
+    .sidebar-right {
+      width: 240px;
+      border-right: none;
+      border-left: 1px solid rgba(201, 168, 76, 0.25);
+    }
+
+
+    .sidebar h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      color: #c9a84c;
+      padding: 20px 16px 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .domain-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .domain-item:hover {
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    .domain-item.active {
+      background: rgba(201, 168, 76, 0.15);
+      border-left-color: #c9a84c;
+      color: #c9a84c;
+    }
+
+    .domain-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .history-section {
+      margin-top: 20px;
+      padding: 0 16px;
+    }
+
+    .history-item {
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .history-item:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.3);
+    }
+
+    .history-date {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 4px;
+    }
+
+
+    .new-session-btn {
+      margin: 16px;
+      padding: 10px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 6px;
+      color: #c9a84c;
+      font-family: 'Raleway', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: calc(100% - 32px);
+    }
+
+    .new-session-btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+    }
+
+    .center-panel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(5, 8, 18, 0.5);
+    }
+
+    .oracle-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+    }
+
+    .oracle-sigil {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 12px;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 10px #c9a84c); }
+      50% { filter: drop-shadow(0 0 25px #c9a84c); }
+    }
+
+    .oracle-title {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      color: #c9a84c;
+      margin-bottom: 4px;
+    }
+
+    .oracle-subtitle {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .top-bar {
+      padding: 12px 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 4px;
+      font-size: 11px;
+      color: #c9a84c;
+    }
+
+
+    .challenge-btn {
+      margin-left: auto;
+      padding: 8px 16px;
+      background: rgba(170, 68, 255, 0.2);
+      border: 1px solid rgba(170, 68, 255, 0.4);
+      border-radius: 6px;
+      color: #aa44ff;
+      font-family: 'Raleway', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .challenge-btn:hover {
+      background: rgba(170, 68, 255, 0.3);
+    }
+
+    .chat-area {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeInUp 0.3s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+      animation: slideInRight 0.3s forwards;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 14px 18px;
+      border-radius: 8px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .message.oracle .message-content {
+      background: rgba(68, 136, 255, 0.1);
+      border: 1px solid rgba(68, 136, 255, 0.3);
+    }
+
+
+    .message.user .message-content {
+      background: rgba(8, 15, 35, 0.8);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .message-avatar svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .challenge-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(170, 68, 255, 0.3);
+      border: 1px solid rgba(170, 68, 255, 0.5);
+      border-radius: 4px;
+      font-size: 10px;
+      color: #aa44ff;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .concept-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .concept-tag {
+      padding: 4px 10px;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 12px;
+      font-size: 11px;
+      color: #c9a84c;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .concept-tag:hover {
+      background: rgba(201, 168, 76, 0.25);
+      transform: translateY(-1px);
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+
+    .code-block {
+      position: relative;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 6px;
+      padding: 16px;
+      margin: 10px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 8px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 4px;
+      color: #c9a84c;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 6px;
+      padding: 14px 18px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #c9a84c;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    .input-area {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(201, 168, 76, 0.25);
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .input-wrapper {
+      flex-grow: 1;
+      position: relative;
+    }
+
+    #message-input {
+      width: 100%;
+      min-height: 44px;
+      max-height: 120px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+
+    #message-input:focus {
+      border-color: #c9a84c;
+      box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.1);
+    }
+
+    #message-input.glow {
+      animation: input-glow 0.5s;
+    }
+
+    @keyframes input-glow {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.1); }
+      50% { box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.4); }
+    }
+
+    .send-btn, .voice-btn {
+      padding: 12px 16px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 8px;
+      color: #c9a84c;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-btn:hover, .voice-btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .insights-section {
+      padding: 16px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    .insights-section h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: #c9a84c;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .token-counter {
+      font-size: 24px;
+      color: #c9a84c;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .token-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .topic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .topic-tag {
+      padding: 4px 8px;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 4px;
+      font-size: 10px;
+      color: #c9a84c;
+    }
+
+
+    .followup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .followup-item {
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+
+    .followup-item:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.4);
+    }
+
+    .notes-area {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-size: 12px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .notes-area:focus {
+      border-color: rgba(201, 168, 76, 0.4);
+    }
+
+    .timer-display {
+      font-size: 32px;
+      color: #aa44ff;
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .timer-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 8px;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 6px;
+      color: #c9a84c;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(201, 168, 76, 0.25);
+    }
+
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.visible {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(8, 15, 35, 0.95);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      color: #c9a84c;
+      margin-bottom: 16px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 6px;
+      color: #c9a84c;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .modal-btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+    }
+
+    .error-message {
+      padding: 14px 18px;
+      background: rgba(255, 68, 68, 0.1);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+      border-radius: 8px;
+      color: #ff4444;
+      font-size: 13px;
+      margin: 10px 0;
+    }
+
+    .retry-btn {
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: rgba(255, 68, 68, 0.2);
+      border: 1px solid rgba(255, 68, 68, 0.4);
+      border-radius: 4px;
+      color: #ff4444;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100% !important;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+      }
+      
+      .sidebar-right {
+        border-left: none;
+        border-top: 1px solid rgba(201, 168, 76, 0.25);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  
+  <div class="container">
+    <!-- Left Sidebar -->
+    <div class="sidebar sidebar-left">
+      <h3>DOMAINS</h3>
+      <div id="domain-list"></div>
+      
+      <h3 style="margin-top: 20px;">CONVERSATION HISTORY</h3>
+      <div class="history-section" id="history-list"></div>
+      
+      <button class="new-session-btn" id="new-session-btn">+ New Session</button>
+    </div>
+    
+    <!-- Center Panel -->
+    <div class="center-panel">
+      <div class="oracle-header">
+        <svg class="oracle-sigil" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#c9a84c;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#8b7332;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <polygon points="50,5 93,25 93,75 50,95 7,75 7,25" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+          <ellipse cx="50" cy="50" rx="20" ry="12" fill="url(#goldGradient)"/>
+          <circle cx="50" cy="50" r="6" fill="#050812"/>
+          <path d="M 30 50 Q 30 40, 50 40 Q 70 40, 70 50" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+          <path d="M 30 50 Q 30 60, 50 60 Q 70 60, 70 50" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+        </svg>
+        <div class="oracle-title">THE ORACLE</div>
+        <div class="oracle-subtitle">Ancient Intelligence • Socratic Tutor • Knowledge Weaver</div>
+      </div>
+      
+      <div class="top-bar">
+        <div class="badge" id="domain-badge">General Knowledge</div>
+        <div class="badge">llama-3.3-70b</div>
+        <button class="challenge-btn" id="challenge-btn">⚡ Challenge Me</button>
+      </div>
+      
+      <div class="chat-area" id="chat-area"></div>
+      
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea id="message-input" placeholder="Ask the Oracle anything..." rows="1"></textarea>
+        </div>
+        <button class="voice-btn" title="Voice input (coming soon)">🎤</button>
+        <button class="send-btn" id="send-btn">→</button>
+      </div>
+    </div>
+
+    
+    <!-- Right Sidebar -->
+    <div class="sidebar sidebar-right">
+      <h3>SESSION INSIGHTS</h3>
+      
+      <div class="insights-section">
+        <h4>Tokens Used</h4>
+        <div class="token-counter" id="token-counter">0</div>
+        <div class="token-label">estimated tokens this session</div>
+      </div>
+      
+      <div class="insights-section">
+        <h4>Topics Covered</h4>
+        <div class="topic-tags" id="topic-tags"></div>
+      </div>
+      
+      <div class="insights-section">
+        <h4>Suggested Follow-ups</h4>
+        <div class="followup-list" id="followup-list"></div>
+      </div>
+      
+      <div class="insights-section" id="timer-section" style="display: none;">
+        <h4>Challenge Timer</h4>
+        <div class="timer-display" id="timer-display">5:00</div>
+        <div class="timer-label">Time remaining</div>
+      </div>
+      
+      <div class="insights-section">
+        <h4>Mastery Notes</h4>
+        <textarea class="notes-area" id="notes-area" placeholder="Jot down insights..."></textarea>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="action-btn" id="save-btn">💾 Save</button>
+        <button class="action-btn" id="export-btn">📥 Export</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- API Key Setup Modal -->
+  <div class="modal" id="api-modal">
+    <div class="modal-content">
+      <div class="modal-title">🔮 Oracle Configuration</div>
+      <p style="margin-bottom: 16px; font-size: 14px; color: rgba(255,255,255,0.7);">
+        Enter your Groq API key to awaken the Oracle. Get your free key at 
+        <a href="https://console.groq.com" target="_blank" style="color: #c9a84c;">console.groq.com</a>
+      </p>
+      <input type="text" class="modal-input" id="api-key-input" placeholder="gsk_...">
+      <button class="modal-btn" id="save-api-btn">Activate Oracle</button>
+    </div>
+  </div>
+
+  <script>
+    // ========== CONFIGURATION ==========
+    const CONFIG = {
+      groqApiKey: localStorage.getItem('codex_groq_key') || '',
+      model: 'llama-3.3-70b-versatile',
+      maxTokens: 1024,
+      temperature: 0.7
+    };
+
+    
+    // ========== DOMAINS ==========
+    const domains = [
+      { id: 1, name: 'Mathematics', icon: '∑' },
+      { id: 2, name: 'Computer Science', icon: '💻' },
+      { id: 3, name: 'AI & Machine Learning', icon: '🤖' },
+      { id: 4, name: 'Physics & Engineering', icon: '⚛️' },
+      { id: 5, name: 'Philosophy', icon: '🏛️' },
+      { id: 6, name: 'Economics & Finance', icon: '📈' },
+      { id: 7, name: 'Language & Communication', icon: '💬' },
+      { id: 8, name: 'Biology & Life Sciences', icon: '🧬' },
+      { id: 9, name: 'Psychology', icon: '🧠' },
+      { id: 10, name: 'Strategy & Systems', icon: '♟️' }
+    ];
+    
+    // ========== STATE ==========
+    let activeDomain = null;
+    let conversationHistory = [];
+    let isWaitingForResponse = false;
+    let challengeTimer = null;
+    let challengeTimeRemaining = 300; // 5 minutes
+    let totalTokens = 0;
+    let topicSet = new Set();
+    
+    // ========== SYSTEM PROMPT ==========
+    function getSystemPrompt() {
+      const domainName = activeDomain ? activeDomain.name : 'General Knowledge';
+      return {
+        role: 'system',
+        content: `You are the Oracle — the ancient intelligence at the heart of Lekhan's Omniversal Codex. You are a Socratic tutor of supreme depth across all 10 domains of knowledge: Mathematics, Computer Science, AI/ML, Physics, Philosophy, Economics, Language, Biology, Psychology, and Strategy.
+
+Current active domain: ${domainName}
+
+Your principles:
+1. Always teach through questions first before giving answers
+2. Connect every concept back to its domain fundamentals
+3. Find and state connections to at least one other domain in every response
+4. Use concrete examples, thought experiments, and analogies
+5. Be concise but never shallow — depth over length
+6. End every response with one powerful follow-up question to deepen thinking
+7. If asked something outside the 10 domains, redirect wisely
+
+Tone: wise, calm, precise, occasionally poetic. Never robotic.`
+      };
+    }
+    
+    // ========== STARFIELD BACKGROUND ==========
+    const starfield = document.getElementById('starfield');
+    const ctx = starfield.getContext('2d');
+    starfield.width = window.innerWidth;
+    starfield.height = window.innerHeight;
+    
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: Math.random() * starfield.width,
+        y: Math.random() * starfield.height,
+        radius: Math.random() * 1.5,
+        opacity: Math.random() * 0.5 + 0.3,
+        twinkleSpeed: Math.random() * 0.02 + 0.01
+      });
+    }
+
+    
+    // Nebula blobs
+    const blobs = [];
+    for (let i = 0; i < 4; i++) {
+      blobs.push({
+        x: Math.random() * starfield.width,
+        y: Math.random() * starfield.height,
+        points: Array(8).fill(0).map(() => ({
+          angle: Math.random() * Math.PI * 2,
+          radius: 100 + Math.random() * 100,
+          speed: (Math.random() - 0.5) * 0.001
+        })),
+        color: `rgba(${Math.random() * 50}, ${Math.random() * 30 + 10}, ${Math.random() * 50 + 20}, 0.15)`,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1
+      });
+    }
+    
+    function animateStarfield() {
+      ctx.fillStyle = '#050812';
+      ctx.fillRect(0, 0, starfield.width, starfield.height);
+      
+      // Draw blobs
+      blobs.forEach(blob => {
+        ctx.beginPath();
+        blob.points.forEach((point, i) => {
+          point.angle += point.speed;
+          const x = blob.x + Math.cos(point.angle) * point.radius;
+          const y = blob.y + Math.sin(point.angle) * point.radius;
+          
+          if (i === 0) ctx.moveTo(x, y);
+          else {
+            const prevPoint = blob.points[i - 1];
+            const prevX = blob.x + Math.cos(prevPoint.angle) * prevPoint.radius;
+            const prevY = blob.y + Math.sin(prevPoint.angle) * prevPoint.radius;
+            const cpX = (prevX + x) / 2;
+            const cpY = (prevY + y) / 2;
+            ctx.quadraticCurveTo(prevX, prevY, cpX, cpY);
+          }
+        });
+        ctx.closePath();
+        ctx.fillStyle = blob.color;
+        ctx.fill();
+        
+        blob.x += blob.vx;
+        blob.y += blob.vy;
+        
+        if (blob.x < -200 || blob.x > starfield.width + 200) blob.vx *= -1;
+        if (blob.y < -200 || blob.y > starfield.height + 200) blob.vy *= -1;
+      });
+      
+      // Draw stars
+      stars.forEach(star => {
+        star.opacity += (Math.random() - 0.5) * star.twinkleSpeed;
+        star.opacity = Math.max(0.1, Math.min(0.8, star.opacity));
+        
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      
+      requestAnimationFrame(animateStarfield);
+    }
+    
+    animateStarfield();
+
+    
+    window.addEventListener('resize', () => {
+      starfield.width = window.innerWidth;
+      starfield.height = window.innerHeight;
+    });
+    
+    // ========== INITIALIZATION ==========
+    function init() {
+      // Check API key
+      if (!CONFIG.groqApiKey) {
+        document.getElementById('api-modal').classList.add('visible');
+      }
+      
+      // Render domains
+      const domainList = document.getElementById('domain-list');
+      domains.forEach(domain => {
+        const item = document.createElement('div');
+        item.className = 'domain-item';
+        item.innerHTML = `
+          <div class="domain-icon">${domain.icon}</div>
+          <div>${domain.name}</div>
+        `;
+        item.addEventListener('click', () => selectDomain(domain));
+        domainList.appendChild(item);
+      });
+      
+      // Load history
+      loadHistory();
+      
+      // Load notes
+      const savedNotes = localStorage.getItem('oracle_notes');
+      if (savedNotes) {
+        document.getElementById('notes-area').value = savedNotes;
+      }
+      
+      // Initialize conversation
+      conversationHistory = [getSystemPrompt()];
+    }
+    
+    // ========== DOMAIN SELECTION ==========
+    function selectDomain(domain) {
+      // Update active domain
+      const previousDomain = activeDomain;
+      activeDomain = domain;
+      
+      // Update UI
+      document.querySelectorAll('.domain-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.target.closest('.domain-item').classList.add('active');
+      
+      document.getElementById('domain-badge').textContent = domain.name;
+      
+      // Update system prompt
+      conversationHistory[0] = getSystemPrompt();
+      
+      // Send transition message if switching mid-conversation
+      if (previousDomain && conversationHistory.length > 1) {
+        addOracleMessage(`The lens shifts to ${domain.name}. What aspect calls to you?`);
+      }
+      
+      // Update follow-ups
+      updateFollowups();
+    }
+    
+    // ========== API KEY SETUP ==========
+    document.getElementById('save-api-btn').addEventListener('click', () => {
+      const key = document.getElementById('api-key-input').value.trim();
+      if (key) {
+        CONFIG.groqApiKey = key;
+        localStorage.setItem('codex_groq_key', key);
+        document.getElementById('api-modal').classList.remove('visible');
+      }
+    });
+
+    
+    // ========== MESSAGE HANDLING ==========
+    function addUserMessage(text) {
+      const chatArea = document.getElementById('chat-area');
+      const message = document.createElement('div');
+      message.className = 'message user';
+      message.innerHTML = `
+        <div class="message-content">${escapeHtml(text)}</div>
+      `;
+      chatArea.appendChild(message);
+      chatArea.scrollTop = chatArea.scrollHeight;
+      
+      conversationHistory.push({ role: 'user', content: text });
+      
+      // Trim history if too long
+      if (conversationHistory.length > 21) {
+        conversationHistory.splice(1, 2);
+      }
+      
+      updateTokenCount();
+    }
+    
+    function addOracleMessage(text, isChallenge = false) {
+      const chatArea = document.getElementById('chat-area');
+      const message = document.createElement('div');
+      message.className = 'message oracle';
+      
+      const formattedText = formatOracleMessage(text);
+      const concepts = extractConcepts(text);
+      
+      message.innerHTML = `
+        <div class="message-avatar">
+          <svg viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="17" fill="rgba(68,136,255,0.2)" stroke="#4488ff" stroke-width="1"/>
+            <ellipse cx="18" cy="18" rx="8" ry="5" fill="#4488ff"/>
+            <circle cx="18" cy="18" r="3" fill="#050812"/>
+          </svg>
+        </div>
+        <div>
+          ${isChallenge ? '<div class="challenge-badge">⚡ CHALLENGE</div>' : ''}
+          <div class="message-content">
+            ${formattedText}
+            ${concepts.length > 0 ? `
+              <div class="concept-tags">
+                ${concepts.map(c => `<div class="concept-tag" onclick="explainConcept('${c}')">${c}</div>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      chatArea.appendChild(message);
+      
+      // Animate words
+      const words = message.querySelectorAll('.message-content')[0].childNodes;
+      let delay = 0;
+      words.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent;
+          const span = document.createElement('span');
+          span.style.opacity = '0';
+          span.textContent = text;
+          node.replaceWith(span);
+          setTimeout(() => {
+            span.style.transition = 'opacity 0.2s';
+            span.style.opacity = '1';
+          }, delay);
+          delay += 20;
+        }
+      });
+      
+      chatArea.scrollTop = chatArea.scrollHeight;
+      
+      conversationHistory.push({ role: 'assistant', content: text });
+      
+      // Extract topics
+      extractTopics(text);
+      updateFollowups();
+      updateTokenCount();
+    }
+
+    
+    function showTypingIndicator() {
+      const chatArea = document.getElementById('chat-area');
+      const indicator = document.createElement('div');
+      indicator.className = 'message oracle';
+      indicator.id = 'typing-indicator';
+      indicator.innerHTML = `
+        <div class="message-avatar">
+          <svg viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="17" fill="rgba(68,136,255,0.2)" stroke="#4488ff" stroke-width="1"/>
+            <ellipse cx="18" cy="18" rx="8" ry="5" fill="#4488ff"/>
+            <circle cx="18" cy="18" r="3" fill="#050812"/>
+          </svg>
+        </div>
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      chatArea.appendChild(indicator);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+    
+    function hideTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+    
+    function showError(message, retryFn) {
+      const chatArea = document.getElementById('chat-area');
+      const error = document.createElement('div');
+      error.className = 'error-message';
+      error.innerHTML = `
+        <div>⚠️ ${message}</div>
+        ${retryFn ? '<button class="retry-btn" onclick="' + retryFn + '">Retry</button>' : ''}
+      `;
+      chatArea.appendChild(error);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+    
+    // ========== API CALL ==========
+    async function sendToOracle(userMessage) {
+      if (isWaitingForResponse) return;
+      if (!CONFIG.groqApiKey) {
+        document.getElementById('api-modal').classList.add('visible');
+        return;
+      }
+      
+      isWaitingForResponse = true;
+      document.getElementById('send-btn').disabled = true;
+      
+      addUserMessage(userMessage);
+      showTypingIndicator();
+      
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${CONFIG.groqApiKey}`
+          },
+          body: JSON.stringify({
+            model: CONFIG.model,
+            max_tokens: CONFIG.maxTokens,
+            temperature: CONFIG.temperature,
+            messages: conversationHistory
+          })
+        });
+
+        
+        hideTypingIndicator();
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error?.message || `API Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const oracleResponse = data.choices[0].message.content;
+        
+        addOracleMessage(oracleResponse);
+        
+      } catch (error) {
+        hideTypingIndicator();
+        showError(error.message, 'retryLastMessage()');
+        console.error('Oracle error:', error);
+      } finally {
+        isWaitingForResponse = false;
+        document.getElementById('send-btn').disabled = false;
+      }
+    }
+    
+    function retryLastMessage() {
+      if (conversationHistory.length > 1) {
+        const lastUserMessage = conversationHistory[conversationHistory.length - 1];
+        if (lastUserMessage.role === 'user') {
+          conversationHistory.pop();
+          sendToOracle(lastUserMessage.content);
+        }
+      }
+    }
+    
+    // ========== CHALLENGE MODE ==========
+    document.getElementById('challenge-btn').addEventListener('click', async () => {
+      const domainName = activeDomain ? activeDomain.name : 'general knowledge';
+      const challengePrompt = `Generate one hard, thought-provoking question about ${domainName} that requires deep reasoning to answer. Just the question, nothing else.`;
+      
+      if (isWaitingForResponse) return;
+      
+      isWaitingForResponse = true;
+      showTypingIndicator();
+      
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${CONFIG.groqApiKey}`
+          },
+          body: JSON.stringify({
+            model: CONFIG.model,
+            max_tokens: 200,
+            temperature: 0.9,
+            messages: [
+              getSystemPrompt(),
+              { role: 'user', content: challengePrompt }
+            ]
+          })
+        });
+        
+        hideTypingIndicator();
+        
+        if (!response.ok) throw new Error('Challenge generation failed');
+        
+        const data = await response.json();
+        const challenge = data.choices[0].message.content;
+        
+        addOracleMessage(challenge, true);
+        startChallengeTimer();
+        
+      } catch (error) {
+        hideTypingIndicator();
+        showError('Failed to generate challenge', null);
+      } finally {
+        isWaitingForResponse = false;
+      }
+    });
+
+    
+    function startChallengeTimer() {
+      challengeTimeRemaining = 300;
+      document.getElementById('timer-section').style.display = 'block';
+      updateTimerDisplay();
+      
+      if (challengeTimer) clearInterval(challengeTimer);
+      
+      challengeTimer = setInterval(() => {
+        challengeTimeRemaining--;
+        updateTimerDisplay();
+        
+        if (challengeTimeRemaining <= 0) {
+          clearInterval(challengeTimer);
+          playBellSound();
+          addOracleMessage("Time is up — what is your answer?");
+          document.getElementById('timer-section').style.display = 'none';
+        }
+      }, 1000);
+    }
+    
+    function updateTimerDisplay() {
+      const minutes = Math.floor(challengeTimeRemaining / 60);
+      const seconds = challengeTimeRemaining % 60;
+      document.getElementById('timer-display').textContent = 
+        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    function playBellSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 1);
+    }
+    
+    // ========== MESSAGE FORMATTING ==========
+    function formatOracleMessage(text) {
+      // Code blocks
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+        return `<div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>${escapeHtml(code.trim())}</code></pre>
+        </div>`;
+      });
+      
+      // Inline code
+      text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
+      // Bold
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      
+      // Italic
+      text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      
+      // Line breaks
+      text = text.replace(/\n/g, '<br>');
+      
+      return text;
+    }
+
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent;
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+    
+    function extractConcepts(text) {
+      const regex = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g;
+      const matches = text.match(regex) || [];
+      return [...new Set(matches)].slice(0, 5);
+    }
+    
+    function explainConcept(concept) {
+      const input = document.getElementById('message-input');
+      input.value = `Explain ${concept} in depth`;
+      sendMessage();
+    }
+    
+    // ========== TOPICS & INSIGHTS ==========
+    function extractTopics(text) {
+      const keywords = [
+        'algorithm', 'data', 'function', 'system', 'theory', 'model', 'process',
+        'structure', 'pattern', 'principle', 'concept', 'method', 'approach',
+        'framework', 'strategy', 'analysis', 'synthesis', 'optimization'
+      ];
+      
+      keywords.forEach(keyword => {
+        if (text.toLowerCase().includes(keyword)) {
+          topicSet.add(keyword);
+        }
+      });
+      
+      const topicTags = document.getElementById('topic-tags');
+      topicTags.innerHTML = '';
+      [...topicSet].slice(0, 10).forEach(topic => {
+        const tag = document.createElement('div');
+        tag.className = 'topic-tag';
+        tag.textContent = topic;
+        topicTags.appendChild(tag);
+      });
+    }
+    
+    function updateFollowups() {
+      const followupList = document.getElementById('followup-list');
+      followupList.innerHTML = '';
+      
+      const followups = getFollowupsForDomain(activeDomain);
+      followups.forEach(question => {
+        const item = document.createElement('div');
+        item.className = 'followup-item';
+        item.textContent = question;
+        item.addEventListener('click', () => {
+          document.getElementById('message-input').value = question;
+          sendMessage();
+        });
+        followupList.appendChild(item);
+      });
+    }
+
+    
+    function getFollowupsForDomain(domain) {
+      const allFollowups = {
+        1: [
+          "How does this connect to real-world applications?",
+          "What's the underlying mathematical structure?",
+          "Can you prove this rigorously?"
+        ],
+        2: [
+          "What's the time complexity?",
+          "How would you implement this?",
+          "What are the trade-offs?"
+        ],
+        3: [
+          "How does this model learn?",
+          "What are the limitations?",
+          "How would you evaluate performance?"
+        ],
+        4: [
+          "What's the physical intuition?",
+          "How does this scale?",
+          "What are the engineering constraints?"
+        ],
+        5: [
+          "What are the ethical implications?",
+          "How does this relate to human nature?",
+          "What would the counterargument be?"
+        ],
+        6: [
+          "What are the market dynamics?",
+          "How does incentive structure affect this?",
+          "What's the long-term impact?"
+        ],
+        7: [
+          "How does context change meaning?",
+          "What's the cultural significance?",
+          "How would you communicate this clearly?"
+        ],
+        8: [
+          "What's the evolutionary advantage?",
+          "How does this system maintain homeostasis?",
+          "What happens when this fails?"
+        ],
+        9: [
+          "What cognitive biases are at play?",
+          "How does this affect behavior?",
+          "What's the neurological basis?"
+        ],
+        10: [
+          "What's the strategic framework?",
+          "How do you optimize for multiple objectives?",
+          "What are the second-order effects?"
+        ]
+      };
+      
+      const domainId = domain ? domain.id : 1;
+      const questions = allFollowups[domainId] || allFollowups[1];
+      
+      // Shuffle and return 3
+      return questions.sort(() => Math.random() - 0.5).slice(0, 3);
+    }
+    
+    function updateTokenCount() {
+      let totalChars = 0;
+      conversationHistory.forEach(msg => {
+        totalChars += msg.content.length;
+      });
+      totalTokens = Math.ceil(totalChars / 4);
+      document.getElementById('token-counter').textContent = totalTokens.toLocaleString();
+    }
+
+    
+    // ========== SESSION MANAGEMENT ==========
+    function saveSession() {
+      const timestamp = Date.now();
+      const firstMessage = conversationHistory.find(m => m.role === 'user')?.content || 'New conversation';
+      const preview = firstMessage.substring(0, 50);
+      
+      const session = {
+        timestamp,
+        preview,
+        domain: activeDomain?.name || 'General',
+        history: conversationHistory,
+        topics: [...topicSet]
+      };
+      
+      localStorage.setItem(`oracle_session_${timestamp}`, JSON.stringify(session));
+      loadHistory();
+      alert('Session saved!');
+    }
+    
+    function loadHistory() {
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '';
+      
+      const sessions = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('oracle_session_')) {
+          const session = JSON.parse(localStorage.getItem(key));
+          sessions.push({ key, ...session });
+        }
+      }
+      
+      sessions.sort((a, b) => b.timestamp - a.timestamp);
+      sessions.slice(0, 10).forEach(session => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        const date = new Date(session.timestamp).toLocaleDateString();
+        item.innerHTML = `
+          <div class="history-date">${date} • ${session.domain}</div>
+          <div>${session.preview}...</div>
+        `;
+        item.addEventListener('click', () => loadSession(session.key));
+        historyList.appendChild(item);
+      });
+    }
+    
+    function loadSession(key) {
+      const session = JSON.parse(localStorage.getItem(key));
+      if (!session) return;
+      
+      // Clear current chat
+      document.getElementById('chat-area').innerHTML = '';
+      
+      // Load history
+      conversationHistory = session.history;
+      topicSet = new Set(session.topics || []);
+      
+      // Render messages
+      conversationHistory.slice(1).forEach(msg => {
+        if (msg.role === 'user') {
+          addUserMessage(msg.content);
+        } else {
+          addOracleMessage(msg.content);
+        }
+      });
+      
+      // Update domain
+      const domain = domains.find(d => d.name === session.domain);
+      if (domain) selectDomain(domain);
+      
+      updateTokenCount();
+      extractTopics(conversationHistory.map(m => m.content).join(' '));
+    }
+
+    
+    function exportSession() {
+      let text = '=== ORACLE SESSION ===\n\n';
+      text += `Domain: ${activeDomain?.name || 'General'}\n`;
+      text += `Date: ${new Date().toLocaleString()}\n`;
+      text += `Tokens: ${totalTokens}\n\n`;
+      text += '=== CONVERSATION ===\n\n';
+      
+      conversationHistory.slice(1).forEach(msg => {
+        const role = msg.role === 'user' ? 'YOU' : 'ORACLE';
+        text += `${role}:\n${msg.content}\n\n`;
+      });
+      
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `oracle-session-${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    function newSession() {
+      if (conversationHistory.length > 1) {
+        if (!confirm('Start a new session? Current conversation will be lost if not saved.')) {
+          return;
+        }
+      }
+      
+      document.getElementById('chat-area').innerHTML = '';
+      conversationHistory = [getSystemPrompt()];
+      topicSet.clear();
+      totalTokens = 0;
+      
+      document.getElementById('topic-tags').innerHTML = '';
+      document.getElementById('token-counter').textContent = '0';
+      
+      if (challengeTimer) {
+        clearInterval(challengeTimer);
+        document.getElementById('timer-section').style.display = 'none';
+      }
+    }
+    
+    // ========== INPUT HANDLING ==========
+    const messageInput = document.getElementById('message-input');
+    
+    messageInput.addEventListener('input', () => {
+      messageInput.style.height = 'auto';
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+    });
+    
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text || isWaitingForResponse) return;
+      
+      sendToOracle(text);
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+      
+      // Glow effect
+      messageInput.classList.add('glow');
+      setTimeout(() => messageInput.classList.remove('glow'), 500);
+    }
+    
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+    
+    // ========== NOTES AUTO-SAVE ==========
+    const notesArea = document.getElementById('notes-area');
+    let notesTimeout;
+    
+    notesArea.addEventListener('input', () => {
+      clearTimeout(notesTimeout);
+      notesTimeout = setTimeout(() => {
+        localStorage.setItem('oracle_notes', notesArea.value);
+      }, 500);
+    });
+    
+    // ========== KEYBOARD SHORTCUTS ==========
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+K - Focus input
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        messageInput.focus();
+        messageInput.select();
+      }
+      
+      // Ctrl+1 through Ctrl+0 - Switch domains
+      if (e.ctrlKey && e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const index = parseInt(e.key) - 1;
+        if (domains[index]) {
+          selectDomain(domains[index]);
+        }
+      }
+      
+      if (e.ctrlKey && e.key === '0') {
+        e.preventDefault();
+        if (domains[9]) {
+          selectDomain(domains[9]);
+        }
+      }
+    });
+    
+    // ========== BUTTON HANDLERS ==========
+    document.getElementById('new-session-btn').addEventListener('click', newSession);
+    document.getElementById('save-btn').addEventListener('click', saveSession);
+    document.getElementById('export-btn').addEventListener('click', exportSession);
+    
+    // ========== INITIALIZE ==========
+    init();
+  </script>
+</body>
+</html>
