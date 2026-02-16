@@ -15,39 +15,47 @@ export const domains: Domain[] = [
     subdomains: [
       {
         title: "Biomechanics & Movement Science",
-        points: ["Human anatomy", "Functional joint mechanics", "Movement patterns", "Gait cycle analysis", "Kinetic chain optimization", "Center of gravity control", "Biotensegrity theory"]
+        points: ["Human anatomy", "Functional joint mechanics", "Movement patterns", "Gait cycle analysis", "Kinetic chain optimization", "Center of gravity control", "Biotensegrity theory", "Force vectors", "Torque mechanics", "Lever systems", "Muscle fiber types", "Fascia networks", "Proprioception", "Vestibular system", "Motor unit recruitment", "Stretch-shortening cycle"]
       },
       {
         title: "Strength & Power Engineering",
-        points: ["Progressive overload systems", "Maximal strength training", "Explosive power development", "Plyometrics", "Isometrics", "Tendon strength conditioning"]
+        points: ["Progressive overload systems", "Maximal strength training", "Explosive power development", "Plyometrics", "Isometrics", "Tendon strength conditioning", "Olympic lifting", "Powerlifting techniques", "Strongman training", "Calisthenics progressions", "Eccentric training", "Cluster sets", "Wave loading", "Contrast training", "Rate of force development"]
       },
       {
         title: "Endurance & Conditioning",
-        points: ["Cardiovascular endurance", "VO2 max training", "Sprint mechanics", "Metabolic conditioning (MetCon)", "Respiratory control training"]
+        points: ["Cardiovascular endurance", "VO2 max training", "Sprint mechanics", "Metabolic conditioning (MetCon)", "Respiratory control training", "Lactate threshold", "Aerobic base building", "HIIT protocols", "Tabata training", "Fartlek training", "Zone training", "Heart rate variability", "Recovery protocols", "Altitude training", "Energy system development"]
       },
       {
         title: "Mobility, Flexibility & Joint Freedom",
-        points: ["Dynamic mobility", "Loaded stretching", "Joint decompression", "Movement flow systems", "Spinal mobility"]
+        points: ["Dynamic mobility", "Loaded stretching", "Joint decompression", "Movement flow systems", "Spinal mobility", "Hip mobility drills", "Shoulder mobility", "Ankle mobility", "Thoracic spine extension", "PNF stretching", "Active isolated stretching", "Myofascial release", "Joint capsule work", "End-range strength", "Controlled articular rotations"]
       },
       {
         title: "Tactical Combat Systems",
-        points: ["Reaction speed training", "Distance management", "Fight IQ", "Tactical feints", "Combat footwork theory", "Pressure control"]
+        points: ["Reaction speed training", "Distance management", "Fight IQ", "Tactical feints", "Combat footwork theory", "Pressure control", "Angles of attack", "Defensive positioning", "Counter-fighting", "Ring generalship", "Cage control", "Timing development", "Rhythm disruption", "Entry strategies", "Exit strategies", "Combination building"]
       },
       {
         title: "Striking Arts",
-        points: ["Boxing mechanics", "Muay Thai striking", "Karate striking science", "Wing Chun chain punching", "Power generation physics"]
+        points: ["Boxing mechanics", "Muay Thai striking", "Karate striking science", "Wing Chun chain punching", "Power generation physics", "Kickboxing", "Savate", "Taekwondo kicking", "Elbow strikes", "Knee strikes", "Head movement", "Slip and roll", "Parrying", "Blocking systems", "Counter-punching", "Body mechanics", "Hip rotation", "Weight transfer"]
       },
       {
         title: "Grappling & Control Arts",
-        points: ["Brazilian Jiu-Jitsu", "Wrestling takedowns", "Judo throwing systems", "Ground control", "Leverage-based submissions"]
+        points: ["Brazilian Jiu-Jitsu", "Wrestling takedowns", "Judo throwing systems", "Ground control", "Leverage-based submissions", "Sambo techniques", "Catch wrestling", "Greco-Roman wrestling", "Freestyle wrestling", "Guard passing", "Sweep mechanics", "Escape systems", "Positional hierarchy", "Submission chains", "Pressure passing", "Leg locks", "Chokes and strangles"]
       },
       {
         title: "Weapons Systems",
-        points: ["Bladed weapons", "Staff & stick arts", "Tactical weapon retention", "Disarm mechanics"]
+        points: ["Bladed weapons", "Staff & stick arts", "Tactical weapon retention", "Disarm mechanics", "Knife fighting", "Sword techniques", "Spear combat", "Nunchaku", "Kali/Escrima", "Kendo", "Fencing", "Weapon transitions", "Improvised weapons", "Defensive tactics", "Range management with weapons"]
       },
       {
         title: "Combat Psychology",
-        points: ["Threat response control", "Adrenaline management", "Fight mindset", "Flow state induction", "Cognitive reaction conditioning"]
+        points: ["Threat response control", "Adrenaline management", "Fight mindset", "Flow state induction", "Cognitive reaction conditioning", "Fear management", "Aggression control", "Visualization techniques", "Mental rehearsal", "Stress inoculation", "Confidence building", "Killer instinct", "Situational awareness", "Pre-fight preparation", "Post-fight analysis"]
+      },
+      {
+        title: "Recovery & Injury Prevention",
+        points: ["Active recovery", "Sleep optimization", "Nutrition timing", "Hydration strategies", "Foam rolling", "Stretching protocols", "Ice baths", "Contrast therapy", "Massage therapy", "Physical therapy", "Injury assessment", "Rehabilitation protocols", "Prehabilitation", "Movement screening", "Load management"]
+      },
+      {
+        title: "Athletic Performance Nutrition",
+        points: ["Macronutrient timing", "Protein synthesis", "Carb loading", "Fat adaptation", "Supplement science", "Pre-workout nutrition", "Post-workout nutrition", "Hydration science", "Electrolyte balance", "Performance enhancing foods", "Anti-inflammatory diet", "Gut health", "Micronutrients", "Meal planning", "Body composition"]
       }
     ],
     advancedLayers: [
@@ -80,31 +88,43 @@ export const domains: Domain[] = [
     subdomains: [
       {
         title: "Memory Systems",
-        points: ["Working memory", "Long-term memory", "Encoding mechanisms", "Memory distortions", "Neural substrates (hippocampus)"]
+        points: ["Working memory", "Long-term memory", "Encoding mechanisms", "Memory distortions", "Neural substrates (hippocampus)", "Episodic memory", "Semantic memory", "Procedural memory", "Implicit memory", "Explicit memory", "Memory consolidation", "Memory retrieval", "Forgetting curves", "Memory palace technique", "Mnemonics", "Interference theory", "Context-dependent memory"]
       },
       {
         title: "Attention & Focus Architecture",
-        points: ["Selective attention", "Deep work states", "Executive control", "Cognitive load", "Flow state triggers"]
+        points: ["Selective attention", "Deep work states", "Executive control", "Cognitive load", "Flow state triggers", "Sustained attention", "Divided attention", "Attention switching", "Mindfulness meditation", "Concentration training", "Distraction management", "Attention restoration", "Vigilance", "Mental fatigue", "Cognitive endurance"]
       },
       {
         title: "Perception Systems",
-        points: ["Visual perception", "Pattern recognition", "Top-down vs bottom-up processing", "Gestalt principles"]
+        points: ["Visual perception", "Pattern recognition", "Top-down vs bottom-up processing", "Gestalt principles", "Auditory perception", "Tactile perception", "Multisensory integration", "Perceptual illusions", "Object recognition", "Face recognition", "Motion perception", "Depth perception", "Color perception", "Perceptual learning", "Sensory adaptation"]
       },
       {
         title: "Learning & Skill Acquisition",
-        points: ["Schema formation", "Chunking", "Spaced repetition", "Neural plasticity", "Transfer of learning"]
+        points: ["Schema formation", "Chunking", "Spaced repetition", "Neural plasticity", "Transfer of learning", "Deliberate practice", "Interleaving", "Retrieval practice", "Elaborative rehearsal", "Metacognition", "Learning styles", "Mastery learning", "Scaffolding", "Zone of proximal development", "Feedback loops", "Error correction"]
       },
       {
         title: "Decision-Making & Reasoning",
-        points: ["Logic-based reasoning", "Heuristics & biases", "Game theory cognition", "Bayesian decision-making"]
+        points: ["Logic-based reasoning", "Heuristics & biases", "Game theory cognition", "Bayesian decision-making", "Deductive reasoning", "Inductive reasoning", "Abductive reasoning", "Critical thinking", "Problem-solving strategies", "Decision trees", "Cost-benefit analysis", "Risk assessment", "Probability judgment", "Causal reasoning", "Analogical reasoning"]
       },
       {
         title: "Intelligence Frameworks",
-        points: ["Fluid vs crystallized intelligence", "Computational intelligence", "Metacognition", "Creativity & divergent thinking"]
+        points: ["Fluid vs crystallized intelligence", "Computational intelligence", "Metacognition", "Creativity & divergent thinking", "Convergent thinking", "Multiple intelligences", "Emotional intelligence", "Social intelligence", "Practical intelligence", "IQ testing", "Cognitive abilities", "Mental models", "Abstract reasoning", "Spatial intelligence", "Verbal intelligence"]
       },
       {
         title: "Cognitive Bias Architecture",
-        points: ["Confirmation bias", "Anchoring", "Loss aversion", "First-principles thinking", "Debiasing strategies"]
+        points: ["Confirmation bias", "Anchoring", "Loss aversion", "First-principles thinking", "Debiasing strategies", "Availability heuristic", "Representativeness heuristic", "Hindsight bias", "Dunning-Kruger effect", "Sunk cost fallacy", "Framing effects", "Status quo bias", "Overconfidence bias", "Fundamental attribution error", "Cognitive dissonance"]
+      },
+      {
+        title: "Neuroscience Fundamentals",
+        points: ["Brain anatomy", "Neuron structure", "Synaptic transmission", "Neurotransmitters", "Brain plasticity", "Neurogenesis", "Cortical organization", "Hemispheric specialization", "Brain imaging techniques", "EEG patterns", "fMRI studies", "Neural networks", "Brain development", "Cognitive aging", "Neurological disorders"]
+      },
+      {
+        title: "Language & Linguistics",
+        points: ["Syntax", "Semantics", "Pragmatics", "Phonology", "Morphology", "Language acquisition", "Bilingualism", "Language processing", "Reading comprehension", "Speech production", "Linguistic relativity", "Universal grammar", "Language disorders", "Psycholinguistics", "Neurolinguistics"]
+      },
+      {
+        title: "Consciousness & Awareness",
+        points: ["States of consciousness", "Self-awareness", "Metaconsciousness", "Altered states", "Sleep stages", "Dreams", "Meditation states", "Attention and consciousness", "Neural correlates", "Qualia", "Hard problem of consciousness", "Integrated information theory", "Global workspace theory", "Phenomenology", "Mindfulness"]
       }
     ],
     advancedLayers: [
@@ -130,12 +150,46 @@ export const domains: Domain[] = [
       "Software Engineering", "Digital Architecture", "UI/UX Mastery", "Cloud & Infrastructure", "Product Engineering", "HCI"
     ],
     subdomains: [
-      { title: "Programming Foundations", points: ["Algorithms", "Data structures", "Clean code", "Design patterns"] },
-      { title: "Frontend Development", points: ["React/Next.js", "TailwindCSS", "State management", "WebAssembly"] },
-      { title: "Backend Development", points: ["Microservices", "GraphQL/REST", "Database design", "Auth systems"] },
-      { title: "Cloud Computing", points: ["AWS/Azure", "Kubernetes", "Serverless", "Infrastructure-as-Code"] },
-      { title: "DevOps & Automation", points: ["CI/CD pipelines", "Containerization", "Observability", "SRE"] },
-      { title: "Security & Defense", points: ["Cryptography", "OWASP", "Identity management", "Secure coding"] }
+      { 
+        title: "Programming Foundations", 
+        points: ["Algorithms", "Data structures", "Clean code", "Design patterns", "Object-oriented programming", "Functional programming", "Recursion", "Big O notation", "Sorting algorithms", "Search algorithms", "Hash tables", "Trees and graphs", "Dynamic programming", "Greedy algorithms", "Bit manipulation"]
+      },
+      { 
+        title: "Frontend Development", 
+        points: ["React/Next.js", "TailwindCSS", "State management", "WebAssembly", "Vue.js", "Angular", "TypeScript", "JavaScript ES6+", "HTML5/CSS3", "Responsive design", "Progressive Web Apps", "Web animations", "Performance optimization", "Accessibility (a11y)", "SEO", "Browser APIs", "Web components"]
+      },
+      { 
+        title: "Backend Development", 
+        points: ["Microservices", "GraphQL/REST", "Database design", "Auth systems", "Node.js", "Python/Django", "Java/Spring", "Go", "API design", "Message queues", "Caching strategies", "Session management", "Rate limiting", "WebSockets", "Server-side rendering", "Background jobs"]
+      },
+      { 
+        title: "Cloud Computing", 
+        points: ["AWS/Azure", "Kubernetes", "Serverless", "Infrastructure-as-Code", "Google Cloud", "Docker", "Terraform", "Cloud storage", "Load balancing", "Auto-scaling", "CDN", "Cloud databases", "Lambda functions", "Cloud security", "Cost optimization", "Multi-cloud strategies"]
+      },
+      { 
+        title: "DevOps & Automation", 
+        points: ["CI/CD pipelines", "Containerization", "Observability", "SRE", "Jenkins", "GitHub Actions", "GitLab CI", "Monitoring tools", "Logging", "Alerting", "Infrastructure monitoring", "Application performance", "Chaos engineering", "Blue-green deployment", "Canary releases"]
+      },
+      { 
+        title: "Security & Defense", 
+        points: ["Cryptography", "OWASP", "Identity management", "Secure coding", "Penetration testing", "Vulnerability assessment", "SSL/TLS", "OAuth/JWT", "SQL injection prevention", "XSS protection", "CSRF tokens", "Security headers", "Encryption at rest", "Encryption in transit", "Zero trust architecture"]
+      },
+      {
+        title: "Database Systems",
+        points: ["SQL databases", "NoSQL databases", "PostgreSQL", "MongoDB", "Redis", "Database indexing", "Query optimization", "Transactions", "ACID properties", "CAP theorem", "Sharding", "Replication", "Database migrations", "ORMs", "Data modeling", "Time-series databases"]
+      },
+      {
+        title: "Mobile Development",
+        points: ["React Native", "Flutter", "Swift/iOS", "Kotlin/Android", "Mobile UI/UX", "Push notifications", "Offline-first apps", "Mobile security", "App store optimization", "Mobile testing", "Cross-platform development", "Native modules", "Mobile performance", "Gesture handling", "Mobile analytics"]
+      },
+      {
+        title: "UI/UX Design",
+        points: ["User research", "Wireframing", "Prototyping", "Design systems", "Figma/Sketch", "User flows", "Information architecture", "Interaction design", "Visual hierarchy", "Color theory", "Typography", "Usability testing", "A/B testing", "Design thinking", "Accessibility design"]
+      },
+      {
+        title: "Software Architecture",
+        points: ["System design", "Scalability patterns", "Distributed systems", "Event-driven architecture", "CQRS", "Domain-driven design", "Hexagonal architecture", "Clean architecture", "Monolith vs microservices", "Service mesh", "API gateway", "Circuit breakers", "Saga pattern", "Event sourcing", "Architecture documentation"]
+      }
     ],
     advancedLayers: [
       { name: "Coding Mastery", description: "Syntax, structures, problem-solving." },
@@ -158,12 +212,42 @@ export const domains: Domain[] = [
     icon: "Bot",
     pillars: ["Artificial Intelligence", "Machine Learning", "Robotics", "Automation", "Embedded Systems", "HRI"],
     subdomains: [
-      { title: "AI Foundations", points: ["Agents", "Search algorithms", "Game theory", "Knowledge representation"] },
-      { title: "Machine Learning", points: ["Supervised/Unsupervised", "Reinforcement learning", "Neural Networks", "Transformers"] },
-      { title: "Deep Learning", points: ["CNNs", "RNNs/LSTMs", "Diffusion models", "LLMs & Prompt Engineering"] },
-      { title: "Computer Vision", points: ["Object detection", "Segmentation", "3D reconstruction", "SLAM"] },
-      { title: "Robotics Engineering", points: ["Kinematics", "Trajectory planning", "Control systems (PID/MPC)", "Sensors"] },
-      { title: "Automation", points: ["PLC", "SCADA", "Industrial IOT", "Process automation"] }
+      { 
+        title: "AI Foundations", 
+        points: ["Agents", "Search algorithms", "Game theory", "Knowledge representation", "Expert systems", "Logic programming", "Planning algorithms", "Constraint satisfaction", "Adversarial search", "Heuristic functions", "A* algorithm", "Minimax", "Alpha-beta pruning", "Monte Carlo tree search", "Reasoning under uncertainty"]
+      },
+      { 
+        title: "Machine Learning", 
+        points: ["Supervised/Unsupervised", "Reinforcement learning", "Neural Networks", "Transformers", "Decision trees", "Random forests", "Support vector machines", "K-means clustering", "Principal component analysis", "Feature engineering", "Model evaluation", "Cross-validation", "Hyperparameter tuning", "Ensemble methods", "Transfer learning"]
+      },
+      { 
+        title: "Deep Learning", 
+        points: ["CNNs", "RNNs/LSTMs", "Diffusion models", "LLMs & Prompt Engineering", "GANs", "Autoencoders", "Attention mechanisms", "BERT", "GPT architecture", "Vision transformers", "ResNet", "U-Net", "Batch normalization", "Dropout", "Activation functions", "Backpropagation", "Gradient descent variants"]
+      },
+      { 
+        title: "Computer Vision", 
+        points: ["Object detection", "Segmentation", "3D reconstruction", "SLAM", "Image classification", "Face recognition", "Pose estimation", "Optical flow", "Feature extraction", "Edge detection", "Image preprocessing", "Data augmentation", "YOLO", "R-CNN", "Semantic segmentation", "Instance segmentation", "Depth estimation"]
+      },
+      { 
+        title: "Natural Language Processing", 
+        points: ["Text classification", "Named entity recognition", "Sentiment analysis", "Machine translation", "Question answering", "Text generation", "Tokenization", "Word embeddings", "Language models", "Seq2seq", "Attention", "BERT fine-tuning", "Prompt engineering", "Few-shot learning", "Zero-shot learning"]
+      },
+      { 
+        title: "Robotics Engineering", 
+        points: ["Kinematics", "Trajectory planning", "Control systems (PID/MPC)", "Sensors", "Inverse kinematics", "Forward kinematics", "Motion planning", "Path planning", "Obstacle avoidance", "Localization", "Mapping", "SLAM", "Robot operating system (ROS)", "Actuators", "End effectors", "Dynamics", "Force control"]
+      },
+      { 
+        title: "Automation", 
+        points: ["PLC", "SCADA", "Industrial IOT", "Process automation", "Ladder logic", "HMI design", "Sensor integration", "Actuator control", "Industrial protocols", "Modbus", "OPC", "Factory automation", "Robotic process automation", "Workflow automation", "Test automation"]
+      },
+      {
+        title: "Reinforcement Learning",
+        points: ["Q-learning", "Deep Q-networks", "Policy gradients", "Actor-critic", "PPO", "TRPO", "Multi-agent RL", "Model-based RL", "Reward shaping", "Exploration vs exploitation", "Markov decision processes", "Temporal difference learning", "Monte Carlo methods", "Value iteration", "Policy iteration"]
+      },
+      {
+        title: "AI Ethics & Safety",
+        points: ["Bias in AI", "Fairness", "Transparency", "Explainable AI", "AI alignment", "Safety constraints", "Adversarial robustness", "Privacy preservation", "Federated learning", "Differential privacy", "AI governance", "Responsible AI", "AI auditing", "Value alignment", "AI risk assessment"]
+      }
     ],
     tracks: [
       { name: "AI Engineer", description: "Deep learning, NLP, CV, models." },

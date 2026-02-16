@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { domains } from '../data';
 import { getIcon } from '../components/Icons';
-import { Search, Map, Quote, Calendar } from 'lucide-react';
-import ConstellationMap from '../components/ConstellationMap';
+import { Search, Quote } from 'lucide-react';
 import QuotesRotator from '../components/QuotesRotator';
-import WeeklyPlanner from '../components/WeeklyPlanner';
 
 const Home: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -93,15 +91,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Constellation Map */}
-      <section id="constellation" className="mb-16">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Map className="w-8 h-8 text-neon-purple" />
-          <h2 className="text-3xl font-bold text-neon-purple text-center font-mono">Domain Constellation Map</h2>
-        </div>
-        <ConstellationMap />
-      </section>
-
       {/* Quotes Rotator */}
       <section id="quotes" className="mb-16">
         <div className="flex items-center justify-center gap-3 mb-8">
@@ -111,15 +100,6 @@ const Home: React.FC = () => {
         <div className="bg-dark-card/50 rounded-xl border border-dark-border p-8">
           <QuotesRotator />
         </div>
-      </section>
-
-      {/* Weekly Planner */}
-      <section id="planner" className="mb-16">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Calendar className="w-8 h-8 text-neon-blue" />
-          <h2 className="text-3xl font-bold text-neon-blue text-center font-mono">Weekly Study Planner</h2>
-        </div>
-        <WeeklyPlanner />
       </section>
     </div>
   );
