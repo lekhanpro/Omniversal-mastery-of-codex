@@ -36,14 +36,24 @@ const Arena: React.FC = () => {
   const domainNames = [
     "Physical Mastery",
     "Mind & Cognition",
-    "AI & Machine Learning",
-    "Physics & Universe",
-    "Philosophy & Wisdom",
-    "Economics & Systems",
-    "Language & Communication",
-    "Biology & Life",
+    "Tech Creation",
+    "AI & Robotics",
+    "Scientific Intelligence",
+    "Business & Finance",
+    "Philosophy",
+    "Communication",
     "Cybersecurity",
-    "Future Intelligence"
+    "Future Intelligence",
+    "Global Intelligence",
+    "Meta-Learning",
+    "Creative Arts",
+    "Public Systems",
+    "Deep Computing",
+    "Social Engineering",
+    "Planetary Health",
+    "Quantum & Cosmos",
+    "Consciousness",
+    "Mythic Mastery"
   ];
 
   const questionBank: Question[] = [
@@ -145,7 +155,107 @@ const Arena: React.FC = () => {
     { id: 77, domain: 10, question: "What is AGI?", options: ["Artificial General Intelligence", "Advanced Graphics Interface", "Automated Game Intelligence", "Augmented General Interface"], correct: 0, difficulty: 'easy' },
     { id: 78, domain: 10, question: "What is the simulation hypothesis?", options: ["We live in a simulation", "Simulations are impossible", "Reality is an illusion", "Dreams are real"], correct: 0, difficulty: 'medium' },
     { id: 79, domain: 10, question: "What is quantum supremacy?", options: ["Quantum computer outperforms classical", "Quantum physics is superior", "Quantum mechanics rules", "Quantum entanglement"], correct: 0, difficulty: 'hard' },
-    { id: 80, domain: 10, question: "What is the Drake Equation?", options: ["Physics formula", "Estimate of alien civilizations", "AI formula", "Quantum equation"], correct: 1, difficulty: 'medium' }
+    { id: 80, domain: 10, question: "What is the Drake Equation?", options: ["Physics formula", "Estimate of alien civilizations", "AI formula", "Quantum equation"], correct: 1, difficulty: 'medium' },
+
+    // Domain 11: Global Intelligence
+    { id: 81, domain: 11, question: "What is geopolitics?", options: ["Study of rocks", "Politics influenced by geography", "Global economics", "International trade"], correct: 1, difficulty: 'easy' },
+    { id: 82, domain: 11, question: "What is soft power?", options: ["Military strength", "Cultural influence", "Economic sanctions", "Physical force"], correct: 1, difficulty: 'medium' },
+    { id: 83, domain: 11, question: "What is the Thucydides Trap?", options: ["Economic crisis", "Rising power threatens established power", "Trade war", "Military alliance"], correct: 1, difficulty: 'hard' },
+    { id: 84, domain: 11, question: "What is cultural relativism?", options: ["All cultures are equal", "Cultures should be understood in context", "Western culture is superior", "Culture doesn't matter"], correct: 1, difficulty: 'medium' },
+    { id: 85, domain: 11, question: "What is the Westphalian system?", options: ["Economic system", "Nation-state sovereignty", "Trade agreement", "Military alliance"], correct: 1, difficulty: 'hard' },
+    { id: 86, domain: 11, question: "What is diaspora?", options: ["Disease spread", "Scattered population from homeland", "Cultural festival", "Trade route"], correct: 1, difficulty: 'medium' },
+    { id: 87, domain: 11, question: "What is the Bretton Woods system?", options: ["Forest management", "International monetary system", "Trade agreement", "Military pact"], correct: 1, difficulty: 'hard' },
+    { id: 88, domain: 11, question: "What is realpolitik?", options: ["Idealistic politics", "Pragmatic power-based politics", "Democratic politics", "Socialist politics"], correct: 1, difficulty: 'medium' },
+
+    // Domain 12: Meta-Learning
+    { id: 89, domain: 12, question: "What is spaced repetition?", options: ["Continuous study", "Reviewing at increasing intervals", "Random review", "One-time study"], correct: 1, difficulty: 'easy' },
+    { id: 90, domain: 12, question: "What is deliberate practice?", options: ["Random practice", "Focused, goal-oriented practice", "Easy practice", "Fun practice"], correct: 1, difficulty: 'medium' },
+    { id: 91, domain: 12, question: "What is the Feynman Technique?", options: ["Math formula", "Teach to learn", "Memory palace", "Speed reading"], correct: 1, difficulty: 'medium' },
+    { id: 92, domain: 12, question: "What is chunking in learning?", options: ["Breaking into pieces", "Grouping information", "Memorizing everything", "Skipping content"], correct: 1, difficulty: 'easy' },
+    { id: 93, domain: 12, question: "What is metacognition?", options: ["Thinking about thinking", "Fast thinking", "Emotional thinking", "Creative thinking"], correct: 0, difficulty: 'medium' },
+    { id: 94, domain: 12, question: "What is the forgetting curve?", options: ["Learning speed", "Memory decay over time", "Study schedule", "Brain capacity"], correct: 1, difficulty: 'medium' },
+    { id: 95, domain: 12, question: "What is interleaving?", options: ["Mixing different topics", "Studying one topic deeply", "Taking breaks", "Group study"], correct: 0, difficulty: 'hard' },
+    { id: 96, domain: 12, question: "What is a growth mindset?", options: ["Fixed abilities", "Abilities can be developed", "Natural talent only", "IQ is everything"], correct: 1, difficulty: 'easy' },
+
+    // Domain 13: Creative Arts
+    { id: 97, domain: 13, question: "What is the rule of thirds in composition?", options: ["Divide into thirds", "Use three colors", "Three subjects", "Three layers"], correct: 0, difficulty: 'easy' },
+    { id: 98, domain: 13, question: "What is chiaroscuro?", options: ["Color mixing", "Light-dark contrast", "Perspective technique", "Brush technique"], correct: 1, difficulty: 'medium' },
+    { id: 99, domain: 13, question: "What is the golden ratio?", options: ["1.414", "1.618", "1.732", "2.0"], correct: 1, difficulty: 'medium' },
+    { id: 100, domain: 13, question: "What is negative space?", options: ["Dark areas", "Empty space around subject", "Background", "Shadows"], correct: 1, difficulty: 'easy' },
+    { id: 101, domain: 13, question: "What is the hero's journey?", options: ["Travel story", "Narrative structure", "Character type", "Plot twist"], correct: 1, difficulty: 'medium' },
+    { id: 102, domain: 13, question: "What is synesthesia in art?", options: ["Color theory", "Cross-sensory experience", "Perspective", "Texture"], correct: 1, difficulty: 'hard' },
+    { id: 103, domain: 13, question: "What is the Kuleshov effect?", options: ["Color effect", "Film editing creates meaning", "Sound effect", "Camera angle"], correct: 1, difficulty: 'hard' },
+    { id: 104, domain: 13, question: "What is impasto?", options: ["Thin paint", "Thick paint texture", "Watercolor technique", "Digital effect"], correct: 1, difficulty: 'medium' },
+
+    // Domain 14: Public Systems
+    { id: 105, domain: 14, question: "What is federalism?", options: ["Central government only", "Power divided between levels", "No government", "Military rule"], correct: 1, difficulty: 'easy' },
+    { id: 106, domain: 14, question: "What is judicial review?", options: ["Reviewing laws", "Courts can declare laws unconstitutional", "Jury duty", "Legal appeal"], correct: 1, difficulty: 'medium' },
+    { id: 107, domain: 14, question: "What is public goods theory?", options: ["Private property", "Non-excludable, non-rivalrous goods", "Government spending", "Tax policy"], correct: 1, difficulty: 'hard' },
+    { id: 108, domain: 14, question: "What is bureaucracy?", options: ["Democracy", "Administrative system", "Monarchy", "Anarchy"], correct: 1, difficulty: 'easy' },
+    { id: 109, domain: 14, question: "What is the tragedy of the commons?", options: ["Public benefit", "Overuse of shared resources", "Private property", "Government failure"], correct: 1, difficulty: 'medium' },
+    { id: 110, domain: 14, question: "What is participatory budgeting?", options: ["Government decides", "Citizens decide budget allocation", "No budget", "Private funding"], correct: 1, difficulty: 'medium' },
+    { id: 111, domain: 14, question: "What is administrative law?", options: ["Criminal law", "Governs government agencies", "Civil law", "International law"], correct: 1, difficulty: 'hard' },
+    { id: 112, domain: 14, question: "What is e-governance?", options: ["Electronic voting only", "Digital government services", "Email system", "Online shopping"], correct: 1, difficulty: 'easy' },
+
+    // Domain 15: Deep Computing
+    { id: 113, domain: 15, question: "What is Big O notation?", options: ["Algorithm efficiency", "Programming language", "Data type", "Operating system"], correct: 0, difficulty: 'medium' },
+    { id: 114, domain: 15, question: "What is the CAP theorem?", options: ["Consistency, Availability, Partition tolerance", "Computer Architecture Principles", "Central Access Protocol", "Cache Algorithm Performance"], correct: 0, difficulty: 'hard' },
+    { id: 115, domain: 15, question: "What is MapReduce?", options: ["Navigation algorithm", "Distributed data processing", "Graphics rendering", "Network protocol"], correct: 1, difficulty: 'medium' },
+    { id: 116, domain: 15, question: "What is a hash table?", options: ["Encryption method", "Key-value data structure", "Network protocol", "File system"], correct: 1, difficulty: 'easy' },
+    { id: 117, domain: 15, question: "What is dynamic programming?", options: ["Web development", "Optimization technique", "Programming language", "Database query"], correct: 1, difficulty: 'hard' },
+    { id: 118, domain: 15, question: "What is a binary search tree?", options: ["Linear structure", "Hierarchical sorted structure", "Graph structure", "Array structure"], correct: 1, difficulty: 'medium' },
+    { id: 119, domain: 15, question: "What is NP-completeness?", options: ["Easy problems", "Hardest problems in NP", "Polynomial problems", "Linear problems"], correct: 1, difficulty: 'hard' },
+    { id: 120, domain: 15, question: "What is parallel computing?", options: ["Sequential processing", "Simultaneous processing", "Cloud computing", "Quantum computing"], correct: 1, difficulty: 'easy' },
+
+    // Domain 16: Social Engineering
+    { id: 121, domain: 16, question: "What is cognitive dissonance?", options: ["Mental clarity", "Conflicting beliefs discomfort", "Memory loss", "Learning difficulty"], correct: 1, difficulty: 'medium' },
+    { id: 122, domain: 16, question: "What is the halo effect?", options: ["Light perception", "One trait influences overall impression", "Memory enhancement", "Learning speed"], correct: 1, difficulty: 'medium' },
+    { id: 123, domain: 16, question: "What is social proof?", options: ["Legal evidence", "Following others' behavior", "Personal identity", "Social media"], correct: 1, difficulty: 'easy' },
+    { id: 124, domain: 16, question: "What is the foot-in-the-door technique?", options: ["Sales method", "Small request then larger", "Door-to-door sales", "Marketing strategy"], correct: 1, difficulty: 'medium' },
+    { id: 125, domain: 16, question: "What is priming in psychology?", options: ["First impression", "Exposure influences response", "Memory technique", "Learning method"], correct: 1, difficulty: 'hard' },
+    { id: 126, domain: 16, question: "What is groupthink?", options: ["Brainstorming", "Conformity suppresses dissent", "Team building", "Group learning"], correct: 1, difficulty: 'medium' },
+    { id: 127, domain: 16, question: "What is the mere exposure effect?", options: ["First impression", "Familiarity increases liking", "Surprise effect", "Novelty preference"], correct: 1, difficulty: 'medium' },
+    { id: 128, domain: 16, question: "What is reciprocity in influence?", options: ["Mutual exchange", "People return favors", "Competition", "Negotiation"], correct: 1, difficulty: 'easy' },
+
+    // Domain 17: Planetary Health
+    { id: 129, domain: 17, question: "What is the greenhouse effect?", options: ["Plant growth", "Atmospheric heat trapping", "Ocean warming", "Deforestation"], correct: 1, difficulty: 'easy' },
+    { id: 130, domain: 17, question: "What is biodiversity?", options: ["Plant types", "Variety of life", "Animal species", "Ecosystem size"], correct: 1, difficulty: 'easy' },
+    { id: 131, domain: 17, question: "What is carbon sequestration?", options: ["Carbon release", "Carbon capture and storage", "Carbon production", "Carbon trading"], correct: 1, difficulty: 'medium' },
+    { id: 132, domain: 17, question: "What is eutrophication?", options: ["Water purification", "Nutrient pollution in water", "Ocean acidification", "Coral bleaching"], correct: 1, difficulty: 'hard' },
+    { id: 133, domain: 17, question: "What is a keystone species?", options: ["Largest species", "Disproportionate ecosystem impact", "Most common species", "Endangered species"], correct: 1, difficulty: 'medium' },
+    { id: 134, domain: 17, question: "What is the circular economy?", options: ["Round products", "Waste elimination system", "Economic cycle", "Trade system"], correct: 1, difficulty: 'medium' },
+    { id: 135, domain: 17, question: "What is rewilding?", options: ["Zoo release", "Ecosystem restoration", "Wildlife hunting", "Forest planting"], correct: 1, difficulty: 'medium' },
+    { id: 136, domain: 17, question: "What is ocean acidification?", options: ["Ocean pollution", "pH decrease from CO2", "Salt increase", "Temperature rise"], correct: 1, difficulty: 'hard' },
+
+    // Domain 18: Quantum & Cosmos
+    { id: 137, domain: 18, question: "What is quantum superposition?", options: ["Particle speed", "Multiple states simultaneously", "Particle collision", "Wave motion"], correct: 1, difficulty: 'medium' },
+    { id: 138, domain: 18, question: "What is dark matter?", options: ["Black holes", "Invisible matter affecting gravity", "Dark energy", "Empty space"], correct: 1, difficulty: 'medium' },
+    { id: 139, domain: 18, question: "What is the cosmic microwave background?", options: ["Star radiation", "Big Bang remnant radiation", "Galaxy light", "Black hole radiation"], correct: 1, difficulty: 'hard' },
+    { id: 140, domain: 18, question: "What is quantum tunneling?", options: ["Particle teleportation", "Particle passes through barrier", "Particle collision", "Particle decay"], correct: 1, difficulty: 'hard' },
+    { id: 141, domain: 18, question: "What is a quasar?", options: ["Star type", "Extremely bright galactic nucleus", "Planet", "Asteroid"], correct: 1, difficulty: 'medium' },
+    { id: 142, domain: 18, question: "What is the Planck length?", options: ["Largest scale", "Smallest meaningful length", "Average distance", "Light year"], correct: 1, difficulty: 'hard' },
+    { id: 143, domain: 18, question: "What is redshift?", options: ["Color change", "Light stretched by expansion", "Star color", "Heat radiation"], correct: 1, difficulty: 'medium' },
+    { id: 144, domain: 18, question: "What is a neutron star?", options: ["New star", "Collapsed star core", "Exploding star", "Binary star"], correct: 1, difficulty: 'medium' },
+
+    // Domain 19: Consciousness
+    { id: 145, domain: 19, question: "What is the hard problem of consciousness?", options: ["Brain complexity", "Explaining subjective experience", "Memory storage", "Neural networks"], correct: 1, difficulty: 'hard' },
+    { id: 146, domain: 19, question: "What is qualia?", options: ["Quantity", "Subjective experience quality", "Brain waves", "Consciousness level"], correct: 1, difficulty: 'hard' },
+    { id: 147, domain: 19, question: "What is mindfulness?", options: ["Intelligence", "Present moment awareness", "Memory", "Concentration"], correct: 1, difficulty: 'easy' },
+    { id: 148, domain: 19, question: "What is the default mode network?", options: ["Computer network", "Brain network active at rest", "Neural pathway", "Memory system"], correct: 1, difficulty: 'hard' },
+    { id: 149, domain: 19, question: "What is ego death?", options: ["Physical death", "Loss of self-identity", "Brain damage", "Memory loss"], correct: 1, difficulty: 'medium' },
+    { id: 150, domain: 19, question: "What is lucid dreaming?", options: ["Clear dreams", "Aware you're dreaming", "Vivid dreams", "Recurring dreams"], correct: 1, difficulty: 'easy' },
+    { id: 151, domain: 19, question: "What is the global workspace theory?", options: ["Office design", "Consciousness as information broadcast", "Brain structure", "Memory theory"], correct: 1, difficulty: 'hard' },
+    { id: 152, domain: 19, question: "What is metaconsciousness?", options: ["Super consciousness", "Awareness of awareness", "Unconsciousness", "Dream state"], correct: 1, difficulty: 'medium' },
+
+    // Domain 20: Mythic Mastery
+    { id: 153, domain: 20, question: "What is an archetype?", options: ["Ancient artifact", "Universal symbol or pattern", "Historical figure", "Mythology book"], correct: 1, difficulty: 'easy' },
+    { id: 154, domain: 20, question: "What is the collective unconscious?", options: ["Group thinking", "Shared inherited memories", "Social consciousness", "Cultural knowledge"], correct: 1, difficulty: 'medium' },
+    { id: 155, domain: 20, question: "What is the monomyth?", options: ["Single myth", "Hero's journey pattern", "Creation story", "Ancient text"], correct: 1, difficulty: 'medium' },
+    { id: 156, domain: 20, question: "What is a trickster archetype?", options: ["Villain", "Boundary-crossing disruptor", "Hero", "Mentor"], correct: 1, difficulty: 'medium' },
+    { id: 157, domain: 20, question: "What is the shadow in Jungian psychology?", options: ["Darkness", "Repressed aspects of self", "Evil twin", "Unconscious mind"], correct: 1, difficulty: 'hard' },
+    { id: 158, domain: 20, question: "What is a creation myth?", options: ["Art story", "Origin of world story", "Hero story", "Love story"], correct: 1, difficulty: 'easy' },
+    { id: 159, domain: 20, question: "What is the axis mundi?", options: ["Earth's axis", "World center/cosmic axis", "Mountain peak", "Tree trunk"], correct: 1, difficulty: 'hard' },
+    { id: 160, domain: 20, question: "What is apotheosis?", options: ["Death", "Becoming divine", "Transformation", "Enlightenment"], correct: 1, difficulty: 'medium' }
   ];
 
   useEffect(() => {

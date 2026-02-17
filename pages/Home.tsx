@@ -27,9 +27,6 @@ const Home: React.FC = () => {
         <p className="text-gray-400 max-w-2xl mx-auto text-lg">
           A comprehensive digital library for personal evolution, future intelligence, and high-performance skill building.
         </p>
-        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-          This is for myself cuz it's fun yayy!! 
-        </p>
         
         <div className="mt-8 relative max-w-md mx-auto">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

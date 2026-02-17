@@ -6,10 +6,7 @@ import DomainView from './pages/DomainView';
 import Arena from './pages/Arena';
 import Oracle from './pages/Oracle';
 import Grimoire from './pages/Grimoire';
-import Observatory from './pages/Observatory';
-import Forge from './pages/Forge';
 import Cartography from './pages/Cartography';
-import Dashboard from './pages/Dashboard';
 
 // Scroll to top on route change
 const ScrollToTop = () => {

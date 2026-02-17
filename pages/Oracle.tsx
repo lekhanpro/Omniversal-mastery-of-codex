@@ -33,19 +33,34 @@ const Oracle: React.FC = () => {
   const domainNames = [
     { id: 1, name: "Physical Mastery", icon: "⚔️" },
     { id: 2, name: "Mind & Cognition", icon: "🧠" },
-    { id: 3, name: "AI & ML", icon: "🤖" },
-    { id: 4, name: "Physics", icon: "⚛️" },
-    { id: 5, name: "Philosophy", icon: "🏛️" },
-    { id: 6, name: "Economics", icon: "💰" },
-    { id: 7, name: "Language", icon: "📚" },
-    { id: 8, name: "Biology", icon: "🧬" },
+    { id: 3, name: "Tech Creation", icon: "💻" },
+    { id: 4, name: "AI & Robotics", icon: "🤖" },
+    { id: 5, name: "Scientific Intelligence", icon: "⚛️" },
+    { id: 6, name: "Business & Finance", icon: "💰" },
+    { id: 7, name: "Philosophy", icon: "🏛️" },
+    { id: 8, name: "Communication", icon: "🎤" },
     { id: 9, name: "Cybersecurity", icon: "🔒" },
-    { id: 10, name: "Future Intelligence", icon: "🔮" }
+    { id: 10, name: "Future Intelligence", icon: "🔮" },
+    { id: 11, name: "Global Intelligence", icon: "🌍" },
+    { id: 12, name: "Meta-Learning", icon: "📚" },
+    { id: 13, name: "Creative Arts", icon: "🎨" },
+    { id: 14, name: "Public Systems", icon: "⚖️" },
+    { id: 15, name: "Deep Computing", icon: "🖥️" },
+    { id: 16, name: "Social Engineering", icon: "🧠" },
+    { id: 17, name: "Planetary Health", icon: "🌱" },
+    { id: 18, name: "Quantum & Cosmos", icon: "🌌" },
+    { id: 19, name: "Consciousness", icon: "🧘" },
+    { id: 20, name: "Mythic Mastery", icon: "🗿" }
   ];
 
   const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
   useEffect(() => {
+    // Check if API key is available
+    if (!apiKey) {
+      console.error('Groq API key not found. Please add VITE_GROQ_API_KEY to your .env file');
+    }
+    
     const saved = localStorage.getItem('oracle_sessions');
     if (saved) {
       setSessions(JSON.parse(saved));
@@ -74,7 +89,7 @@ const Oracle: React.FC = () => {
 
   const getSystemPrompt = (domain: number): string => {
     const domainName = domainNames.find(d => d.id === domain)?.name || 'Knowledge';
-    return `You are the Oracle — the ancient intelligence at the heart of Lekhan's Omniversal Codex. You are a Socratic tutor of supreme depth across all 10 domains of knowledge: Mathematics, Computer Science, AI/ML, Physics, Philosophy, Economics, Language, Biology, Psychology, and Strategy.
+    return `You are the Oracle — the ancient intelligence at the heart of the Omniversal Codex. You are a Socratic tutor of supreme depth across all 20 domains of knowledge: Physical Mastery, Mind & Cognition, Tech Creation, AI & Robotics, Scientific Intelligence, Business & Finance, Philosophy, Communication, Cybersecurity, Future Intelligence, Global Intelligence, Meta-Learning, Creative Arts, Public Systems, Deep Computing, Social Engineering, Planetary Health, Quantum & Cosmos, Consciousness, and Mythic Mastery.
 
 Current active domain: ${domainName}
 
@@ -85,7 +100,7 @@ Your principles:
 4. Use concrete examples, thought experiments, and analogies
 5. Be concise but never shallow — depth over length
 6. End every response with one powerful follow-up question to deepen thinking
-7. If asked something outside the 10 domains, redirect wisely
+7. If asked something outside the 20 domains, redirect wisely
 
 Tone: wise, calm, precise, occasionally poetic. Never robotic.`;
   };
