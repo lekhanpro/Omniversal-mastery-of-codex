@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Observatory - Reading Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&family=Georgia&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #030610;
+      color: #e8eeff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Cinzel', serif;
+      color: #c9a84c;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header h1 {
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .telescope-svg {
+      width: 200px;
+      height: 200px;
+      position: fixed;
+      right: 40px;
+      top: 40px;
+      opacity: 0.3;
+      animation: telescopeRotate 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes telescopeRotate {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    .btn {
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+    }
+
+    .btn-primary {
+      background: #c9a84c;
+      color: #030610;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #d4b55c;
+    }
+
+    .btn-large {
+      font-size: 24px;
+      padding: 16px 32px;
+      border-radius: 50px;
+    }
+
+    .add-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #c9a84c;
+      color: #030610;
+      font-size: 32px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(201, 168, 76, 0.5);
+      transition: all 0.3s;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-btn:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 6px 30px rgba(201, 168, 76, 0.7);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      background: rgba(10, 21, 53, 0.6);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+    }
+
+    .view-toggle button {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      color: #e8eeff;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .view-toggle button.active {
+      background: #c9a84c;
+      color: #030610;
+    }
+
+    .bookshelf-view {
+      display: block;
+    }
+
+    .shelf {
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .shelf-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(10, 21, 53, 0.6);
+      border-left: 4px solid #c9a84c;
+      border-radius: 4px;
+    }
+
+    .shelf-label h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .shelf-count {
+      font-size: 14px;
+      color: rgba(232, 238, 255, 0.6);
+    }
+
+    .books-container {
+      display: flex;
+      gap: 8px;
+      padding: 20px;
+      background: rgba(26, 21, 8, 0.3);
+      border-radius: 8px;
+      min-height: 180px;
+      overflow-x: auto;
+      perspective: 1000px;
+    }
+
+    .book {
+      width: 36px;
+      min-width: 36px;
+      height: 140px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.3), transparent);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .book:hover {
+      transform: rotateY(-20deg) translateY(-10px);
+      box-shadow: 0 10px 30px rgba(201, 168, 76, 0.4);
+      z-index: 10;
+    }
+
+    .book-spine {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: 'Georgia', serif;
+      font-size: 11px;
+      padding: 8px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 130px;
+    }
+
+    .book.status-want { opacity: 0.5; }
+    .book.status-studying { 
+      opacity: 0.8;
+      animation: studyPulse 2s ease-in-out infinite;
+    }
+    .book.status-completed { 
+      opacity: 1;
+      border-top: 3px solid #c9a84c;
+    }
+    .book.status-reference { 
+      opacity: 1;
+    }
+    .book.status-reference::before {
+      content: '⭐';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 10px;
+    }
+
+    @keyframes studyPulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 204, 68, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(255, 204, 68, 0.8); }
+    }
+
+    .progress-bar-container {
+      margin-top: 12px;
+      height: 8px;
+      background: rgba(10, 21, 53, 0.6);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0a1535, #c9a84c);
+      transition: width 0.5s ease;
+    }
+
+    .list-view {
+      display: none;
+    }
+
+    .list-view.active {
+      display: block;
+    }
+
+    .filters {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      padding: 16px;
+      background: rgba(10, 21, 53, 0.6);
+      border-radius: 8px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-group label {
+      font-size: 12px;
+      color: rgba(232, 238, 255, 0.6);
+      text-transform: uppercase;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 6px 12px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .chip.active {
+      background: #c9a84c;
+      color: #030610;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(10, 21, 53, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th {
+      background: rgba(201, 168, 76, 0.2);
+      padding: 12px;
+      text-align: left;
+      font-family: 'Cinzel', serif;
+      color: #c9a84c;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover {
+      background: rgba(201, 168, 76, 0.3);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(232, 238, 255, 0.1);
+    }
+
+    tr:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-left: 4px solid #c9a84c;
+      cursor: pointer;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-want { background: #4488ff; }
+    .status-studying { background: #ffcc44; }
+    .status-completed { background: #44ff88; }
+    .status-reference { background: #c9a84c; }
+
+    .rating-stars {
+      color: #c9a84c;
+      font-size: 14px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(3, 6, 16, 0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(26, 21, 8, 0.95);
+      border: 2px solid #c9a84c;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #c9a84c;
+      font-size: 32px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #c9a84c;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(3, 6, 16, 0.6);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 6px;
+      color: #e8eeff;
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      width: auto;
+    }
+
+    .star-rating {
+      display: flex;
+      gap: 4px;
+      font-size: 24px;
+    }
+
+    .star {
+      cursor: pointer;
+      color: rgba(201, 168, 76, 0.3);
+      transition: all 0.2s;
+    }
+
+    .star:hover,
+    .star.active {
+      color: #c9a84c;
+      text-shadow: 0 0 10px rgba(201, 168, 76, 0.8);
+    }
+
+    .difficulty-slider {
+      width: 100%;
+      height: 8px;
+      background: rgba(201, 168, 76, 0.2);
+      border-radius: 4px;
+      appearance: none;
+      outline: none;
+    }
+
+    .difficulty-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #c9a84c;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .domain-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .domain-chip {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .domain-chip.selected {
+      border-color: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .detail-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 800px;
+      height: 100%;
+      background: rgba(26, 21, 8, 0.98);
+      border-left: 2px solid #c9a84c;
+      z-index: 1001;
+      overflow-y: auto;
+      transition: right 0.3s ease-out;
+      padding: 32px;
+    }
+
+    .detail-panel.show {
+      right: 0;
+    }
+
+    .resource-cover {
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, #0a1535, #c9a84c);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resource-cover h2 {
+      font-size: 32px;
+      text-align: center;
+      padding: 20px;
+      z-index: 1;
+    }
+
+    .serendipity-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(3, 6, 16, 0.98);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .serendipity-overlay.show {
+      display: flex;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .serendipity-content {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .spotlight {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(201,168,76,0.3), transparent);
+      border-radius: 50%;
+      animation: spotlightPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes spotlightPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .typewriter {
+      font-family: 'Cinzel', serif;
+      font-size: 36px;
+      color: #c9a84c;
+      overflow: hidden;
+      border-right: 3px solid #c9a84c;
+      white-space: nowrap;
+      animation: typing 2s steps(30) 1s forwards, blink 0.75s step-end infinite;
+      max-width: 0;
+    }
+
+    @keyframes typing {
+      from { max-width: 0; }
+      to { max-width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .stat-card {
+      background: rgba(10, 21, 53, 0.6);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #c9a84c;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(232, 238, 255, 0.6);
+      text-transform: uppercase;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(26, 21, 8, 0.9);
+      border: 1px solid #c9a84c;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: #c9a84c;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .back-link:hover {
+      background: rgba(201, 168, 76, 0.2);
+      transform: translateX(-5px);
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 32px; }
+      .telescope-svg { display: none; }
+      .books-container { overflow-x: scroll; }
+      .detail-panel { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  
+  <svg class="telescope-svg" viewBox="0 0 200 200" fill="none" stroke="#c9a84c" stroke-width="2">
+    <line x1="50" y1="150" x2="150" y2="50" />
+    <circle cx="100" cy="100" r="8" fill="#c9a84c" />
+    <line x1="100" y1="100" x2="100" y2="180" />
+    <line x1="90" y1="180" x2="110" y2="180" />
+    <circle cx="150" cy="50" r="15" />
+    <circle cx="50" cy="150" r="10" />
+  </svg>
+
+  <a href="/" class="back-link">← Back to Codex</a>
+
+  <div class="container">
+    <div class="header">
+      <h1>🔭 THE OBSERVATORY</h1>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+        <button class="btn btn-large" onclick="triggerSerendipity()">✦ Serendipity</button>
+        <div class="view-toggle">
+          <button class="active" onclick="switchView('bookshelf')">📚 Bookshelf</button>
+          <button onclick="switchView('list')">📋 List</button>
+        </div>
+        <button class="btn" onclick="exportData()">💾 Export</button>
+        <button class="btn" onclick="document.getElementById('import-file').click()">📥 Import</button>
+        <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- Bookshelf View -->
+    <div id="bookshelf-view" class="bookshelf-view"></div>
+
+    <!-- List View -->
+    <div id="list-view" class="list-view">
+      <div class="filters" id="filters"></div>
+      <div style="margin-bottom: 16px; color: rgba(232, 238, 255, 0.6);">
+        <span id="filter-count">Showing 0 of 0 resources</span>
+      </div>
+      <table id="resources-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable('catalogueId')">Catalogue ID</th>
+            <th onclick="sortTable('title')">Title</th>
+            <th onclick="sortTable('author')">Author</th>
+            <th onclick="sortTable('type')">Type</th>
+            <th onclick="sortTable('domains')">Domains</th>
+            <th onclick="sortTable('status')">Status</th>
+            <th onclick="sortTable('rating')">Rating</th>
+            <th onclick="sortTable('difficulty')">Difficulty</th>
+            <th onclick="sortTable('dateAdded')">Date Added</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add Resource Modal -->
+  <div id="add-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAddModal()">&times;</button>
+      <h2>Add Resource to Observatory</h2>
+      <form id="add-form" onsubmit="addResource(event)">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" id="title" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Author / Creator</label>
+          <input type="text" id="author">
+        </div>
+        
+        <div class="form-group">
+          <label>Type</label>
+          <select id="type">
+            <option value="book">📚 Book</option>
+            <option value="paper">📄 Research Paper</option>
+            <option value="course">🎓 Course</option>
+            <option value="video">🎥 Video Series</option>
+            <option value="podcast">🎧 Podcast</option>
+            <option value="website">🌐 Website</option>
+            <option value="ai-tool">🧠 AI Tool</option>
+            <option value="practice">🛠️ Practice Platform</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Domains (select 1-3)</label>
+          <div class="domain-chips" id="domain-selector"></div>
+        </div>
+        
+        <div class="form-group">
+          <label>Status</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="status" value="want" checked>
+              <span class="status-dot status-want"></span> Want to Explore
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="status" value="studying">
+              <span class="status-dot status-studying"></span> Currently Studying
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="status" value="completed">
+              <span class="status-dot status-completed"></span> Completed
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="status" value="reference">
+              <span class="status-dot status-reference"></span> Reference
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Rating</label>
+          <div class="star-rating" id="rating-input">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>URL (optional)</label>
+          <input type="url" id="url">
+        </div>
+        
+        <div class="form-group">
+          <label>Personal Takeaway</label>
+          <textarea id="takeaway" placeholder="Key insight in 1-3 sentences..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Difficulty (1-5)</label>
+          <input type="range" class="difficulty-slider" id="difficulty" min="1" max="5" value="3">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: rgba(232, 238, 255, 0.6);">
+            <span>Accessible</span>
+            <span>Dense</span>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Observatory</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div id="detail-panel" class="detail-panel">
+    <button class="modal-close" onclick="closeDetailPanel()">&times;</button>
+    <div id="detail-content"></div>
+  </div>
+
+  <!-- Serendipity Overlay -->
+  <div id="serendipity-overlay" class="serendipity-overlay">
+    <div class="serendipity-content">
+      <div class="spotlight"></div>
+      <h2 class="typewriter" id="serendipity-title"></h2>
+      <div id="serendipity-details" style="margin-top: 32px;"></div>
+    </div>
+  </div>
+
+  <button class="add-btn" onclick="openAddModal()">+</button>
+
+  <script>
+    const DOMAINS = [
+      { id: 1, name: "Physical Mastery", color: "#4488ff" },
+      { id: 2, name: "Mind & Cognition", color: "#00ffcc" },
+      { id: 3, name: "AI & ML", color: "#aa44ff" },
+      { id: 4, name: "Physics", color: "#ff6644" },
+      { id: 5, name: "Philosophy", color: "#ffcc44" },
+      { id: 6, name: "Economics", color: "#44ff88" },
+      { id: 7, name: "Language", color: "#ff44aa" },
+      { id: 8, name: "Biology", color: "#88ff44" },
+      { id: 9, name: "Cybersecurity", color: "#ff8844" },
+      { id: 10, name: "Future Intelligence", color: "#44aaff" }
+    ];
+
+    let resources = JSON.parse(localStorage.getItem('observatory_resources') || '[]');
+    let selectedRating = 0;
+    let selectedDomains = [];
+    let currentView = 'bookshelf';
+
+    // ===== STARFIELD BACKGROUND =====
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    for (let i = 0; i < 300; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        alpha: Math.random()
+      });
+    }
+
+    const nebulas = [];
+    for (let i = 0; i < 4; i++) {
+      nebulas.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: 150 + Math.random() * 200,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
+        hue: 200 + Math.random() * 60
+      });
+    }
+
+    function drawStarfield() {
+      ctx.fillStyle = '#030610';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      nebulas.forEach(nebula => {
+        const gradient = ctx.createRadialGradient(nebula.x, nebula.y, 0, nebula.x, nebula.y, nebula.radius);
+        gradient.addColorStop(0, `hsla(${nebula.hue}, 60%, 40%, 0.08)`);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        nebula.x += nebula.vx;
+        nebula.y += nebula.vy;
+
+        if (nebula.x < -nebula.radius) nebula.x = canvas.width + nebula.radius;
+        if (nebula.x > canvas.width + nebula.radius) nebula.x = -nebula.radius;
+        if (nebula.y < -nebula.radius) nebula.y = canvas.height + nebula.radius;
+        if (nebula.y > canvas.height + nebula.radius) nebula.y = -nebula.radius;
+      });
+
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(232, 238, 255, ${star.alpha})`;
+        ctx.fill();
+        
+        star.alpha += (Math.random() - 0.5) * 0.02;
+        star.alpha = Math.max(0.3, Math.min(1, star.alpha));
+      });
+
+      requestAnimationFrame(drawStarfield);
+    }
+
+    drawStarfield();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // ===== INITIALIZATION =====
+    function init() {
+      renderDomainSelector();
+      renderStats();
+      renderBookshelfView();
+      renderListView();
+      setupRatingInput();
+    }
+
+    function renderDomainSelector() {
+      const selector = document.getElementById('domain-selector');
+      selector.innerHTML = DOMAINS.map(domain => `
+        <div class="domain-chip" style="background: ${domain.color}20; color: ${domain.color};" 
+             onclick="toggleDomain(${domain.id})">
+          ${domain.name}
+        </div>
+      `).join('');
+    }
+
+    function toggleDomain(domainId) {
+      const index = selectedDomains.indexOf(domainId);
+      if (index > -1) {
+        selectedDomains.splice(index, 1);
+      } else {
+        if (selectedDomains.length < 3) {
+          selectedDomains.push(domainId);
+        } else {
+          alert('Maximum 3 domains allowed');
+          return;
+        }
+      }
+      
+      document.querySelectorAll('.domain-chip').forEach((chip, i) => {
+        if (selectedDomains.includes(i + 1)) {
+          chip.classList.add('selected');
+        } else {
+          chip.classList.remove('selected');
+        }
+      });
+    }
+
+    function setupRatingInput() {
+      document.querySelectorAll('#rating-input .star').forEach(star => {
+        star.addEventListener('click', () => {
+          selectedRating = parseInt(star.dataset.rating);
+          updateStarDisplay();
+        });
+        
+        star.addEventListener('mouseenter', () => {
+          const rating = parseInt(star.dataset.rating);
+          document.querySelectorAll('#rating-input .star').forEach((s, i) => {
+            if (i < rating) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+      
+      document.getElementById('rating-input').addEventListener('mouseleave', updateStarDisplay);
+    }
+
+    function updateStarDisplay() {
+      document.querySelectorAll('#rating-input .star').forEach((s, i) => {
+        if (i < selectedRating) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    }
+
+    // ===== ADD RESOURCE =====
+    function openAddModal() {
+      document.getElementById('add-modal').classList.add('show');
+      selectedDomains = [];
+      selectedRating = 0;
+      document.getElementById('add-form').reset();
+      updateStarDisplay();
+      document.querySelectorAll('.domain-chip').forEach(chip => chip.classList.remove('selected'));
+    }
+
+    function closeAddModal() {
+      document.getElementById('add-modal').classList.remove('show');
+    }
+
+    function addResource(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+      const type = document.getElementById('type').value;
+      const status = document.querySelector('input[name="status"]:checked').value;
+      const url = document.getElementById('url').value;
+      const takeaway = document.getElementById('takeaway').value;
+      const difficulty = parseInt(document.getElementById('difficulty').value);
+      
+      if (selectedDomains.length === 0) {
+        alert('Please select at least one domain');
+        return;
+      }
+      
+      const catalogueId = `OBS-${selectedDomains[0]}-${Date.now().toString(36).toUpperCase()}`;
+      
+      const resource = {
+        id: Date.now(),
+        catalogueId,
+        title,
+        author,
+        type,
+        domains: selectedDomains,
+        status,
+        rating: selectedRating,
+        url,
+        takeaway,
+        difficulty,
+        dateAdded: Date.now(),
+        notes: '',
+        quotes: [],
+        progress: 0,
+        startDate: null,
+        completeDate: null
+      };
+      
+      resources.push(resource);
+      saveResources();
+      closeAddModal();
+      
+      // Show confirmation
+      showNotification('Added to Observatory ✓');
+      
+      // Refresh views
+      renderStats();
+      renderBookshelfView();
+      renderListView();
+    }
+
+    function saveResources() {
+      localStorage.setItem('observatory_resources', JSON.stringify(resources));
+    }
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #c9a84c;
+        color: #030610;
+        padding: 16px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+      `;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+      }, 2000);
+    }
+
+    // ===== STATS =====
+    function renderStats() {
+      const total = resources.length;
+      const byStatus = {
+        want: resources.filter(r => r.status === 'want').length,
+        studying: resources.filter(r => r.status === 'studying').length,
+        completed: resources.filter(r => r.status === 'completed').length,
+        reference: resources.filter(r => r.status === 'reference').length
+      };
+      
+      const avgRating = total > 0 
+        ? (resources.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1)
+        : 0;
+      
+      const byDomain = {};
+      DOMAINS.forEach(d => {
+        byDomain[d.id] = resources.filter(r => r.domains.includes(d.id)).length;
+      });
+      
+      const mostProductive = Object.entries(byDomain).sort((a, b) => b[1] - a[1])[0];
+      const mostProductiveDomain = mostProductive ? DOMAINS.find(d => d.id === parseInt(mostProductive[0])) : null;
+      
+      document.getElementById('stats-grid').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">Total Resources</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${byStatus.completed}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${byStatus.studying}</div>
+          <div class="stat-label">Currently Studying</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${avgRating} ★</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${mostProductiveDomain ? mostProductiveDomain.name : 'N/A'}</div>
+          <div class="stat-label">Most Productive</div>
+        </div>
+      `;
+    }
+
+    // ===== BOOKSHELF VIEW =====
+    function renderBookshelfView() {
+      const view = document.getElementById('bookshelf-view');
+      view.innerHTML = '';
+      
+      DOMAINS.forEach(domain => {
+        const domainResources = resources.filter(r => r.domains.includes(domain.id));
+        const completed = domainResources.filter(r => r.status === 'completed').length;
+        const total = domainResources.length;
+        const progress = total > 0 ? (completed / total) * 100 : 0;
+        
+        const shelf = document.createElement('div');
+        shelf.className = 'shelf';
+        shelf.innerHTML = `
+          <div class="shelf-label">
+            <h3 style="color: ${domain.color}">${domain.name}</h3>
+            <span class="shelf-count">${total} resources</span>
+          </div>
+          <div class="books-container" id="shelf-${domain.id}"></div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: ${progress}%"></div>
+          </div>
+        `;
+        view.appendChild(shelf);
+        
+        const container = shelf.querySelector(`#shelf-${domain.id}`);
+        domainResources.forEach(resource => {
+          const book = createBookElement(resource, domain.color);
+          container.appendChild(book);
+        });
+      });
+    }
+
+    function createBookElement(resource, color) {
+      const book = document.createElement('div');
+      book.className = `book status-${resource.status}`;
+      book.style.background = `linear-gradient(90deg, ${color}40, ${color}20)`;
+      book.style.borderColor = color;
+      
+      const height = resource.type === 'paper' ? 100 : 
+                    resource.type === 'course' ? 160 : 
+                    120 + Math.random() * 40;
+      book.style.height = height + 'px';
+      
+      book.innerHTML = `<div class="book-spine" style="color: ${color}">${resource.title}</div>`;
+      
+      book.addEventListener('click', () => openDetailPanel(resource));
+      
+      return book;
+    }
+
+    // ===== LIST VIEW =====
+    function renderListView() {
+      renderFilters();
+      renderTable();
+    }
+
+    function renderFilters() {
+      const filters = document.getElementById('filters');
+      filters.innerHTML = `
+        <div class="filter-group">
+          <label>Domains</label>
+          <div class="filter-chips">
+            ${DOMAINS.map(d => `
+              <div class="chip" data-filter="domain" data-value="${d.id}" onclick="toggleFilter(this)">
+                ${d.name}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Status</label>
+          <div class="filter-chips">
+            <div class="chip" data-filter="status" data-value="want" onclick="toggleFilter(this)">
+              <span class="status-dot status-want"></span> Want
+            </div>
+            <div class="chip" data-filter="status" data-value="studying" onclick="toggleFilter(this)">
+              <span class="status-dot status-studying"></span> Studying
+            </div>
+            <div class="chip" data-filter="status" data-value="completed" onclick="toggleFilter(this)">
+              <span class="status-dot status-completed"></span> Completed
+            </div>
+            <div class="chip" data-filter="status" data-value="reference" onclick="toggleFilter(this)">
+              <span class="status-dot status-reference"></span> Reference
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    let activeFilters = { domain: [], status: [] };
+
+    function toggleFilter(chip) {
+      const filterType = chip.dataset.filter;
+      const value = chip.dataset.value;
+      
+      chip.classList.toggle('active');
+      
+      if (chip.classList.contains('active')) {
+        if (!activeFilters[filterType].includes(value)) {
+          activeFilters[filterType].push(value);
+        }
+      } else {
+        activeFilters[filterType] = activeFilters[filterType].filter(v => v !== value);
+      }
+      
+      renderTable();
+    }
+
+    function renderTable() {
+      let filtered = resources;
+      
+      if (activeFilters.domain.length > 0) {
+        filtered = filtered.filter(r => 
+          r.domains.some(d => activeFilters.domain.includes(d.toString()))
+        );
+      }
+      
+      if (activeFilters.status.length > 0) {
+        filtered = filtered.filter(r => activeFilters.status.includes(r.status));
+      }
+      
+      document.getElementById('filter-count').textContent = 
+        `Showing ${filtered.length} of ${resources.length} resources`;
+      
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = filtered.map(resource => {
+        const domainTags = resource.domains.map(id => {
+          const domain = DOMAINS.find(d => d.id === id);
+          return `<span style="color: ${domain.color}">●</span>`;
+        }).join(' ');
+        
+        const stars = '★'.repeat(resource.rating) + '☆'.repeat(5 - resource.rating);
+        const difficultyBar = '█'.repeat(resource.difficulty) + '░'.repeat(5 - resource.difficulty);
+        
+        return `
+          <tr onclick="openDetailPanel(${JSON.stringify(resource).replace(/"/g, '&quot;')})">
+            <td>${resource.catalogueId}</td>
+            <td style="font-family: Georgia">${resource.title}</td>
+            <td>${resource.author || '-'}</td>
+            <td>${getTypeIcon(resource.type)}</td>
+            <td>${domainTags}</td>
+            <td><span class="status-dot status-${resource.status}"></span></td>
+            <td class="rating-stars">${stars}</td>
+            <td>${difficultyBar}</td>
+            <td>${new Date(resource.dateAdded).toLocaleDateString()}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getTypeIcon(type) {
+      const icons = {
+        book: '📚',
+        paper: '📄',
+        course: '🎓',
+        video: '🎥',
+        podcast: '🎧',
+        website: '🌐',
+        'ai-tool': '🧠',
+        practice: '🛠️'
+      };
+      return icons[type] || '📚';
+    }
+
+    let sortColumn = null;
+    let sortAscending = true;
+
+    function sortTable(column) {
+      if (sortColumn === column) {
+        sortAscending = !sortAscending;
+      } else {
+        sortColumn = column;
+        sortAscending = true;
+      }
+      
+      resources.sort((a, b) => {
+        let aVal = a[column];
+        let bVal = b[column];
+        
+        if (column === 'domains') {
+          aVal = a.domains.length;
+          bVal = b.domains.length;
+        }
+        
+        if (typeof aVal === 'string') {
+          return sortAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        }
+        
+        return sortAscending ? aVal - bVal : bVal - aVal;
+      });
+      
+      renderTable();
+    }
+
+    // ===== DETAIL PANEL =====
+    function openDetailPanel(resource) {
+      const panel = document.getElementById('detail-panel');
+      const content = document.getElementById('detail-content');
+      
+      const domainColors = resource.domains.map(id => DOMAINS.find(d => d.id === id).color);
+      const gradient = `linear-gradient(135deg, ${domainColors.join(', ')})`;
+      
+      content.innerHTML = `
+        <div class="resource-cover" style="background: ${gradient}">
+          <h2>${resource.title}</h2>
+        </div>
+        
+        <div style="margin-bottom: 24px;">
+          <h3>Details</h3>
+          <p><strong>Catalogue ID:</strong> ${resource.catalogueId}</p>
+          <p><strong>Author:</strong> ${resource.author || 'Unknown'}</p>
+          <p><strong>Type:</strong> ${getTypeIcon(resource.type)} ${resource.type}</p>
+          <p><strong>Status:</strong> <span class="status-dot status-${resource.status}"></span> ${resource.status}</p>
+          <p><strong>Rating:</strong> ${'★'.repeat(resource.rating)}${'☆'.repeat(5 - resource.rating)}</p>
+          <p><strong>Difficulty:</strong> ${'█'.repeat(resource.difficulty)}${'░'.repeat(5 - resource.difficulty)}</p>
+          ${resource.url ? `<p><strong>URL:</strong> <a href="${resource.url}" target="_blank" style="color: #c9a84c">${resource.url}</a></p>` : ''}
+          <p><strong>Date Added:</strong> ${new Date(resource.dateAdded).toLocaleDateString()}</p>
+        </div>
+        
+        ${resource.takeaway ? `
+          <div style="margin-bottom: 24px;">
+            <h3>Personal Takeaway</h3>
+            <p>${resource.takeaway}</p>
+          </div>
+        ` : ''}
+        
+        <div style="margin-bottom: 24px;">
+          <h3>Progress</h3>
+          <input type="range" class="difficulty-slider" value="${resource.progress}" min="0" max="100" 
+                 onchange="updateProgress(${resource.id}, this.value)">
+          <p style="text-align: center; margin-top: 8px;">${resource.progress}%</p>
+        </div>
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          ${resource.status !== 'studying' ? `
+            <button class="btn btn-primary" onclick="startReading(${resource.id})">Start Reading</button>
+          ` : ''}
+          ${resource.status !== 'completed' ? `
+            <button class="btn" onclick="markComplete(${resource.id})">Mark Complete</button>
+          ` : ''}
+          <button class="btn" onclick="deleteResource(${resource.id})">Delete</button>
+        </div>
+      `;
+      
+      panel.classList.add('show');
+    }
+
+    function closeDetailPanel() {
+      document.getElementById('detail-panel').classList.remove('show');
+    }
+
+    function updateProgress(id, progress) {
+      const resource = resources.find(r => r.id === id);
+      if (resource) {
+        resource.progress = parseInt(progress);
+        saveResources();
+      }
+    }
+
+    function startReading(id) {
+      const resource = resources.find(r => r.id === id);
+      if (resource) {
+        resource.status = 'studying';
+        resource.startDate = Date.now();
+        saveResources();
+        closeDetailPanel();
+        renderStats();
+        renderBookshelfView();
+        renderListView();
+        showNotification('Started reading!');
+      }
+    }
+
+    function markComplete(id) {
+      const resource = resources.find(r => r.id === id);
+      if (resource) {
+        resource.status = 'completed';
+        resource.completeDate = Date.now();
+        resource.progress = 100;
+        saveResources();
+        closeDetailPanel();
+        renderStats();
+        renderBookshelfView();
+        renderListView();
+        showNotification('Marked as complete! 🎉');
+      }
+    }
+
+    function deleteResource(id) {
+      if (confirm('Delete this resource?')) {
+        resources = resources.filter(r => r.id !== id);
+        saveResources();
+        closeDetailPanel();
+        renderStats();
+        renderBookshelfView();
+        renderListView();
+        showNotification('Resource deleted');
+      }
+    }
+
+    // ===== SERENDIPITY =====
+    function triggerSerendipity() {
+      const wantToExplore = resources.filter(r => r.status === 'want');
+      
+      if (wantToExplore.length === 0) {
+        alert('No resources in "Want to Explore" status!');
+        return;
+      }
+      
+      const random = wantToExplore[Math.floor(Math.random() * wantToExplore.length)];
+      
+      const overlay = document.getElementById('serendipity-overlay');
+      const title = document.getElementById('serendipity-title');
+      const details = document.getElementById('serendipity-details');
+      
+      title.textContent = random.title;
+      title.style.maxWidth = '0';
+      
+      details.innerHTML = `
+        <p style="font-size: 18px; margin: 24px 0;">${random.author || 'Unknown Author'}</p>
+        <p style="margin-bottom: 24px;">${random.takeaway || 'Discover something new...'}</p>
+        <button class="btn btn-primary btn-large" onclick="acceptSerendipity(${random.id})">
+          Accept the Journey
+        </button>
+        <button class="btn" onclick="closeSerendipity()" style="margin-left: 16px;">
+          Maybe Later
+        </button>
+      `;
+      
+      overlay.classList.add('show');
+      
+      setTimeout(() => {
+        title.style.animation = 'typing 2s steps(30) forwards, blink 0.75s step-end infinite';
+      }, 500);
+    }
+
+    function acceptSerendipity(id) {
+      startReading(id);
+      closeSerendipity();
+    }
+
+    function closeSerendipity() {
+      document.getElementById('serendipity-overlay').classList.remove('show');
+    }
+
+    // ===== VIEW SWITCHING =====
+    function switchView(view) {
+      currentView = view;
+      
+      document.querySelectorAll('.view-toggle button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      if (view === 'bookshelf') {
+        document.getElementById('bookshelf-view').style.display = 'block';
+        document.getElementById('list-view').classList.remove('active');
+        document.querySelectorAll('.view-toggle button')[0].classList.add('active');
+      } else {
+        document.getElementById('bookshelf-view').style.display = 'none';
+        document.getElementById('list-view').classList.add('active');
+        document.querySelectorAll('.view-toggle button')[1].classList.add('active');
+      }
+    }
+
+    // ===== EXPORT/IMPORT =====
+    function exportData() {
+      const data = JSON.stringify(resources, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `observatory-export-${Date.now()}.json`;
+      a.click();
+      showNotification('Exported successfully!');
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          
+          imported.forEach(resource => {
+            if (!resources.find(r => r.id === resource.id)) {
+              resources.push(resource);
+            }
+          });
+          
+          saveResources();
+          renderStats();
+          renderBookshelfView();
+          renderListView();
+          showNotification(`Imported ${imported.length} resources!`);
+        } catch (error) {
+          alert('Invalid file format');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Initialize
+    init();
+  </script>
+</body>
+</html>

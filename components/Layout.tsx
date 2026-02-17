@@ -52,18 +52,97 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 }`}
               >
                 <Grid className="w-5 h-5 mr-3" />
-                <span className="font-mono text-sm">Dashboard</span>
+                <span className="font-mono text-sm">Home</span>
              </Link>
+
+             <div className="mb-2 text-xs font-bold text-gray-600 uppercase tracking-widest px-3">Features</div>
               
               <Link 
                 to="/knowledge-map"
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
                   location.pathname === '/knowledge-map' ? 'bg-neon-purple/10 border-neon-purple text-neon-purple' : 'hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <span className="mr-3">🗺️</span>
                 <span className="font-mono text-sm">Knowledge Map</span>
+             </Link>
+
+             <Link 
+                to="/oracle"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/oracle' ? 'bg-gold/10 border-gold text-gold' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">🔮</span>
+                <span className="font-mono text-sm">Oracle</span>
+             </Link>
+
+             <Link 
+                to="/arena"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/arena' ? 'bg-red-500/10 border-red-500 text-red-500' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">⚔️</span>
+                <span className="font-mono text-sm">Arena</span>
+             </Link>
+
+             <Link 
+                to="/grimoire"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/grimoire' ? 'bg-purple-500/10 border-purple-500 text-purple-500' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">📖</span>
+                <span className="font-mono text-sm">Grimoire</span>
+             </Link>
+
+             <Link 
+                to="/observatory"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/observatory' ? 'bg-blue-500/10 border-blue-500 text-blue-500' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">📡</span>
+                <span className="font-mono text-sm">Observatory</span>
+             </Link>
+
+             <Link 
+                to="/forge"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/forge' ? 'bg-orange-500/10 border-orange-500 text-orange-500' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">⚒️</span>
+                <span className="font-mono text-sm">Forge</span>
+             </Link>
+
+             <Link 
+                to="/cartography"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/cartography' ? 'bg-green-500/10 border-green-500 text-green-500' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">🗺️</span>
+                <span className="font-mono text-sm">Cartography</span>
+             </Link>
+
+             <Link 
+                to="/dashboard"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
+                  location.pathname === '/dashboard' ? 'bg-neon-blue/10 border-neon-blue text-neon-blue' : 'hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <span className="mr-3">📊</span>
+                <span className="font-mono text-sm">Dashboard</span>
              </Link>
 
              <div className="mb-2 text-xs font-bold text-gray-600 uppercase tracking-widest px-3">Domains</div>

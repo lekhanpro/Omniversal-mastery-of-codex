@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Omniversal Codex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #040810;
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #cosmos-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .glass-panel {
+      background: rgba(6, 12, 30, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid #c9a84c;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Cinzel', serif;
+      color: #c9a84c;
+    }
+
+    h1 {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    #radar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    #radar-canvas {
+      max-width: 100%;
+      cursor: crosshair;
+    }
+
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .btn {
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+      transition: all 0.3s;
+      margin-top: 16px;
+    }
+
+    .btn:hover {
+      background: rgba(201, 168, 76, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: rgba(6, 12, 30, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      border-color: #c9a84c;
+      box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 36px;
+      font-weight: bold;
+      color: #c9a84c;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th {
+      font-family: 'Cinzel', serif;
+      color: #c9a84c;
+      text-align: left;
+      padding: 12px;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover {
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c9a84c, #00ccaa);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-not-started { background: rgba(100, 100, 100, 0.3); color: #888; }
+    .status-unlocked { background: rgba(68, 136, 255, 0.3); color: #4488ff; }
+    .status-in-progress { background: rgba(255, 204, 68, 0.3); color: #ffcc44; }
+    .status-mastering { background: rgba(0, 204, 170, 0.3); color: #00ccaa; }
+    .status-mastered { background: rgba(68, 255, 136, 0.3); color: #44ff88; }
+
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(53, 1fr);
+      gap: 3px;
+      margin: 16px 0;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1;
+      background: #0a0f1a;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.2);
+      border: 1px solid #c9a84c;
+    }
+
+    .heatmap-cell.level-1 { background: rgba(201, 168, 76, 0.2); }
+    .heatmap-cell.level-2 { background: rgba(201, 168, 76, 0.4); }
+    .heatmap-cell.level-3 { background: rgba(201, 168, 76, 0.6); }
+    .heatmap-cell.level-4 { background: rgba(201, 168, 76, 0.8); }
+    .heatmap-cell.level-5 { background: #c9a84c; }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .badge {
+      background: rgba(6, 12, 30, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .badge.locked {
+      opacity: 0.4;
+      filter: grayscale(1) blur(1px);
+    }
+
+    .badge.unlocked {
+      border-color: #c9a84c;
+      box-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
+    }
+
+    .badge-icon {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .badge-name {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .badge-desc {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      background: rgba(6, 12, 30, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .calendar-day:hover {
+      border-color: #c9a84c;
+      transform: scale(1.05);
+    }
+
+    .calendar-day.today {
+      border: 2px solid #c9a84c;
+      box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+    }
+
+    .calendar-day.active {
+      background: rgba(201, 168, 76, 0.2);
+    }
+
+    .calendar-icons {
+      display: flex;
+      gap: 2px;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .tooltip {
+      position: fixed;
+      background: rgba(6, 12, 30, 0.95);
+      border: 1px solid #c9a84c;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 1000;
+      display: none;
+      max-width: 250px;
+    }
+
+    .tooltip.show {
+      display: block;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(6, 12, 30, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid #c9a84c;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: #c9a84c;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .back-link:hover {
+      background: rgba(201, 168, 76, 0.2);
+      transform: translateX(-5px);
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .sparkle {
+      animation: sparkle 1s ease-in-out;
+    }
+
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .count-up {
+      animation: countUp 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cosmos-bg"></canvas>
+  <a href="/" class="back-link">← Back to Codex</a>
+  
+  <div class="container">
+    <h1>📊 CODEX DASHBOARD</h1>
+    <p class="subtitle">Live Mastery Analytics & Visualization</p>
+
+    <!-- Radar Chart -->
+    <div class="glass-panel">
+      <div id="radar-container">
+        <canvas id="radar-canvas" width="500" height="500"></canvas>
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-box" style="background: rgba(201,168,76,0.3); border: 2px solid rgba(201,168,76,0.9);"></div>
+            <span>Completion %</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-box" style="background: rgba(68,136,255,0.2); border: 2px solid #4488ff;"></div>
+            <span>Quiz Scores</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-box" style="background: rgba(0,204,170,0.2); border: 2px solid #00ccaa;"></div>
+            <span>Activity</span>
+          </div>
+        </div>
+        <button class="btn" onclick="animateRadar()">🔄 Animate Again</button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-subjects">0</div>
+        <div class="stat-label">Total Subjects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-completion">0%</div>
+        <div class="stat-label">Avg Completion</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-hours">0h</div>
+        <div class="stat-label">Hours Logged</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-quizzes">0</div>
+        <div class="stat-label">Quizzes Done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-streak">0</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-notes">0</div>
+        <div class="stat-label">Notes Written</div>
+      </div>
+    </div>
+
+    <!-- Domain Breakdown Table -->
+    <div class="glass-panel">
+      <h2>Domain Breakdown</h2>
+      <table id="domain-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">Domain</th>
+            <th onclick="sortTable(1)">Subjects</th>
+            <th onclick="sortTable(2)">Completion %</th>
+            <th onclick="sortTable(3)">Quiz Avg</th>
+            <th onclick="sortTable(4)">Hours</th>
+            <th onclick="sortTable(5)">Notes</th>
+            <th onclick="sortTable(6)">Last Active</th>
+            <th onclick="sortTable(7)">Status</th>
+          </tr>
+        </thead>
+        <tbody id="domain-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Activity Heatmap -->
+    <div class="glass-panel">
+      <h2>Activity Heatmap (Last 365 Days)</h2>
+      <div id="heatmap" class="heatmap"></div>
+      <div style="display: flex; justify-content: space-between; margin-top: 16px; font-size: 14px;">
+        <span>Longest Streak: <strong id="longest-streak">0</strong> days</span>
+        <span>Total Active Days: <strong id="active-days">0</strong></span>
+      </div>
+    </div>
+
+    <!-- Achievement Badges -->
+    <div class="glass-panel">
+      <h2>🏆 Achievement Badges</h2>
+      <div class="badges-grid" id="badges-grid"></div>
+    </div>
+
+    <!-- Streak Calendar -->
+    <div class="glass-panel">
+      <h2>📆 Streak Calendar</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <button class="btn" onclick="changeMonth(-1)">← Prev</button>
+        <h3 id="calendar-month"></h3>
+        <button class="btn" onclick="changeMonth(1)">Next →</button>
+      </div>
+      <div class="calendar" id="calendar"></div>
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    // ===== MASTERY DATA =====
+    const MASTERY = {
+      domains: [
+        { id:1, name:"Physical Mastery", completion:68, hoursLogged:42, notesCount:12, quizzesTaken:8, avgQuizScore:74, streak:5, color:"#4488ff" },
+        { id:2, name:"Mind & Cognition", completion:75, hoursLogged:38, notesCount:15, quizzesTaken:10, avgQuizScore:82, streak:7, color:"#00ffcc" },
+        { id:3, name:"AI & ML", completion:55, hoursLogged:28, notesCount:8, quizzesTaken:5, avgQuizScore:68, streak:3, color:"#aa44ff" },
+        { id:4, name:"Physics", completion:62, hoursLogged:35, notesCount:10, quizzesTaken:7, avgQuizScore:71, streak:4, color:"#ff6644" },
+        { id:5, name:"Philosophy", completion:80, hoursLogged:45, notesCount:18, quizzesTaken:12, avgQuizScore:88, streak:9, color:"#ffcc44" },
+        { id:6, name:"Economics", completion:48, hoursLogged:22, notesCount:6, quizzesTaken:4, avgQuizScore:65, streak:2, color:"#44ff88" },
+        { id:7, name:"Language", completion:70, hoursLogged:40, notesCount:14, quizzesTaken:9, avgQuizScore:78, streak:6, color:"#ff44aa" },
+        { id:8, name:"Biology", completion:58, hoursLogged:30, notesCount:9, quizzesTaken:6, avgQuizScore:70, streak:3, color:"#88ff44" },
+        { id:9, name:"Cybersecurity", completion:65, hoursLogged:36, notesCount:11, quizzesTaken:8, avgQuizScore:75, streak:5, color:"#ff8844" },
+        { id:10, name:"Future Intelligence", completion:72, hoursLogged:42, notesCount:13, quizzesTaken:10, avgQuizScore:80, streak:7, color:"#44aaff" }
+      ]
+    };
+
+    // Load from localStorage if available
+    function loadMasteryData() {
+      const notes = JSON.parse(localStorage.getItem('grimoire_notes') || '[]');
+      const arenaStreak = parseInt(localStorage.getItem('arena_best_streak') || '0');
+      
+      MASTERY.domains.forEach(domain => {
+        const domainNotes = notes.filter(n => n.domain === domain.id);
+        if (domainNotes.length > 0) {
+          domain.notesCount = domainNotes.length;
+        }
+      });
+    }
+
+    loadMasteryData();
+
+    // ===== COSMOS BACKGROUND =====
+    const cosmosCanvas = document.getElementById('cosmos-bg');
+    const cosmosCtx = cosmosCanvas.getContext('2d');
+    cosmosCanvas.width = window.innerWidth;
+    cosmosCanvas.height = window.innerHeight;
+
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: Math.random() * cosmosCanvas.width,
+        y: Math.random() * cosmosCanvas.height,
+        radius: Math.random() * 1.5,
+        alpha: Math.random()
+      });
+    }
+
+    const nebulas = [];
+    for (let i = 0; i < 6; i++) {
+      nebulas.push({
+        x: Math.random() * cosmosCanvas.width,
+        y: Math.random() * cosmosCanvas.height,
+        radius: 100 + Math.random() * 150,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        hue: Math.random() * 60 + 180
+      });
+    }
+
+    function drawCosmos() {
+      cosmosCtx.fillStyle = '#040810';
+      cosmosCtx.fillRect(0, 0, cosmosCanvas.width, cosmosCanvas.height);
+
+      // Draw nebulas
+      nebulas.forEach(nebula => {
+        const gradient = cosmosCtx.createRadialGradient(nebula.x, nebula.y, 0, nebula.x, nebula.y, nebula.radius);
+        gradient.addColorStop(0, `hsla(${nebula.hue}, 70%, 50%, 0.1)`);
+        gradient.addColorStop(1, 'transparent');
+        cosmosCtx.fillStyle = gradient;
+        cosmosCtx.fillRect(0, 0, cosmosCanvas.width, cosmosCanvas.height);
+
+        nebula.x += nebula.vx;
+        nebula.y += nebula.vy;
+
+        if (nebula.x < -nebula.radius) nebula.x = cosmosCanvas.width + nebula.radius;
+        if (nebula.x > cosmosCanvas.width + nebula.radius) nebula.x = -nebula.radius;
+        if (nebula.y < -nebula.radius) nebula.y = cosmosCanvas.height + nebula.radius;
+        if (nebula.y > cosmosCanvas.height + nebula.radius) nebula.y = -nebula.radius;
+      });
+
+      // Draw stars
+      stars.forEach(star => {
+        cosmosCtx.beginPath();
+        cosmosCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        cosmosCtx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        cosmosCtx.fill();
+        
+        star.alpha += (Math.random() - 0.5) * 0.02;
+        star.alpha = Math.max(0.2, Math.min(1, star.alpha));
+      });
+
+      requestAnimationFrame(drawCosmos);
+    }
+
+    drawCosmos();
+
+    window.addEventListener('resize', () => {
+      cosmosCanvas.width = window.innerWidth;
+      cosmosCanvas.height = window.innerHeight;
+    });
+
+    // ===== RADAR CHART =====
+    const radarCanvas = document.getElementById('radar-canvas');
+    const radarCtx = radarCanvas.getContext('2d');
+    const centerX = 250;
+    const centerY = 250;
+    const maxRadius = 200;
+
+    let animationProgress = 0;
+    let isAnimating = false;
+
+    function drawRadarChart(progress = 1) {
+      radarCtx.clearRect(0, 0, 500, 500);
+
+      const numAxes = MASTERY.domains.length;
+      const angleStep = (Math.PI * 2) / numAxes;
+
+      // Draw grid rings
+      for (let i = 1; i <= 5; i++) {
+        radarCtx.beginPath();
+        radarCtx.strokeStyle = 'rgba(201, 168, 76, 0.15)';
+        radarCtx.lineWidth = 1;
+        
+        for (let j = 0; j <= numAxes; j++) {
+          const angle = j * angleStep - Math.PI / 2;
+          const radius = (maxRadius / 5) * i;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          
+          if (j === 0) {
+            radarCtx.moveTo(x, y);
+          } else {
+            radarCtx.lineTo(x, y);
+          }
+        }
+        radarCtx.closePath();
+        radarCtx.stroke();
+      }
+
+      // Draw axes
+      radarCtx.strokeStyle = 'rgba(201, 168, 76, 0.3)';
+      radarCtx.lineWidth = 1;
+      MASTERY.domains.forEach((domain, i) => {
+        const angle = i * angleStep - Math.PI / 2;
+        radarCtx.beginPath();
+        radarCtx.moveTo(centerX, centerY);
+        radarCtx.lineTo(
+          centerX + Math.cos(angle) * maxRadius,
+          centerY + Math.sin(angle) * maxRadius
+        );
+        radarCtx.stroke();
+
+        // Draw labels
+        const labelRadius = maxRadius + 30;
+        const labelX = centerX + Math.cos(angle) * labelRadius;
+        const labelY = centerY + Math.sin(angle) * labelRadius;
+        
+        radarCtx.fillStyle = domain.color;
+        radarCtx.font = '12px Cinzel';
+        radarCtx.textAlign = 'center';
+        radarCtx.textBaseline = 'middle';
+        radarCtx.fillText(domain.name, labelX, labelY);
+      });
+
+      // Draw polygons with animation
+      const polygons = [
+        { data: MASTERY.domains.map(d => d.completion), color: 'rgba(201,168,76,0.3)', stroke: 'rgba(201,168,76,0.9)', delay: 0 },
+        { data: MASTERY.domains.map(d => d.avgQuizScore), color: 'rgba(68,136,255,0.2)', stroke: '#4488ff', delay: 0.3 },
+        { data: MASTERY.domains.map(d => Math.min(100, (d.hoursLogged + d.notesCount * 5))), color: 'rgba(0,204,170,0.2)', stroke: '#00ccaa', delay: 0.6 }
+      ];
+
+      polygons.forEach(polygon => {
+        const polyProgress = Math.max(0, Math.min(1, (progress - polygon.delay) / 0.7));
+        
+        radarCtx.beginPath();
+        polygon.data.forEach((value, i) => {
+          const angle = i * angleStep - Math.PI / 2;
+          const radius = (value / 100) * maxRadius * polyProgress;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          
+          if (i === 0) {
+            radarCtx.moveTo(x, y);
+          } else {
+            radarCtx.lineTo(x, y);
+          }
+        });
+        radarCtx.closePath();
+        
+        radarCtx.fillStyle = polygon.color;
+        radarCtx.fill();
+        radarCtx.strokeStyle = polygon.stroke;
+        radarCtx.lineWidth = 2;
+        radarCtx.stroke();
+      });
+    }
+
+    function animateRadar() {
+      if (isAnimating) return;
+      isAnimating = true;
+      animationProgress = 0;
+      
+      function animate() {
+        animationProgress += 0.016 / 1.2;
+        drawRadarChart(animationProgress);
+        
+        if (animationProgress < 1.6) {
+          requestAnimationFrame(animate);
+        } else {
+          isAnimating = false;
+        }
+      }
+      
+      animate();
+    }
+
+    // Hover interaction
+    radarCanvas.addEventListener('mousemove', (e) => {
+      const rect = radarCanvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const angleStep = (Math.PI * 2) / MASTERY.domains.length;
+      let hoveredDomain = null;
+      
+      MASTERY.domains.forEach((domain, i) => {
+        const angle = i * angleStep - Math.PI / 2;
+        const axisX = centerX + Math.cos(angle) * maxRadius;
+        const axisY = centerY + Math.sin(angle) * maxRadius;
+        
+        const dist = Math.sqrt(Math.pow(mouseX - axisX, 2) + Math.pow(mouseY - axisY, 2));
+        if (dist < 40) {
+          hoveredDomain = domain;
+        }
+      });
+      
+      const tooltip = document.getElementById('tooltip');
+      if (hoveredDomain) {
+        tooltip.innerHTML = `
+          <strong>${hoveredDomain.name}</strong><br>
+          Completion: ${hoveredDomain.completion}%<br>
+          Quiz Avg: ${hoveredDomain.avgQuizScore}%<br>
+          Hours: ${hoveredDomain.hoursLogged}h<br>
+          Notes: ${hoveredDomain.notesCount}<br>
+          Streak: ${hoveredDomain.streak} days
+        `;
+        tooltip.style.left = e.clientX + 10 + 'px';
+        tooltip.style.top = e.clientY + 10 + 'px';
+        tooltip.classList.add('show');
+      } else {
+        tooltip.classList.remove('show');
+      }
+    });
+
+    radarCanvas.addEventListener('mouseleave', () => {
+      document.getElementById('tooltip').classList.remove('show');
+    });
+
+    // Initial draw
+    animateRadar();
+
+    // ===== STATS CARDS =====
+    function animateStats() {
+      const totalSubjects = MASTERY.domains.reduce((sum, d) => sum + Math.floor(d.completion * 1.5), 0);
+      const avgCompletion = Math.round(MASTERY.domains.reduce((sum, d) => sum + d.completion, 0) / MASTERY.domains.length);
+      const totalHours = MASTERY.domains.reduce((sum, d) => sum + d.hoursLogged, 0);
+      const totalQuizzes = MASTERY.domains.reduce((sum, d) => sum + d.quizzesTaken, 0);
+      const currentStreak = Math.max(...MASTERY.domains.map(d => d.streak));
+      const totalNotes = MASTERY.domains.reduce((sum, d) => sum + d.notesCount, 0);
+
+      animateValue('stat-subjects', 0, totalSubjects, 1000);
+      animateValue('stat-completion', 0, avgCompletion, 1000, '%');
+      animateValue('stat-hours', 0, totalHours, 1000, 'h');
+      animateValue('stat-quizzes', 0, totalQuizzes, 1000);
+      animateValue('stat-streak', 0, currentStreak, 1000);
+      animateValue('stat-notes', 0, totalNotes, 1000);
+    }
+
+    function animateValue(id, start, end, duration, suffix = '') {
+      const element = document.getElementById(id);
+      const range = end - start;
+      const increment = range / (duration / 16);
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= end) {
+          current = end;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(current) + suffix;
+      }, 16);
+    }
+
+    // Trigger animation when visible
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateStats();
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    observer.observe(document.querySelector('.stats-row'));
+
+    // ===== DOMAIN TABLE =====
+    function populateTable() {
+      const tbody = document.getElementById('domain-tbody');
+      tbody.innerHTML = '';
+      
+      MASTERY.domains.forEach(domain => {
+        const subjects = Math.floor(domain.completion * 1.5);
+        const total = 150;
+        const status = domain.completion < 10 ? 'not-started' :
+                      domain.completion < 30 ? 'unlocked' :
+                      domain.completion < 60 ? 'in-progress' :
+                      domain.completion < 90 ? 'mastering' : 'mastered';
+        
+        const statusText = status.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span style="color: ${domain.color}">●</span> ${domain.name}</td>
+          <td>${subjects} / ${total}</td>
+          <td>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${domain.completion}%"></div>
+            </div>
+            ${domain.completion}%
+          </td>
+          <td style="color: ${domain.avgQuizScore >= 85 ? '#44ff88' : domain.avgQuizScore >= 70 ? '#c9a84c' : domain.avgQuizScore >= 50 ? '#ffcc44' : '#ff6644'}">${domain.avgQuizScore}%</td>
+          <td>${domain.hoursLogged}h</td>
+          <td>${domain.notesCount}</td>
+          <td>${Math.floor(Math.random() * 7)} days ago</td>
+          <td><span class="status-badge status-${status}">${statusText}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function sortTable(columnIndex) {
+      const tbody = document.getElementById('domain-tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      
+      rows.sort((a, b) => {
+        const aText = a.cells[columnIndex].textContent.trim();
+        const bText = b.cells[columnIndex].textContent.trim();
+        
+        const aNum = parseFloat(aText);
+        const bNum = parseFloat(bText);
+        
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return bNum - aNum;
+        }
+        return aText.localeCompare(bText);
+      });
+      
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
+    populateTable();
+
+    // ===== ACTIVITY HEATMAP =====
+    function generateHeatmap() {
+      const heatmap = document.getElementById('heatmap');
+      heatmap.innerHTML = '';
+      
+      const today = new Date();
+      const activityData = {};
+      
+      // Generate random activity data for last 365 days
+      for (let i = 0; i < 365; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        activityData[dateStr] = Math.floor(Math.random() * 6);
+      }
+      
+      // Create 52 weeks × 7 days
+      for (let week = 0; week < 52; week++) {
+        for (let day = 0; day < 7; day++) {
+          const date = new Date(today);
+          date.setDate(date.getDate() - ((51 - week) * 7 + (6 - day)));
+          const dateStr = date.toISOString().split('T')[0];
+          const level = activityData[dateStr] || 0;
+          
+          const cell = document.createElement('div');
+          cell.className = `heatmap-cell ${level > 0 ? 'level-' + Math.min(5, level) : ''}`;
+          cell.dataset.date = dateStr;
+          cell.dataset.level = level;
+          
+          cell.addEventListener('mouseenter', (e) => {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = `
+              <strong>${dateStr}</strong><br>
+              ${level} activities<br>
+              ${level > 0 ? 'Domains: ' + Math.floor(Math.random() * 3 + 1) : 'No activity'}
+            `;
+            tooltip.style.left = e.clientX + 10 + 'px';
+            tooltip.style.top = e.clientY + 10 + 'px';
+            tooltip.classList.add('show');
+          });
+          
+          cell.addEventListener('mouseleave', () => {
+            document.getElementById('tooltip').classList.remove('show');
+          });
+          
+          heatmap.appendChild(cell);
+        }
+      }
+      
+      // Calculate streaks
+      let longestStreak = 0;
+      let currentStreak = 0;
+      let activeDays = 0;
+      
+      Object.values(activityData).forEach(level => {
+        if (level > 0) {
+          currentStreak++;
+          activeDays++;
+          longestStreak = Math.max(longestStreak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      });
+      
+      document.getElementById('longest-streak').textContent = longestStreak;
+      document.getElementById('active-days').textContent = activeDays;
+    }
+
+    generateHeatmap();
+
+    // ===== ACHIEVEMENT BADGES =====
+    const badges = [
+      { id: 'first-step', name: 'First Step', desc: 'Complete first subject', icon: '🎯', unlocked: true },
+      { id: 'scholar', name: 'Scholar', desc: '50 subjects checked', icon: '📚', unlocked: true },
+      { id: 'centurion', name: 'Centurion', desc: '100 subjects checked', icon: '💯', unlocked: false },
+      { id: 'quiz-novice', name: 'Quiz Novice', desc: 'Complete 1 quiz', icon: '📝', unlocked: true },
+      { id: 'quiz-master', name: 'Quiz Master', desc: 'Complete 20 quizzes', icon: '🏆', unlocked: false },
+      { id: 'perfect-score', name: 'Perfect Score', desc: '100% on any quiz', icon: '⭐', unlocked: false },
+      { id: 'gauntlet-champ', name: 'Gauntlet Champion', desc: 'Complete Gauntlet mode', icon: '⚔️', unlocked: false },
+      { id: 'chronicler', name: 'Chronicler', desc: 'Write 10 notes', icon: '✍️', unlocked: true },
+      { id: 'sage', name: 'Sage', desc: 'Write 50 notes', icon: '📖', unlocked: false },
+      { id: 'polymath', name: 'Polymath', desc: 'Active in all 10 domains', icon: '🌟', unlocked: true },
+      { id: 'streak-7', name: 'Streak 7', desc: '7-day streak', icon: '🔥', unlocked: true },
+      { id: 'streak-30', name: 'Streak 30', desc: '30-day streak', icon: '🔥🔥', unlocked: false },
+      { id: 'speed-demon', name: 'Speed Demon', desc: 'Speed Round under 8 min', icon: '⚡', unlocked: false },
+      { id: 'connector', name: 'Connector', desc: 'Note with 3+ cross-domain links', icon: '🔗', unlocked: false },
+      { id: 'astronomer', name: 'Astronomer', desc: 'Use Knowledge Map 10 times', icon: '🗺️', unlocked: true },
+      { id: 'oracle-seeker', name: 'Oracle Seeker', desc: '20 Oracle conversations', icon: '🔮', unlocked: false },
+      { id: 'deep-diver', name: 'Deep Diver', desc: 'Mastery level 5 note', icon: '🤿', unlocked: false },
+      { id: 'completionist', name: 'Completionist', desc: '1 domain at 100%', icon: '✅', unlocked: false },
+      { id: 'omniverse', name: 'Omniverse', desc: 'All 10 domains at 50%+', icon: '🌌', unlocked: true },
+      { id: 'ascended', name: 'Ascended', desc: 'All 10 domains at 90%+', icon: '👑', unlocked: false }
+    ];
+
+    function renderBadges() {
+      const grid = document.getElementById('badges-grid');
+      grid.innerHTML = '';
+      
+      badges.forEach(badge => {
+        const div = document.createElement('div');
+        div.className = `badge ${badge.unlocked ? 'unlocked' : 'locked'}`;
+        div.innerHTML = `
+          <div class="badge-icon">${badge.icon}</div>
+          <div class="badge-name">${badge.name}</div>
+          <div class="badge-desc">${badge.desc}</div>
+        `;
+        
+        if (badge.unlocked) {
+          div.style.borderColor = '#c9a84c';
+        }
+        
+        grid.appendChild(div);
+      });
+    }
+
+    renderBadges();
+
+    // ===== STREAK CALENDAR =====
+    let currentMonth = new Date();
+
+    function renderCalendar() {
+      const calendar = document.getElementById('calendar');
+      calendar.innerHTML = '';
+      
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+      
+      document.getElementById('calendar-month').textContent = 
+        currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      
+      // Add empty cells for days before month starts
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        calendar.appendChild(emptyCell);
+      }
+      
+      // Add days
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const cell = document.createElement('div');
+        cell.className = 'calendar-day';
+        
+        const isToday = date.toDateString() === today.toDateString();
+        const hasActivity = Math.random() > 0.5;
+        
+        if (isToday) cell.classList.add('today');
+        if (hasActivity) cell.classList.add('active');
+        
+        cell.innerHTML = `
+          <div>${day}</div>
+          ${hasActivity ? `
+            <div class="calendar-icons">
+              ${Math.random() > 0.5 ? '⚔️' : ''}
+              ${Math.random() > 0.5 ? '✒️' : ''}
+              ${Math.random() > 0.5 ? '★' : ''}
+            </div>
+          ` : ''}
+        `;
+        
+        calendar.appendChild(cell);
+      }
+    }
+
+    function changeMonth(delta) {
+      currentMonth.setMonth(currentMonth.getMonth() + delta);
+      renderCalendar();
+    }
+
+    renderCalendar();
+  </script>
+</body>
+</html>
