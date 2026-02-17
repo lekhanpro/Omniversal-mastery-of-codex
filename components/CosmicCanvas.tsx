@@ -28,7 +28,7 @@ class Blob {
     this.points = 8;
     this.anchors = [];
     this.colorSet = this.getRandomColorSet();
-    this.alpha = 0.12 + Math.random() * 0.13;
+    this.alpha = 0.08 + Math.random() * 0.08;
     this.timeOffset = Math.random() * 1000;
 
     for (let i = 0; i < this.points; i++) {
@@ -43,9 +43,9 @@ class Blob {
 
   getRandomColorSet(): string[] {
     const sets = [
-      ['#0a0030', '#1a0050', '#000820'],
-      ['#1a0800', '#300a00', '#1a0800'],
-      ['#001a10', '#003020', '#001a10']
+      ['#e0f2fe', '#bae6fd', '#f0f9ff'],
+      ['#fef3c7', '#fde68a', '#fffbeb'],
+      ['#dbeafe', '#bfdbfe', '#eff6ff']
     ];
     return sets[Math.floor(Math.random() * sets.length)];
   }
@@ -123,20 +123,20 @@ class Star {
 
     if (tier === 'tiny') {
       this.radius = 0.4;
-      this.opacity = 0.4;
-      this.baseOpacity = 0.4;
+      this.opacity = 0.2;
+      this.baseOpacity = 0.2;
       this.twinkle = false;
       this.hasGlow = false;
     } else if (tier === 'medium') {
       this.radius = 0.8;
-      this.opacity = 0.7;
-      this.baseOpacity = 0.7;
+      this.opacity = 0.3;
+      this.baseOpacity = 0.3;
       this.twinkle = false;
       this.hasGlow = false;
     } else {
       this.radius = 1.4;
-      this.baseOpacity = 1.0;
-      this.opacity = 1.0;
+      this.baseOpacity = 0.5;
+      this.opacity = 0.5;
       this.twinkle = true;
       this.hasGlow = Math.random() < 0.25;
     }
@@ -151,10 +151,10 @@ class Star {
 
     if (this.hasGlow) {
       ctx.shadowBlur = 6;
-      ctx.shadowColor = '#c9a84c';
+      ctx.shadowColor = '#0066cc';
     }
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#94a3b8';
     ctx.globalAlpha = this.opacity;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -228,8 +228,8 @@ class ShootingStar {
       currentY - Math.sin(this.angle) * this.length
     );
 
-    gradient.addColorStop(0, `rgba(255, 255, 255, ${1 - progress})`);
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    gradient.addColorStop(0, `rgba(100, 116, 139, ${0.6 * (1 - progress)})`);
+    gradient.addColorStop(1, 'rgba(100, 116, 139, 0)');
 
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 2;

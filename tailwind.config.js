@@ -13,14 +13,16 @@ export default {
       },
       colors: {
         neon: {
-          blue: '#00f3ff',
-          purple: '#bc13fe',
-          green: '#0aff0a',
+          blue: '#0066cc',
+          purple: '#7c3aed',
+          green: '#059669',
         },
-        dark: {
-          bg: '#050505',
-          card: '#0a0a0a',
-          border: '#1f1f1f',
+        light: {
+          bg: '#ffffff',
+          card: '#f9fafb',
+          border: '#e5e7eb',
+          text: '#111827',
+          textSecondary: '#6b7280',
         }
       },
       animation: {
