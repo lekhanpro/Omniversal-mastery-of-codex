@@ -21,21 +21,21 @@ const Home: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 font-mono tracking-tighter">
+        <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-4 font-mono tracking-tighter">
           <span className="text-neon-blue">OMNIVERSAL MASTERY OF</span> CODEX
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+        <p className="text-slate-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
           A comprehensive digital library for personal evolution, future intelligence, and high-performance skill building.
         </p>
         
         <div className="mt-8 relative max-w-md mx-auto">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+            <Search className="h-5 w-5 text-slate-400 dark:text-gray-500" />
           </div>
           <input
             type="text"
             placeholder="Search protocols, skills, and domains..."
-            className="block w-full pl-10 pr-3 py-3 bg-white dark:bg-dark-card border border-gray-300 dark:border-dark-border rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-neon-blue focus:ring-1 focus:ring-neon-blue transition-all shadow-sm"
+            className="block w-full pl-10 pr-3 py-3 bg-white dark:bg-dark-card border border-slate-300 dark:border-dark-border rounded-full text-slate-900 dark:text-gray-100 placeholder-slate-500 dark:placeholder-gray-400 focus:outline-none focus:border-neon-blue focus:ring-1 focus:ring-neon-blue transition-all shadow-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -55,29 +55,29 @@ const Home: React.FC = () => {
             >
               <Link 
                 to={domain.isLocked ? '#' : `/domain/${domain.id}`}
-                className={`block h-full p-6 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-card shadow-sm group relative overflow-hidden ${
-                  domain.isLocked ? 'cursor-not-allowed opacity-60' : 'hover:border-neon-blue hover:shadow-md transition-all duration-300'
+                className={`block h-full p-6 rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card/40 backdrop-blur-md shadow-sm group relative overflow-hidden ${
+                  domain.isLocked ? 'cursor-not-allowed opacity-60' : 'hover:border-neon-blue/50 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,243,255,0.1)] transition-all duration-300'
                 }`}
               >
                  {!domain.isLocked && <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-neon-blue/10 to-transparent rounded-bl-full -mr-8 -mt-8 group-hover:-mr-4 group-hover:-mt-4 transition-all duration-500" />}
                 
                 <div className="flex items-start justify-between mb-4">
-                   <div className={`p-3 rounded-lg ${domain.isLocked ? 'bg-gray-200 dark:bg-gray-800 text-gray-500' : 'bg-neon-blue/10 text-neon-blue'}`}>
+                   <div className={`p-3 rounded-lg ${domain.isLocked ? 'bg-slate-200 dark:bg-gray-800 text-slate-500 dark:text-gray-500' : 'bg-neon-blue/10 text-neon-blue'}`}>
                       {getIcon(domain.icon)}
                    </div>
-                   <span className="font-mono text-xs text-gray-400 dark:text-gray-500">D-{String(domain.id).padStart(2, '0')}</span>
+                   <span className="font-mono text-xs text-slate-400 dark:text-gray-600">D-{String(domain.id).padStart(2, '0')}</span>
                 </div>
                 
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-neon-blue transition-colors">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-gray-100 mb-2 group-hover:text-neon-blue transition-colors">
                   {domain.title}
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                <p className="text-sm text-slate-600 dark:text-gray-400 line-clamp-3">
                   {domain.shortDescription}
                 </p>
 
                 {domain.isLocked && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-[1px]">
-                        <div className="px-3 py-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-black rounded text-xs font-mono text-gray-500 dark:text-gray-400 uppercase">
+                        <div className="px-3 py-1 border border-slate-300 dark:border-gray-700 bg-white dark:bg-black rounded text-xs font-mono text-slate-500 dark:text-gray-400 uppercase">
                             Encrypted
                         </div>
                     </div>
@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           <Quote className="w-8 h-8 text-neon-green" />
           <h2 className="text-3xl font-bold text-neon-green text-center font-mono">Codex Quotes</h2>
         </div>
-        <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-8 shadow-sm">
+        <div className="bg-white dark:bg-dark-card/50 rounded-xl border border-slate-200 dark:border-dark-border p-8 shadow-sm">
           <QuotesRotator />
         </div>
       </section>

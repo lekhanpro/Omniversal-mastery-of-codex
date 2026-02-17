@@ -49,7 +49,7 @@ const KnowledgeMapNew: React.FC = () => {
 
   const render = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     // Clear canvas
-    ctx.fillStyle = isDark ? '#0a0a0a' : '#ffffff';
+    ctx.fillStyle = isDark ? '#050505' : '#f8fafc';
     ctx.fillRect(0, 0, width, height);
 
     const centerX = width / 2;
@@ -57,7 +57,7 @@ const KnowledgeMapNew: React.FC = () => {
     const radius = Math.min(width, height) * 0.35;
 
     // Draw connection lines
-    ctx.strokeStyle = isDark ? 'rgba(100, 116, 139, 0.2)' : 'rgba(200, 200, 200, 0.3)';
+    ctx.strokeStyle = isDark ? 'rgba(201, 168, 76, 0.15)' : 'rgba(100, 116, 139, 0.2)';
     ctx.lineWidth = 1;
     for (let i = 0; i < 20; i++) {
       const angle1 = ((i / 20) * Math.PI * 2) + (rotation * Math.PI / 180);
@@ -80,13 +80,13 @@ const KnowledgeMapNew: React.FC = () => {
     // Draw center circle
     ctx.beginPath();
     ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
-    ctx.fillStyle = isDark ? 'rgba(0, 102, 204, 0.1)' : 'rgba(0, 102, 204, 0.05)';
+    ctx.fillStyle = isDark ? 'rgba(0, 243, 255, 0.1)' : 'rgba(0, 102, 204, 0.05)';
     ctx.fill();
-    ctx.strokeStyle = '#0066cc';
+    ctx.strokeStyle = '#00f3ff';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = isDark ? '#ffffff' : '#111827';
+    ctx.fillStyle = isDark ? '#ffffff' : '#0f172a';
     ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -105,7 +105,7 @@ const KnowledgeMapNew: React.FC = () => {
       // Glow effect for hovered
       if (isHovered) {
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, nodeRadius + 15);
-        gradient.addColorStop(0, '#0066cc40');
+        gradient.addColorStop(0, '#00f3ff40');
         gradient.addColorStop(1, 'transparent');
         ctx.fillStyle = gradient;
         ctx.fillRect(x - nodeRadius - 15, y - nodeRadius - 15, (nodeRadius + 15) * 2, (nodeRadius + 15) * 2);
@@ -114,9 +114,9 @@ const KnowledgeMapNew: React.FC = () => {
       // Node circle
       ctx.beginPath();
       ctx.arc(x, y, nodeRadius, 0, Math.PI * 2);
-      ctx.fillStyle = isDark ? 'rgba(26, 26, 26, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+      ctx.fillStyle = isDark ? 'rgba(10, 10, 10, 0.9)' : 'rgba(255, 255, 255, 0.95)';
       ctx.fill();
-      ctx.strokeStyle = isHovered ? '#0066cc' : (isDark ? '#444' : '#ddd');
+      ctx.strokeStyle = isHovered ? '#00f3ff' : (isDark ? '#333' : '#cbd5e1');
       ctx.lineWidth = isHovered ? 3 : 2;
       ctx.stroke();
 
@@ -128,7 +128,7 @@ const KnowledgeMapNew: React.FC = () => {
 
       // Domain name
       ctx.font = `${isHovered ? 'bold 11px' : '10px'} Arial`;
-      ctx.fillStyle = isHovered ? '#0066cc' : (isDark ? '#aaa' : '#666');
+      ctx.fillStyle = isHovered ? '#00f3ff' : (isDark ? '#999' : '#475569');
       const name = domain.title.length > 15 ? domain.title.substring(0, 13) + '...' : domain.title;
       ctx.fillText(name, x, y + nodeRadius + 15);
     });
@@ -186,7 +186,7 @@ const KnowledgeMapNew: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-white dark:bg-dark-bg overflow-hidden">
+    <div className="relative w-full h-screen bg-slate-50 dark:bg-dark-bg overflow-hidden">
       <div className="absolute top-4 left-4 z-20">
         <Link to="/" className="flex items-center text-neon-blue hover:text-neon-blue/80 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -195,16 +195,16 @@ const KnowledgeMapNew: React.FC = () => {
       </div>
 
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-gray-200 dark:border-dark-border rounded-lg px-6 py-3 shadow-sm">
+        <div className="bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border rounded-lg px-6 py-3 shadow-sm">
           <h1 className="text-xl font-bold font-mono text-neon-blue">KNOWLEDGE MAP</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">Circular Constellation of 20 Domains</p>
+          <p className="text-xs text-slate-500 dark:text-gray-500 text-center">Circular Constellation of 20 Domains</p>
         </div>
       </div>
 
       {hoveredDomain && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-gray-200 dark:border-dark-border rounded-lg px-6 py-3 shadow-sm max-w-md">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border rounded-lg px-6 py-3 shadow-sm max-w-md">
           <h3 className="font-bold text-neon-blue mb-1">{domains.find(d => d.id === hoveredDomain)?.title}</h3>
-          <p className="text-xs text-gray-600 dark:text-gray-400">{domains.find(d => d.id === hoveredDomain)?.shortDescription}</p>
+          <p className="text-xs text-slate-600 dark:text-gray-400">{domains.find(d => d.id === hoveredDomain)?.shortDescription}</p>
         </div>
       )}
 
