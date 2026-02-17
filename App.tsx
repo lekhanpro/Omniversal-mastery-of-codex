@@ -6,7 +6,7 @@ import DomainView from './pages/DomainView';
 import Arena from './pages/Arena';
 import Oracle from './pages/Oracle';
 import Grimoire from './pages/Grimoire';
-import Cartography from './pages/Cartography';
+import KnowledgeMapNew from './pages/KnowledgeMapNew';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -32,13 +32,10 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/domain/:id" element={<Layout><DomainView /></Layout>} />
-        <Route path="/knowledge-map" element={<ExternalRedirect url="/knowledge-map.html" />} />
+        <Route path="/knowledge-map" element={<Layout><KnowledgeMapNew /></Layout>} />
         <Route path="/arena" element={<Arena />} />
         <Route path="/oracle" element={<Oracle />} />
         <Route path="/grimoire" element={<Grimoire />} />
-        <Route path="/observatory" element={<ExternalRedirect url="/observatory.html" />} />
-        <Route path="/forge" element={<ExternalRedirect url="/forge.html" />} />
-        <Route path="/cartography" element={<Layout><Cartography /></Layout>} />
         <Route path="/dashboard" element={<ExternalRedirect url="/dashboard.html" />} />
       </Routes>
     </Router>

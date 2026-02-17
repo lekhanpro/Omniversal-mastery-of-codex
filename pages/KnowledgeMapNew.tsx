@@ -260,7 +260,8 @@ const KnowledgeMapNew: React.FC = () => {
   };
 
   const render = (ctx: CanvasRenderingContext2D, width: number, height: number, cx: number, cy: number) => {
-    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
     
     ctx.save();
     ctx.translate(offsetRef.current.x, offsetRef.current.y);
@@ -275,7 +276,7 @@ const KnowledgeMapNew: React.FC = () => {
       
       const opacity = line.opacity * n1.opacity * n2.opacity;
       
-      ctx.strokeStyle = `rgba(201, 168, 76, ${opacity})`;
+      ctx.strokeStyle = `rgba(100, 116, 139, ${opacity * 0.5})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(n1.x, n1.y);
@@ -286,7 +287,7 @@ const KnowledgeMapNew: React.FC = () => {
       const dotY = n1.y + (n2.y - n1.y) * line.t;
       const dotSize = line.opacity > 0.5 ? 4 : 2;
       
-      ctx.fillStyle = `rgba(201, 168, 76, ${Math.min(opacity * 2, 1)})`;
+      ctx.fillStyle = `rgba(100, 116, 139, ${Math.min(opacity * 2, 1)})`;
       ctx.beginPath();
       ctx.arc(dotX, dotY, dotSize, 0, Math.PI * 2);
       ctx.fill();
@@ -322,7 +323,7 @@ const KnowledgeMapNew: React.FC = () => {
       
       ctx.shadowBlur = 0;
       
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = '#1f2937';
       ctx.font = '12px Cinzel';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -356,7 +357,7 @@ const KnowledgeMapNew: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
+    <div className="relative w-full h-screen bg-white overflow-hidden">
       {/* Header */}
       <div className="absolute top-4 left-4 z-20">
         <Link to="/" className="flex items-center text-neon-blue hover:text-neon-blue/80 transition-colors">
@@ -366,7 +367,7 @@ const KnowledgeMapNew: React.FC = () => {
       </div>
 
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="bg-dark-card/90 backdrop-blur-md border border-dark-border rounded-lg px-6 py-3">
+        <div className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg px-6 py-3 shadow-sm">
           <h1 className="text-xl font-bold font-mono text-neon-blue">NEURAL CONSTELLATION</h1>
           <p className="text-xs text-gray-500 text-center">Interactive Knowledge System</p>
         </div>
@@ -375,13 +376,13 @@ const KnowledgeMapNew: React.FC = () => {
       {/* Search */}
       <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-20 w-96 max-w-[90vw]">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search domains..."
-            className="w-full pl-10 pr-4 py-2 bg-dark-card/90 backdrop-blur-md border border-dark-border rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-neon-blue"
+            className="w-full pl-10 pr-4 py-2 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-neon-blue shadow-sm"
           />
         </div>
       </div>
@@ -390,10 +391,10 @@ const KnowledgeMapNew: React.FC = () => {
       <div className="absolute top-4 right-4 z-20">
         <button
           onClick={() => setHeatMapMode(!heatMapMode)}
-          className={`px-4 py-2 rounded-lg font-mono text-sm transition-all ${
+          className={`px-4 py-2 rounded-lg font-mono text-sm transition-all shadow-sm ${
             heatMapMode
               ? 'bg-neon-blue/20 border border-neon-blue text-neon-blue'
-              : 'bg-dark-card/90 backdrop-blur-md border border-dark-border text-white hover:border-neon-blue/50'
+              : 'bg-white/90 backdrop-blur-md border border-gray-200 text-gray-900 hover:border-neon-blue/50'
           }`}
         >
           <Zap className="w-4 h-4 inline mr-2" />
@@ -402,7 +403,7 @@ const KnowledgeMapNew: React.FC = () => {
       </div>
 
       {/* Stats Panel */}
-      <div className="absolute bottom-4 left-4 z-20 bg-dark-card/90 backdrop-blur-md border border-dark-border rounded-lg p-4 min-w-[200px]">
+      <div className="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg p-4 min-w-[200px] shadow-sm">
         <h3 className="text-sm font-bold font-mono text-neon-blue mb-3">NEURAL STATS</h3>
         <div className="space-y-2 text-xs">
           <div className="flex justify-between">

@@ -59,13 +59,14 @@ const Oracle: React.FC = () => {
     // Check if API key is available
     if (!apiKey) {
       console.error('Groq API key not found. Please add VITE_GROQ_API_KEY to your .env file');
+      addMessage('assistant', '⚠️ API Key Missing: Please add your Groq API key to the .env file as VITE_GROQ_API_KEY. Get your free API key at https://console.groq.com');
     }
     
     const saved = localStorage.getItem('oracle_sessions');
     if (saved) {
       setSessions(JSON.parse(saved));
     }
-  }, []);
+  }, [apiKey]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -113,6 +114,11 @@ Tone: wise, calm, precise, occasionally poetic. Never robotic.`;
     const messageToSend = customMessage || input.trim();
     if (!messageToSend || isLoading) return;
 
+    if (!apiKey) {
+      addMessage('assistant', '⚠️ Cannot send message: API key is missing. Please add VITE_GROQ_API_KEY to your .env file.');
+      return;
+    }
+
     addMessage('user', messageToSend);
     setInput('');
     setIsLoading(true);
@@ -139,7 +145,8 @@ Tone: wise, calm, precise, occasionally poetic. Never robotic.`;
       });
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`API Error ${response.status}: ${errorData.error?.message || response.statusText}`);
       }
 
       const data = await response.json();
@@ -149,7 +156,7 @@ Tone: wise, calm, precise, occasionally poetic. Never robotic.`;
       extractTopics(assistantMessage);
     } catch (error) {
       console.error('Oracle error:', error);
-      addMessage('assistant', `Error: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your API key and try again.`);
+      addMessage('assistant', `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your API key and internet connection.`);
     } finally {
       setIsLoading(false);
     }

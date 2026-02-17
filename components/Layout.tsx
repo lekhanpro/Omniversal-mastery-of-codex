@@ -102,39 +102,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
              </Link>
 
              <Link 
-                to="/observatory"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/observatory' ? 'bg-blue-500/10 border-blue-500 text-blue-600' : 'hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                <span className="mr-3">📡</span>
-                <span className="font-mono text-sm">Observatory</span>
-             </Link>
-
-             <Link 
-                to="/forge"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/forge' ? 'bg-orange-500/10 border-orange-500 text-orange-600' : 'hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                <span className="mr-3">⚒️</span>
-                <span className="font-mono text-sm">Forge</span>
-             </Link>
-
-             <Link 
-                to="/cartography"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/cartography' ? 'bg-green-500/10 border-green-500 text-green-600' : 'hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                <span className="mr-3">🗺️</span>
-                <span className="font-mono text-sm">Cartography</span>
-             </Link>
-
-             <Link 
                 to="/dashboard"
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
