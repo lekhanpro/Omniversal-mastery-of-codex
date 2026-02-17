@@ -515,6 +515,13 @@ const Arena: React.FC = () => {
     return (
       <div className="relative mx-auto max-w-4xl px-4 py-6">
         {redFlash && <div className="pointer-events-none fixed inset-0 z-40 bg-red-600/30" />}
+        {redFlash && mode === 'gauntlet' && (
+          <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
+            <div className="rounded-2xl border border-red-400/70 bg-black/70 px-7 py-4 text-center">
+              <div className="text-3xl font-cinzel tracking-[0.12em] text-red-200">THE ARENA TESTS YOU</div>
+            </div>
+          </div>
+        )}
         <div className="mb-3 flex items-center justify-between text-xs text-gray-400">
           <span>{mode.toUpperCase()} · Q{index + 1}/{questions.length}</span>
           <span className="font-mono">Score: {score}</span>
@@ -560,7 +567,14 @@ const Arena: React.FC = () => {
         <AnimatePresence>
           {floatingBonus && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="pointer-events-none absolute right-8 top-12 text-lg font-bold text-[#e4ca87]">
-              {floatingBonus}
+              {floatingBonus.includes('DOMAIN STREAK') ? (
+                <span className="inline-flex items-center gap-1">
+                  <Flame className="h-4 w-4 text-orange-300" />
+                  {floatingBonus}
+                </span>
+              ) : (
+                floatingBonus
+              )}
             </motion.div>
           )}
         </AnimatePresence>

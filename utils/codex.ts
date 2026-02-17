@@ -61,11 +61,14 @@ export interface AggregatedMasteryData {
   totalSubjects: number;
   checkedSubjects: number;
   avgCompletion: number;
+  totalHoursLogged: number;
   quizCount: number;
   noteCount: number;
   resourceCount: number;
   projectCount: number;
   currentStreak: number;
+  lastActivityAt: number | null;
+  domainActivityScore: Record<number, number>;
 }
 
 export const CODEX_ACTIVITY_KEY = 'codex_activity_log';
@@ -241,20 +244,54 @@ export const getMasteryData = (
     Math.max(1, completionByDomain.length);
 
   const arenaResults = readLS<Array<{ score: number; total: number }>>('arena_results', []);
-  const grimoireNotes = readLS<Array<{ id: string }>>('grimoire_notes', []);
-  const resources = readLS<Array<{ id: string }>>('observatory_resources', []);
-  const projects = readLS<Array<{ id: string }>>('forge_projects', []);
+  const grimoireNotes = readLS<Array<{ id: string; domain?: number; wordCount?: number }>>('grimoire_notes', []);
+  const resources = readLS<Array<{ id: string; domains?: number[]; difficulty?: number; progress?: number }>>(
+    'observatory_resources',
+    []
+  );
+  const projects = readLS<Array<{ id: string; domains?: number[]; difficulty?: number; progress?: number }>>(
+    'forge_projects',
+    []
+  );
+  const activities = readActivityLog();
+
+  const domainActivityScore: Record<number, number> = {};
+  masteryDomains.forEach((domain) => {
+    domainActivityScore[domain.id] = 0;
+  });
+  activities.forEach((activity) => {
+    activity.domainIds.forEach((domainId) => {
+      if (domainActivityScore[domainId] !== undefined) {
+        domainActivityScore[domainId] += 1;
+      }
+    });
+  });
+
+  const noteHours = grimoireNotes.reduce((sum, note) => sum + Math.max(0.15, (note.wordCount ?? 0) / 220), 0);
+  const resourceHours = resources.reduce(
+    (sum, resource) => sum + ((resource.progress ?? 0) / 100) * Math.max(0.4, (resource.difficulty ?? 3) * 0.8),
+    0
+  );
+  const projectHours = projects.reduce(
+    (sum, project) => sum + ((project.progress ?? 0) / 100) * Math.max(1.2, (project.difficulty ?? 3) * 2.2),
+    0
+  );
+  const quizHours = arenaResults.length * 0.25;
+  const totalHoursLogged = Math.round((noteHours + resourceHours + projectHours + quizHours) * 10) / 10;
 
   return {
     completionByDomain,
     totalSubjects,
     checkedSubjects,
     avgCompletion,
+    totalHoursLogged,
     quizCount: arenaResults.length,
     noteCount: grimoireNotes.length,
     resourceCount: resources.length,
     projectCount: projects.length,
     currentStreak: getCurrentStreakFromActivity(),
+    lastActivityAt: activities.length > 0 ? activities[activities.length - 1].timestamp : null,
+    domainActivityScore,
   };
 };
 
