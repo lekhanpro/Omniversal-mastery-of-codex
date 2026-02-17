@@ -29,7 +29,27 @@ interface SessionRecord {
   history: Message[];
 }
 
+interface OracleRuntimeState {
+  domainId: number;
+  messages: Message[];
+  input: string;
+}
+
 const CONFIG = { model: 'llama-3.3-70b-versatile', maxTokens: 1024, temperature: 0.7 };
+const FALLBACK_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-70b-versatile', 'mixtral-8x7b-32768'];
+const ORACLE_RUNTIME_KEY = 'codex_oracle_runtime';
+
+const readOracleRuntime = (): OracleRuntimeState | null => {
+  const raw = localStorage.getItem(ORACLE_RUNTIME_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as OracleRuntimeState;
+    if (!Array.isArray(parsed.messages)) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
 
 const SUGGESTIONS: Record<number, string[]> = Object.fromEntries(
   masteryDomains.map((domain) => [
@@ -45,7 +65,7 @@ const SUGGESTIONS: Record<number, string[]> = Object.fromEntries(
 );
 
 const systemPrompt = (domainName: string): string =>
-  `You are the Oracle of Lekhan's Omniversal Codex — a Socratic tutor across all 17 domains. Active domain: ${domainName}. Always teach through questions first. Connect every concept to at least one other domain. End every response with one powerful follow-up question. Tone: wise, precise, occasionally poetic.`;
+  `You are the Oracle of Lekhan's Omniversal Codex - a Socratic tutor across all 20 domains. Active domain: ${domainName}. Always teach through questions first. Connect every concept to at least one other domain. End every response with one powerful follow-up question. Tone: wise, precise, occasionally poetic.`;
 
 const extractConceptTags = (text: string): string[] => {
   const items = text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) ?? [];
@@ -77,29 +97,41 @@ const splitCode = (text: string): Array<{ type: 'text' | 'code'; value: string }
 };
 
 const playBell = (): void => {
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = 880;
-  gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.08);
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1);
-  osc.connect(gain).connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + 1);
+  const AudioCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioCtor) return;
+  try {
+    const ctx = new AudioCtor();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 1);
+  } catch {
+    // ignore unsupported autoplay/runtime restrictions
+  }
 };
 
 const Oracle: React.FC = () => {
-  const [domainId, setDomainId] = useState(masteryDomains[0]?.id ?? 1);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const runtime = readOracleRuntime();
+  const storedKey = localStorage.getItem('codex_groq_key') ?? '';
+  const envKey = (import.meta.env.VITE_GROQ_API_KEY as string | undefined) ?? '';
+  const initialKey = storedKey || envKey;
+
+  const [domainId, setDomainId] = useState(runtime?.domainId ?? masteryDomains[0]?.id ?? 1);
+  const [messages, setMessages] = useState<Message[]>(runtime?.messages ?? []);
+  const [input, setInput] = useState(runtime?.input ?? '');
   const [loading, setLoading] = useState(false);
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
-  const [showKeyModal, setShowKeyModal] = useState(!localStorage.getItem('codex_groq_key'));
-  const [apiKey, setApiKey] = useState(localStorage.getItem('codex_groq_key') ?? '');
-  const [keyDraft, setKeyDraft] = useState(localStorage.getItem('codex_groq_key') ?? '');
+  const [showKeyModal, setShowKeyModal] = useState(!initialKey);
+  const [apiKey, setApiKey] = useState(initialKey);
+  const [keyDraft, setKeyDraft] = useState(initialKey);
+  const [apiStatus, setApiStatus] = useState<string>('');
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [challengeSeconds, setChallengeSeconds] = useState(0);
   const [masteryNotes, setMasteryNotes] = useState('');
@@ -126,6 +158,15 @@ const Oracle: React.FC = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const payload: OracleRuntimeState = {
+      domainId,
+      messages,
+      input,
+    };
+    localStorage.setItem(ORACLE_RUNTIME_KEY, JSON.stringify(payload));
+  }, [domainId, input, messages]);
 
   useEffect(() => {
     setMasteryNotes(localStorage.getItem(`oracle_notes_${domainId}`) ?? '');
@@ -166,14 +207,15 @@ const Oracle: React.FC = () => {
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
-      if (event.ctrlKey) {
-        const map: Record<string, number> = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7, '9': 8, '0': 9 };
-        if (event.key in map) {
-          const next = masteryDomains[map[event.key]];
-          if (next) {
-            event.preventDefault();
-            setDomainId(next.id);
-          }
+      if (event.ctrlKey && event.code.startsWith('Digit')) {
+        const digit = event.code.replace('Digit', '');
+        const base = digit === '0' ? 10 : Number(digit);
+        const offset = event.shiftKey ? 10 : 0;
+        const index = base - 1 + offset;
+        const next = masteryDomains[index];
+        if (next) {
+          event.preventDefault();
+          setDomainId(next.id);
         }
       }
       if (event.key === 'Escape') setInput('');
@@ -206,57 +248,88 @@ const Oracle: React.FC = () => {
   const sendToOracle = async (prompt: string, challenge = false): Promise<void> => {
     if (!apiKey) {
       setShowKeyModal(true);
+      setApiStatus('API key required.');
       return;
     }
-    if (!challenge) {
-      setMessages((current) => [...current, { id: uid('oracle'), role: 'user', content: prompt, createdAt: Date.now() }]);
-    }
+    const trimmedPrompt = prompt.trim();
+    if (!trimmedPrompt) return;
+
+    const nextMessages = challenge
+      ? messages
+      : [...messages, { id: uid('oracle'), role: 'user' as const, content: trimmedPrompt, createdAt: Date.now() }];
+    if (!challenge) setMessages(nextMessages);
     setLoading(true);
     setInput('');
+    setApiStatus('Connecting to Oracle...');
 
-    const history = messages.map((msg) => ({ role: msg.role, content: msg.content }));
-    const groqBody = {
-      model: CONFIG.model,
-      max_tokens: CONFIG.maxTokens,
-      temperature: CONFIG.temperature,
-      messages: [
-        { role: 'system', content: systemPrompt(domain?.title ?? `Domain ${domainId}`) },
-        ...history,
-        {
-          role: 'user',
-          content: challenge
-            ? `Generate one hard thought-provoking question about ${domain?.title}. Just the question, nothing else.`
-            : prompt,
-        },
-      ],
-    };
+    const history = nextMessages.map((msg) => ({ role: msg.role, content: msg.content }));
+    const content = challenge
+      ? `Generate one hard thought-provoking question about ${domain?.title}. Just the question, nothing else.`
+      : trimmedPrompt;
 
     try {
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify(groqBody),
-      });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-      const json = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
-      const text = json.choices?.[0]?.message?.content?.trim() ?? 'No response.';
+      let responseText = '';
+      let successfulModel = '';
+      let lastError = '';
+
+      for (const model of FALLBACK_MODELS) {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 20000);
+        try {
+          const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+            body: JSON.stringify({
+              model,
+              max_tokens: CONFIG.maxTokens,
+              temperature: CONFIG.temperature,
+              messages: [
+                { role: 'system', content: systemPrompt(domain?.title ?? `Domain ${domainId}`) },
+                ...history,
+                { role: 'user', content },
+              ],
+            }),
+            signal: controller.signal,
+          });
+          if (!response.ok) {
+            lastError = `Model ${model} failed (${response.status})`;
+            continue;
+          }
+          const json = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
+          responseText = json.choices?.[0]?.message?.content?.trim() ?? '';
+          successfulModel = model;
+          break;
+        } catch (error) {
+          lastError = error instanceof Error ? error.message : 'Unknown network error';
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      }
+
+      if (!responseText) {
+        throw new Error(lastError || 'No response from Oracle models.');
+      }
+
       setMessages((current) => [
         ...current,
         {
           id: uid('oracle'),
           role: 'assistant',
-          content: text,
+          content: responseText,
           createdAt: Date.now(),
           isChallenge: challenge,
-          conceptTags: extractConceptTags(text),
+          conceptTags: extractConceptTags(responseText),
         },
       ]);
       if (challenge) setChallengeSeconds(300);
+      setApiStatus(`Connected via ${successfulModel || CONFIG.model}`);
       appendActivity('oracle', [domainId], challenge ? 'Oracle challenge started' : 'Oracle response');
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setApiStatus(`Oracle connection error: ${message}`);
       setMessages((current) => [
         ...current,
-        { id: uid('oracle'), role: 'assistant', content: `Oracle error: ${error instanceof Error ? error.message : 'Unknown error'}.`, createdAt: Date.now() },
+        { id: uid('oracle'), role: 'assistant', content: `Oracle error: ${message}.`, createdAt: Date.now() },
       ]);
     } finally {
       setLoading(false);
@@ -270,17 +343,17 @@ const Oracle: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border border-white/10 bg-black/55 md:min-h-[100dvh]">
+    <div className="glass-panel relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border md:min-h-[100dvh]">
       <div className="grid min-h-[inherit] grid-cols-1 md:grid-cols-[260px_1fr_240px]">
-        <aside className={`fixed inset-y-0 left-0 z-30 w-[260px] border-r border-white/10 bg-black/92 p-4 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <aside className={`glass-panel-strong fixed inset-y-0 left-0 z-30 w-[260px] border-r p-4 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-4 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Domains</h2><button type="button" className="md:hidden" onClick={() => setLeftOpen(false)}><ChevronLeft className="h-4 w-4" /></button></div>
           <div className="mb-4 space-y-1 overflow-y-auto">{masteryDomains.map((entry) => <button key={entry.id} type="button" onClick={() => { setDomainId(entry.id); setLeftOpen(false); }} className={`w-full rounded-md px-3 py-2 text-left text-sm ${entry.id === domainId ? 'border border-[#c9a84c]/70 bg-[#c9a84c]/15 text-[#e4ca87]' : 'text-gray-300 hover:bg-white/10'}`}>D{entry.id}. {entry.title}</button>)}</div>
-          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-gray-500"><span>Sessions</span><button type="button" className="rounded border border-white/20 px-2 py-1 text-[10px]" onClick={() => setMessages([])}>New</button></div>
+          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-gray-500"><span>Sessions</span><button type="button" className="rounded border border-white/20 px-2 py-1 text-[10px]" onClick={() => { setMessages([]); setInput(''); setApiStatus('New session ready'); }}>New</button></div>
           <div className="space-y-2 overflow-y-auto">{sessions.map((session) => <button key={session.id} type="button" onClick={() => { setDomainId(session.domain); setMessages(session.history); setLeftOpen(false); }} className="block w-full rounded border border-white/10 bg-black/45 px-3 py-2 text-left text-xs text-gray-300"><div className="text-[10px] text-gray-500">{new Date(session.timestamp).toLocaleDateString()}</div><div className="line-clamp-2">{session.history.find((item) => item.role === 'user')?.content ?? 'Untitled'}</div></button>)}</div>
         </aside>
 
         <main className="flex min-h-[inherit] min-w-0 flex-col">
-          <header className="flex items-center justify-between border-b border-white/10 bg-black/55 px-3 py-3 md:px-5">
+          <header className="glass-panel flex items-center justify-between border-b px-3 py-3 md:px-5">
             <div className="flex items-center gap-2 md:hidden"><button type="button" onClick={() => setLeftOpen(true)} className="rounded p-2 hover:bg-white/10"><FolderOpen className="h-4 w-4" /></button><button type="button" onClick={() => setRightOpen(true)} className="rounded p-2 hover:bg-white/10"><MessageSquareMore className="h-4 w-4" /></button></div>
             <div className="flex min-w-0 items-center gap-2"><span className="truncate rounded-full border border-[#c9a84c]/55 bg-[#c9a84c]/10 px-2 py-1 text-xs text-[#e4ca87]">{domain?.title}</span><span className="hidden rounded-full border border-white/20 px-2 py-1 text-xs text-gray-400 md:inline">{CONFIG.model}</span></div>
             <div className="flex items-center gap-2"><button type="button" onClick={() => void sendToOracle('challenge', true)} className="rounded border border-[#c9a84c]/65 bg-[#c9a84c]/10 px-3 py-1.5 text-xs text-[#e4ca87]">Challenge Me</button><button type="button" onClick={() => setShowKeyModal(true)} className="rounded border border-white/20 p-1.5"><KeyRound className="h-4 w-4" /></button></div>
@@ -308,16 +381,16 @@ const Oracle: React.FC = () => {
             {loading && <div className="flex justify-start"><div className="rounded-xl border border-white/15 bg-black/50 px-4 py-3"><div className="flex gap-1">{[0, 1, 2].map((dot) => <span key={dot} className="h-2 w-2 rounded-full bg-[#c9a84c]" style={{ animation: `pulse-warning 0.8s ease-in-out ${dot * 150}ms infinite` }} />)}</div></div></div>}
           </div>
 
-          <footer className="border-t border-white/10 bg-black/55 px-3 py-3 md:px-5">
+          <footer className="glass-panel border-t px-3 py-3 md:px-5">
             <div className="mb-2 flex flex-wrap gap-2"><button type="button" onClick={saveSession} className="inline-flex items-center gap-1 rounded border border-white/20 px-2 py-1 text-xs text-gray-300"><Save className="h-3.5 w-3.5" /> Save Session</button><button type="button" onClick={exportTxt} className="inline-flex items-center gap-1 rounded border border-white/20 px-2 py-1 text-xs text-gray-300"><Download className="h-3.5 w-3.5" /> Export .txt</button></div>
             <div className="flex items-end gap-2"><textarea value={input} onChange={(event) => { setInput(event.target.value); event.currentTarget.style.height = 'auto'; event.currentTarget.style.height = `${Math.min(180, event.currentTarget.scrollHeight)}px`; }} onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submit(); } }} placeholder="Ask the Oracle..." className="max-h-44 min-h-[44px] flex-1 resize-none rounded-xl border border-white/15 bg-black/55 px-3 py-2 text-sm text-white outline-none focus:border-[#c9a84c]" /><button type="button" onClick={submit} className="rounded-xl border border-[#c9a84c]/75 bg-[#c9a84c]/15 p-3 text-[#e4ca87]" disabled={loading}><Send className="h-4 w-4" /></button></div>
           </footer>
         </main>
 
-        <aside className={`fixed inset-y-0 right-0 z-30 w-[240px] border-l border-white/10 bg-black/92 p-4 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <aside className={`glass-panel-strong fixed inset-y-0 right-0 z-30 w-[240px] border-l p-4 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="mb-4 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Oracle Intel</h2><button type="button" className="md:hidden" onClick={() => setRightOpen(false)}><ChevronRight className="h-4 w-4" /></button></div>
           <div className="space-y-4 text-xs">
-            <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-1 uppercase tracking-[0.2em] text-gray-500">Token Counter</div><div className="font-mono text-lg text-[#e4ca87]">{tokenCount}</div>{challengeSeconds > 0 && <div className="mt-2 text-[11px] text-red-300">Challenge: {Math.floor(challengeSeconds / 60)}:{String(challengeSeconds % 60).padStart(2, '0')}</div>}</div>
+            <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-1 uppercase tracking-[0.2em] text-gray-500">Token Counter</div><div className="font-mono text-lg text-[#e4ca87]">{tokenCount}</div>{challengeSeconds > 0 && <div className="mt-2 text-[11px] text-red-300">Challenge: {Math.floor(challengeSeconds / 60)}:{String(challengeSeconds % 60).padStart(2, '0')}</div>}{apiStatus && <div className="mt-2 text-[11px] text-gray-400">{apiStatus}</div>}</div>
             <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-2 uppercase tracking-[0.2em] text-gray-500">Topics Covered</div><div className="flex flex-wrap gap-1">{topicsCovered.length === 0 ? <span className="text-gray-500">No tags yet</span> : topicsCovered.map((topic) => <span key={topic} className="rounded-full border border-[#c9a84c]/45 bg-[#c9a84c]/10 px-2 py-0.5 text-[11px] text-[#e4ca87]">{topic}</span>)}</div></div>
             <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-2 uppercase tracking-[0.2em] text-gray-500">Suggested Follow-Ups</div><div className="space-y-2">{suggested.map((question) => <button key={question} type="button" onClick={() => void sendToOracle(question)} className="w-full rounded border border-white/10 px-2 py-1 text-left text-[11px] text-gray-300 hover:border-[#c9a84c]">{question}</button>)}</div></div>
             <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-2 uppercase tracking-[0.2em] text-gray-500">Mastery Notes</div><textarea value={masteryNotes} onChange={(event) => setMasteryNotes(event.target.value)} className="h-28 w-full resize-none rounded border border-white/10 bg-black/55 p-2 text-[11px] text-gray-200 outline-none focus:border-[#c9a84c]" /></div>
@@ -332,7 +405,7 @@ const Oracle: React.FC = () => {
               <h3 className="mb-2 font-cinzel text-xl text-[#e4ca87]">Groq API Key</h3>
               <p className="mb-3 text-sm text-gray-400">Paste your key. It will be stored locally as <code>codex_groq_key</code>.</p>
               <input value={keyDraft} onChange={(event) => setKeyDraft(event.target.value)} placeholder="gsk_..." className="mb-4 w-full rounded border border-white/15 bg-black/60 px-3 py-2 text-sm text-white outline-none focus:border-[#c9a84c]" />
-              <div className="flex justify-end gap-2"><button type="button" onClick={() => setShowKeyModal(false)} className="rounded border border-white/15 px-3 py-1.5 text-sm text-gray-300">Later</button><button type="button" onClick={() => { const clean = keyDraft.trim(); if (!clean) return; localStorage.setItem('codex_groq_key', clean); setApiKey(clean); setShowKeyModal(false); }} className="rounded border border-[#c9a84c]/70 bg-[#c9a84c]/12 px-3 py-1.5 text-sm text-[#e4ca87]">Save Key</button></div>
+              <div className="flex justify-end gap-2"><button type="button" onClick={() => setShowKeyModal(false)} className="rounded border border-white/15 px-3 py-1.5 text-sm text-gray-300">Later</button><button type="button" onClick={() => { const clean = keyDraft.trim(); if (!clean) return; localStorage.setItem('codex_groq_key', clean); setApiKey(clean); setApiStatus('API key saved'); setShowKeyModal(false); }} className="rounded border border-[#c9a84c]/70 bg-[#c9a84c]/12 px-3 py-1.5 text-sm text-[#e4ca87]">Save Key</button></div>
             </motion.div>
           </motion.div>
         )}

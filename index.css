@@ -7,11 +7,30 @@
 :root {
   --codex-gold: #c9a84c;
   --codex-gold-soft: #e4ca87;
-  --codex-bg: #050505;
-  --codex-panel: #0e0e12;
-  --codex-border: #1f1f24;
-  --codex-text: #ebebee;
-  --codex-track: #111217;
+  --codex-bg: #eef3fb;
+  --codex-bg-alt: #f8fbff;
+  --codex-panel: rgba(255, 255, 255, 0.62);
+  --codex-panel-strong: rgba(255, 255, 255, 0.78);
+  --codex-border: rgba(255, 255, 255, 0.46);
+  --codex-text: #1a2436;
+  --codex-text-soft: #526079;
+  --codex-shadow: 0 18px 45px rgba(22, 35, 66, 0.16);
+  --codex-track: rgba(210, 222, 243, 0.65);
+  --codex-thumb: #c9a84c;
+}
+
+:root[data-theme='dark'],
+.dark {
+  --codex-bg: #04060d;
+  --codex-bg-alt: #0a101d;
+  --codex-panel: rgba(10, 14, 24, 0.58);
+  --codex-panel-strong: rgba(8, 11, 20, 0.72);
+  --codex-border: rgba(255, 255, 255, 0.12);
+  --codex-text: #eef3ff;
+  --codex-text-soft: #96a2bd;
+  --codex-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+  --codex-track: rgba(14, 19, 30, 0.92);
+  --codex-thumb: #d5b563;
 }
 
 html,
@@ -28,8 +47,11 @@ html {
 body {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  background: var(--codex-bg);
   color: var(--codex-text);
+  background:
+    radial-gradient(1200px 620px at -5% -10%, rgba(95, 151, 241, 0.18), transparent 62%),
+    radial-gradient(900px 560px at 105% 0%, rgba(228, 202, 135, 0.18), transparent 58%),
+    linear-gradient(150deg, var(--codex-bg-alt), var(--codex-bg));
 }
 
 .font-cinzel {
@@ -38,6 +60,35 @@ body {
 
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
+}
+
+.glass-panel {
+  background: var(--codex-panel);
+  border: 1px solid var(--codex-border);
+  box-shadow: var(--codex-shadow);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+.glass-panel-strong {
+  background: var(--codex-panel-strong);
+  border: 1px solid var(--codex-border);
+  box-shadow: var(--codex-shadow);
+  backdrop-filter: blur(20px) saturate(145%);
+  -webkit-backdrop-filter: blur(20px) saturate(145%);
+}
+
+.glass-button {
+  border: 1px solid var(--codex-border);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.glass-button:hover {
+  border-color: rgba(201, 168, 76, 0.6);
+  background: rgba(201, 168, 76, 0.16);
 }
 
 .hero-shimmer {
@@ -49,7 +100,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, transparent 10%, rgba(201, 168, 76, 0.6) 50%, transparent 90%);
+  background: linear-gradient(100deg, transparent 10%, rgba(201, 168, 76, 0.62) 50%, transparent 90%);
   transform: translateX(-120%);
   animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
@@ -61,11 +112,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #11131b;
+  background: var(--codex-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c9a84c;
+  background: var(--codex-thumb);
   border-radius: 999px;
 }
 
@@ -137,6 +188,44 @@ button:active,
 
 .rounded-rect-node {
   border-radius: 16px;
+}
+
+/* Light mode glass overrides for existing dark utility classes */
+:root[data-theme='light'] .bg-black\/95,
+:root[data-theme='light'] .bg-black\/92,
+:root[data-theme='light'] .bg-black\/90,
+:root[data-theme='light'] .bg-black\/85,
+:root[data-theme='light'] .bg-black\/80,
+:root[data-theme='light'] .bg-black\/75,
+:root[data-theme='light'] .bg-black\/70,
+:root[data-theme='light'] .bg-black\/65,
+:root[data-theme='light'] .bg-black\/60,
+:root[data-theme='light'] .bg-black\/55,
+:root[data-theme='light'] .bg-black\/50,
+:root[data-theme='light'] .bg-black\/45,
+:root[data-theme='light'] .bg-black\/40,
+:root[data-theme='light'] .bg-black\/35 {
+  background-color: rgba(255, 255, 255, 0.62) !important;
+  color: #1e293b !important;
+}
+
+:root[data-theme='light'] .text-white,
+:root[data-theme='light'] .text-gray-200,
+:root[data-theme='light'] .text-gray-300,
+:root[data-theme='light'] .text-gray-400 {
+  color: #334155 !important;
+}
+
+:root[data-theme='light'] .text-gray-500,
+:root[data-theme='light'] .text-gray-600 {
+  color: #5b6b84 !important;
+}
+
+:root[data-theme='light'] .border-white\/10,
+:root[data-theme='light'] .border-white\/12,
+:root[data-theme='light'] .border-white\/15,
+:root[data-theme='light'] .border-white\/20 {
+  border-color: rgba(15, 23, 42, 0.14) !important;
 }
 
 @keyframes shimmer {

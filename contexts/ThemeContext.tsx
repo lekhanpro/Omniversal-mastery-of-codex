@@ -1,31 +1,47 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface ThemeContextType {
+  theme: 'light' | 'dark';
   isDark: boolean;
   toggleTheme: () => void;
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const THEME_KEY = 'codex_theme';
+
+const detectInitialTheme = (): 'light' | 'dark' => {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark'; // defaults to false (light mode) if no saved preference
-  });
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => detectInitialTheme());
+  const isDark = theme === 'dark';
 
   useEffect(() => {
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    localStorage.setItem(THEME_KEY, theme);
+    document.documentElement.setAttribute('data-theme', theme);
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [isDark]);
+  }, [isDark, theme]);
 
-  const toggleTheme = () => setIsDark(!isDark);
+  const value = useMemo<ThemeContextType>(
+    () => ({
+      theme,
+      isDark,
+      toggleTheme: () => setTheme((current) => (current === 'dark' ? 'light' : 'dark')),
+      setTheme,
+    }),
+    [isDark, theme]
+  );
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );

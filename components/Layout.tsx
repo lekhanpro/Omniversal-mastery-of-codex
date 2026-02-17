@@ -73,7 +73,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     target === '/' ? location.pathname === '/' : location.pathname.startsWith(target);
 
   return (
-    <div className="relative flex min-h-[100dvh] bg-slate-50 text-slate-900 dark:bg-dark-bg dark:text-gray-100">
+    <div className="relative flex min-h-[100dvh] text-[var(--codex-text)]">
       <CosmicCanvas />
       <ScrollProgress />
 
@@ -83,11 +83,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       )}
 
-      <header className="fixed left-0 right-0 top-0 z-[1000] flex h-14 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur md:hidden dark:border-dark-border dark:bg-black/90">
+      <header className="glass-panel fixed left-0 right-0 top-0 z-[1000] flex h-14 items-center justify-between border-b px-4 md:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen((prev) => !prev)}
-          className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-200 dark:hover:bg-white/10"
+          className="glass-button rounded-md p-2 transition"
           aria-label="Toggle navigation"
         >
           {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -99,7 +99,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <button
             type="button"
             onClick={copyShareUrl}
-            className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+            className="glass-button rounded-md p-2 transition"
             aria-label="Share progress"
           >
             {shareCopied ? <Copy className="h-4 w-4 text-[#c9a84c]" /> : <Copy className="h-4 w-4" />}
@@ -107,7 +107,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <button
             type="button"
             onClick={toggleTheme}
-            className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+            className="glass-button rounded-md p-2 transition"
             aria-label="Toggle theme"
           >
             {isDark ? <Sun className="h-4 w-4 text-[#c9a84c]" /> : <Moon className="h-4 w-4" />}
@@ -116,19 +116,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       <aside
-        className={`fixed inset-y-0 left-0 z-[999] w-[290px] border-r border-slate-200 bg-white/90 backdrop-blur-xl transition-transform duration-300 dark:border-dark-border dark:bg-black/90 md:relative md:translate-x-0 ${
+        className={`glass-panel-strong fixed inset-y-0 left-0 z-[999] w-[290px] border-r transition-transform duration-300 md:relative md:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="hidden items-center justify-between border-b border-slate-200 px-5 py-5 md:flex dark:border-dark-border">
+          <div className="hidden items-center justify-between border-b border-[var(--codex-border)] px-5 py-5 md:flex">
             <Link to="/" className="font-mono text-sm tracking-[0.28em] text-[#c9a84c]">
               OMNIVERSAL CODEX
             </Link>
             <button
               type="button"
               onClick={toggleTheme}
-              className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+              className="glass-button rounded-md p-2 transition"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun className="h-4 w-4 text-[#c9a84c]" /> : <Moon className="h-4 w-4" />}
@@ -136,7 +136,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
 
           <div className="mt-16 flex-1 overflow-y-auto px-4 pb-4 md:mt-0">
-            <div className="mb-3 px-2 pt-4 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-gray-500">Navigation</div>
+            <div className="mb-3 px-2 pt-4 text-xs uppercase tracking-[0.2em] text-[var(--codex-text-soft)]">Navigation</div>
             <div className="space-y-1.5">
               {mainNav.map((item) => (
                 <Link
@@ -146,7 +146,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   className={`flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm transition ${
                     isActive(item.to)
                       ? 'border-[#c9a84c]/60 bg-[#c9a84c]/10 text-[#c9a84c]'
-                      : 'border-transparent text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10'
+                      : 'border-transparent text-[var(--codex-text)] hover:bg-white/10'
                   }`}
                 >
                   {item.icon}
@@ -155,7 +155,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               ))}
             </div>
 
-            <div className="mt-6 mb-3 px-2 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-gray-500">Domains</div>
+            <div className="mt-6 mb-3 px-2 text-xs uppercase tracking-[0.2em] text-[var(--codex-text-soft)]">Domains</div>
             <div className="space-y-1.5 pb-8">
               {masteryDomains.map((domain) => (
                 <Link
@@ -165,7 +165,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition ${
                     location.pathname === `/domain/${domain.id}`
                       ? 'bg-[#c9a84c]/12 text-[#c9a84c]'
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-white/10'
+                      : 'text-[var(--codex-text-soft)] hover:bg-white/10'
                   }`}
                 >
                   <span className="text-[#c9a84c]">{getIcon(domain.icon, 'h-4 w-4')}</span>
@@ -175,7 +175,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
 
-          <div className="border-t border-slate-200 px-4 py-3 text-[11px] text-slate-600 dark:border-dark-border dark:text-gray-500">
+          <div className="border-t border-[var(--codex-border)] px-4 py-3 text-[11px] text-[var(--codex-text-soft)]">
             CODEX v2.0 | {totalSubjects} Subjects | {totalDomains} Domains | Knowledge is the only infinity
           </div>
         </div>

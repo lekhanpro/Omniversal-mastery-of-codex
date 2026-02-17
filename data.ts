@@ -1476,8 +1476,10 @@ const createQuestionPrompt = (domainTitle: string, subdomainTitle: string, pilla
   return `${prompts[variant % prompts.length]} (${subdomainTitle})`;
 };
 
-export const arenaQuestions: ArenaQuestion[] = domains.slice(0, 17).flatMap((domain, domainIndex) => {
-  const related = domains[(domainIndex + 1) % 17];
+const arenaActiveDomains = domains.slice(0, 20);
+
+export const arenaQuestions: ArenaQuestion[] = arenaActiveDomains.flatMap((domain, domainIndex) => {
+  const related = arenaActiveDomains[(domainIndex + 1) % arenaActiveDomains.length];
   return Array.from({ length: 8 }, (_, questionIndex) => {
     const primarySub = domain.subdomains[questionIndex % domain.subdomains.length];
     const secondarySub = domain.subdomains[(questionIndex + 1) % domain.subdomains.length];

@@ -70,12 +70,16 @@ const parseFlashcards = (html: string): Flashcard[] => {
 };
 
 const Grimoire: React.FC = () => {
+  const savedUi = readLS<{ selectedId: string | null; leftOpen: boolean; rightOpen: boolean }>(
+    'codex_grimoire_ui',
+    { selectedId: null, leftOpen: false, rightOpen: false }
+  );
   const [notes, setNotes] = useState<GrimoireNote[]>(() => readLS<GrimoireNote[]>('grimoire_notes', []));
-  const [selectedId, setSelectedId] = useState<string | null>(notes[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(savedUi.selectedId ?? notes[0]?.id ?? null);
   const [search, setSearch] = useState('');
   const [expandedDomains, setExpandedDomains] = useState<Set<number>>(new Set(masteryDomains.map((domain) => domain.id)));
-  const [leftOpen, setLeftOpen] = useState(false);
-  const [rightOpen, setRightOpen] = useState(false);
+  const [leftOpen, setLeftOpen] = useState(savedUi.leftOpen);
+  const [rightOpen, setRightOpen] = useState(savedUi.rightOpen);
   const [tagInput, setTagInput] = useState('');
   const [showTemplates, setShowTemplates] = useState(false);
   const [showStats, setShowStats] = useState(false);
@@ -116,6 +120,10 @@ const Grimoire: React.FC = () => {
   const flashcards = useMemo(() => (selectedNote ? parseFlashcards(selectedNote.body) : []), [selectedNote]);
   const currentFlashcard = flashcards[flashcardIndex];
   const keyTerms = selectedNote ? getKeyTerms(selectedNote.body) : [];
+
+  useEffect(() => {
+    writeLS('codex_grimoire_ui', { selectedId, leftOpen, rightOpen });
+  }, [leftOpen, rightOpen, selectedId]);
 
   useEffect(() => {
     if (!selectedNote || !editorRef.current) return;
@@ -244,9 +252,9 @@ const Grimoire: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border border-white/10 bg-black/55 md:min-h-[100dvh]">
+    <div className="glass-panel relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border md:min-h-[100dvh]">
       <div className="grid min-h-[inherit] grid-cols-1 md:grid-cols-[220px_1fr_220px]">
-        <aside className={`fixed inset-y-0 left-0 z-30 w-[220px] border-r border-white/10 bg-black/92 p-3 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <aside className={`glass-panel-strong fixed inset-y-0 left-0 z-30 w-[220px] border-r p-3 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-3 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Grimoire</h2><button type="button" onClick={() => setLeftOpen(false)} className="md:hidden"><ChevronLeft className="h-4 w-4" /></button></div>
           <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search notes..." className="mb-3 w-full rounded border border-white/15 bg-black/55 px-2 py-1.5 text-xs text-white outline-none focus:border-[#c9a84c]" />
           <div className="mb-3 flex gap-1 text-[10px]"><button type="button" onClick={exportAllNotes} className="flex items-center gap-1 rounded border border-white/20 px-2 py-1"><Download className="h-3 w-3" /> JSON</button><button type="button" onClick={exportCurrentHtml} className="flex items-center gap-1 rounded border border-white/20 px-2 py-1"><NotebookPen className="h-3 w-3" /> HTML</button><label className="flex cursor-pointer items-center gap-1 rounded border border-white/20 px-2 py-1"><Import className="h-3 w-3" /> Import<input type="file" accept=".json" className="hidden" onChange={importNotes} /></label></div>
@@ -280,7 +288,7 @@ const Grimoire: React.FC = () => {
         </aside>
 
         <main className={`relative flex min-h-[inherit] min-w-0 flex-col border-x border-white/10 ${savePulse ? 'shadow-[0_0_0_1px_rgba(201,168,76,0.7)_inset]' : ''}`}>
-          <header className="flex items-center justify-between border-b border-white/10 bg-black/55 px-3 py-2">
+          <header className="glass-panel flex items-center justify-between border-b px-3 py-2">
             <div className="flex items-center gap-2 md:hidden"><button type="button" onClick={() => setLeftOpen(true)} className="rounded p-1 hover:bg-white/10"><FolderTree className="h-4 w-4" /></button><button type="button" onClick={() => setRightOpen(true)} className="rounded p-1 hover:bg-white/10"><Sparkles className="h-4 w-4" /></button></div>
             <div className="flex flex-wrap gap-1 text-xs">
               <button type="button" onClick={() => exec('bold')} className="rounded border border-white/20 px-2 py-1">Bold</button>
@@ -317,7 +325,7 @@ const Grimoire: React.FC = () => {
           )}
         </main>
 
-        <aside className={`fixed inset-y-0 right-0 z-30 w-[220px] border-l border-white/10 bg-black/92 p-3 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <aside className={`glass-panel-strong fixed inset-y-0 right-0 z-30 w-[220px] border-l p-3 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="mb-3 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Intelligence</h2><button type="button" onClick={() => setRightOpen(false)} className="md:hidden"><ChevronRight className="h-4 w-4" /></button></div>
           <div className="space-y-3 text-xs">
             <div className="rounded border border-white/10 bg-black/50 p-2"><div className="mb-1 uppercase tracking-[0.2em] text-gray-500">Connections</div>{relatedByTag.map((note) => <button key={note.id} type="button" onClick={() => setSelectedId(note.id)} className="block text-left text-gray-300 hover:text-[#e4ca87]">{note.title}</button>)}{relatedByTag.length === 0 && <span className="text-gray-500">No shared tags yet.</span>}</div>

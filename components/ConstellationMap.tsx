@@ -46,14 +46,14 @@ interface HoveredMoon {
   y: number;
 }
 
-const MAP_DOMAIN_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+const MAP_DOMAIN_IDS = masteryDomains.map((domain) => domain.id);
 const REPULSION_K = 8000;
 const ATTRACTION_K = 0.002;
 const DAMPING = 0.88;
 const CENTERING_FORCE = 0.0003;
 const BIG_BANG_DURATION = 1500;
 
-const CONNECTIONS: Array<[number, number]> = [
+const CORE_CONNECTIONS: Array<[number, number]> = [
   [1, 2],
   [1, 3],
   [1, 4],
@@ -76,6 +76,30 @@ const CONNECTIONS: Array<[number, number]> = [
   [8, 9],
   [8, 3],
 ];
+
+const CONNECTIONS: Array<[number, number]> = (() => {
+  const map = new Map<string, [number, number]>();
+  const addEdge = (left: number, right: number): void => {
+    if (left === right) return;
+    if (!MAP_DOMAIN_IDS.includes(left) || !MAP_DOMAIN_IDS.includes(right)) return;
+    const key = left < right ? `${left}-${right}` : `${right}-${left}`;
+    if (!map.has(key)) {
+      map.set(key, left < right ? [left, right] : [right, left]);
+    }
+  };
+
+  CORE_CONNECTIONS.forEach(([left, right]) => addEdge(left, right));
+
+  // Ensure all 20 domains stay meaningfully connected in the force graph.
+  MAP_DOMAIN_IDS.forEach((domainId, index) => {
+    const next = MAP_DOMAIN_IDS[(index + 1) % MAP_DOMAIN_IDS.length];
+    const skip = MAP_DOMAIN_IDS[(index + 4) % MAP_DOMAIN_IDS.length];
+    addEdge(domainId, next);
+    addEdge(domainId, skip);
+  });
+
+  return [...map.values()];
+})();
 
 const randomInRange = (min: number, max: number): number => min + Math.random() * (max - min);
 const clamp = (value: number, min: number, max: number): number => Math.max(min, Math.min(max, value));
@@ -752,7 +776,7 @@ const ConstellationMap: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative h-[calc(100dvh-6rem)] min-h-[720px] overflow-hidden rounded-2xl border border-white/10 bg-[#02040c]">
+    <div ref={containerRef} className="glass-panel relative h-[calc(100dvh-6rem)] min-h-[720px] overflow-hidden rounded-2xl border">
       <canvas
         ref={canvasRef}
         className="h-full w-full cursor-grab active:cursor-grabbing"
@@ -771,7 +795,7 @@ const ConstellationMap: React.FC = () => {
           <button
             type="button"
             onClick={clearFocus}
-            className="inline-flex items-center gap-2 rounded-full border border-[#c9a84c]/60 bg-black/70 px-3 py-2 text-xs text-[#e4ca87] transition hover:bg-black/85"
+            className="glass-button inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs text-[#e4ca87] transition"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Map
@@ -779,7 +803,7 @@ const ConstellationMap: React.FC = () => {
         ) : (
           <Link
             to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-[#c9a84c]/60 bg-black/70 px-3 py-2 text-xs text-[#e4ca87] transition hover:bg-black/85"
+            className="glass-button inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs text-[#e4ca87] transition"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Codex
@@ -788,7 +812,7 @@ const ConstellationMap: React.FC = () => {
       </div>
 
       <div className="absolute left-1/2 top-4 z-10 w-[min(500px,88vw)] -translate-x-1/2">
-        <div className="rounded-full border border-white/15 bg-black/75 px-3 py-2 backdrop-blur">
+        <div className="glass-panel rounded-full border px-3 py-2">
           <div className="flex items-center gap-2">
             <Search className="h-4 w-4 text-gray-400" />
             <input
@@ -819,7 +843,7 @@ const ConstellationMap: React.FC = () => {
         </button>
       </div>
 
-      <div className="absolute bottom-4 left-4 z-10 max-w-xs rounded-lg border border-white/10 bg-black/75 px-4 py-3 text-xs backdrop-blur">
+      <div className="glass-panel absolute bottom-4 left-4 z-10 max-w-xs rounded-lg border px-4 py-3 text-xs">
         <div className="mb-2 font-mono uppercase tracking-[0.2em] text-[#e4ca87]">Map Stats</div>
         <div className="grid grid-cols-2 gap-2 text-gray-300">
           <span>Total Nodes</span>
@@ -829,12 +853,14 @@ const ConstellationMap: React.FC = () => {
           <span>Most Connected</span>
           <span className="text-right">{mostConnectedDomain}</span>
           <span>Hovered</span>
-          <span className="text-right">{hoveredNodeId ? `D${hoveredNodeId}` : 'None'}</span>
+          <span className="text-right">
+            {hoveredNodeId ? masteryDomains.find((domain) => domain.id === hoveredNodeId)?.title ?? `D${hoveredNodeId}` : 'None'}
+          </span>
         </div>
       </div>
 
       {heatMapEnabled && (
-        <div className="absolute bottom-4 right-4 z-10 rounded-lg border border-white/10 bg-black/75 px-4 py-3 text-xs backdrop-blur">
+        <div className="glass-panel absolute bottom-4 right-4 z-10 rounded-lg border px-4 py-3 text-xs">
           <div className="mb-2 font-mono uppercase tracking-[0.2em] text-[#e4ca87]">Completion Heat</div>
           <div className="h-2 w-44 rounded-full bg-gradient-to-r from-[#1a3a6a] to-[#c9a84c]" />
           <div className="mt-1 flex justify-between text-[10px] text-gray-400">
@@ -845,7 +871,7 @@ const ConstellationMap: React.FC = () => {
       )}
 
       {selectedNodeId !== null && (
-        <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border border-[#c9a84c]/55 bg-black/70 px-4 py-2 text-xs text-[#e4ca87] backdrop-blur">
+        <div className="glass-panel absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border px-4 py-2 text-xs text-[#e4ca87]">
           <Flame className="mr-1 inline h-3.5 w-3.5" />
           Moons unfolding for {nodesRef.current.find((node) => node.id === selectedNodeId)?.name ?? `D${selectedNodeId}`}
         </div>

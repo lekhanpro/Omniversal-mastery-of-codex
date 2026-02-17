@@ -154,7 +154,7 @@ const Home: React.FC = () => {
           Omniversal Mastery of Codex
         </h1>
         <p className="mt-3 max-w-3xl text-sm text-gray-400 md:text-base">
-          Navigate your 17-domain mastery architecture. Use keyboard shortcuts: <span className="font-mono text-[#c9a84c]">1-0</span> jump to cards,
+          Navigate your 20-domain mastery architecture. Use keyboard shortcuts: <span className="font-mono text-[#c9a84c]">1-0</span> jump to cards,
           <span className="font-mono text-[#c9a84c]"> / </span> focus search, <span className="font-mono text-[#c9a84c]">Esc</span> clear.
         </p>
         <div className="mt-6 relative max-w-xl">

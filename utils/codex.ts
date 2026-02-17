@@ -1,7 +1,7 @@
 import { domains } from '../data';
 import { Domain } from '../types';
 
-export const ACTIVE_DOMAIN_COUNT = 17;
+export const ACTIVE_DOMAIN_COUNT = 20;
 export const masteryDomains: Domain[] = domains.slice(0, ACTIVE_DOMAIN_COUNT);
 
 export const DOMAIN_COLORS: Record<number, string> = {
@@ -22,6 +22,9 @@ export const DOMAIN_COLORS: Record<number, string> = {
   15: '#7df9c1',
   16: '#ff9f7a',
   17: '#9ad1ff',
+  18: '#7ec8ff',
+  19: '#ffc56f',
+  20: '#d49dff',
 };
 
 export type ActivityType =
