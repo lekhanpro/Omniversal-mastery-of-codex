@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import DomainView from './pages/DomainView';
@@ -27,18 +28,20 @@ const ExternalRedirect: React.FC<{ url: string }> = ({ url }) => {
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Layout><Home /></Layout>} />
-        <Route path="/domain/:id" element={<Layout><DomainView /></Layout>} />
-        <Route path="/knowledge-map" element={<Layout><KnowledgeMapNew /></Layout>} />
-        <Route path="/arena" element={<Arena />} />
-        <Route path="/oracle" element={<Oracle />} />
-        <Route path="/grimoire" element={<Grimoire />} />
-        <Route path="/dashboard" element={<ExternalRedirect url="/dashboard.html" />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/domain/:id" element={<Layout><DomainView /></Layout>} />
+          <Route path="/knowledge-map" element={<Layout><KnowledgeMapNew /></Layout>} />
+          <Route path="/arena" element={<Arena />} />
+          <Route path="/oracle" element={<Oracle />} />
+          <Route path="/grimoire" element={<Grimoire />} />
+          <Route path="/dashboard" element={<ExternalRedirect url="/dashboard.html" />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 };
 

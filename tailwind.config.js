@@ -23,6 +23,13 @@ export default {
           border: '#e5e7eb',
           text: '#111827',
           textSecondary: '#6b7280',
+        },
+        dark: {
+          bg: '#0a0a0a',
+          card: '#1a1a1a',
+          border: '#2a2a2a',
+          text: '#f3f4f6',
+          textSecondary: '#9ca3af',
         }
       },
       animation: {

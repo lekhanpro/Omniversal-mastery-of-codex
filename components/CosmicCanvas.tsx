@@ -28,7 +28,8 @@ class Blob {
     this.points = 8;
     this.anchors = [];
     this.colorSet = this.getRandomColorSet();
-    this.alpha = 0.08 + Math.random() * 0.08;
+    const isDark = document.documentElement.classList.contains('dark');
+    this.alpha = isDark ? (0.12 + Math.random() * 0.13) : (0.08 + Math.random() * 0.08);
     this.timeOffset = Math.random() * 1000;
 
     for (let i = 0; i < this.points; i++) {
@@ -42,12 +43,22 @@ class Blob {
   }
 
   getRandomColorSet(): string[] {
-    const sets = [
-      ['#e0f2fe', '#bae6fd', '#f0f9ff'],
-      ['#fef3c7', '#fde68a', '#fffbeb'],
-      ['#dbeafe', '#bfdbfe', '#eff6ff']
-    ];
-    return sets[Math.floor(Math.random() * sets.length)];
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+      const sets = [
+        ['#0a0030', '#1a0050', '#000820'],
+        ['#1a0800', '#300a00', '#1a0800'],
+        ['#001a10', '#003020', '#001a10']
+      ];
+      return sets[Math.floor(Math.random() * sets.length)];
+    } else {
+      const sets = [
+        ['#e0f2fe', '#bae6fd', '#f0f9ff'],
+        ['#fef3c7', '#fde68a', '#fffbeb'],
+        ['#dbeafe', '#bfdbfe', '#eff6ff']
+      ];
+      return sets[Math.floor(Math.random() * sets.length)];
+    }
   }
 
   update(width: number, height: number) {
@@ -120,23 +131,24 @@ class Star {
     this.x = Math.random() * width;
     this.y = Math.random() * height;
     this.twinkleOffset = Math.random() * 1000;
+    const isDark = document.documentElement.classList.contains('dark');
 
     if (tier === 'tiny') {
       this.radius = 0.4;
-      this.opacity = 0.2;
-      this.baseOpacity = 0.2;
+      this.opacity = isDark ? 0.4 : 0.2;
+      this.baseOpacity = isDark ? 0.4 : 0.2;
       this.twinkle = false;
       this.hasGlow = false;
     } else if (tier === 'medium') {
       this.radius = 0.8;
-      this.opacity = 0.3;
-      this.baseOpacity = 0.3;
+      this.opacity = isDark ? 0.7 : 0.3;
+      this.baseOpacity = isDark ? 0.7 : 0.3;
       this.twinkle = false;
       this.hasGlow = false;
     } else {
       this.radius = 1.4;
-      this.baseOpacity = 0.5;
-      this.opacity = 0.5;
+      this.baseOpacity = isDark ? 1.0 : 0.5;
+      this.opacity = isDark ? 1.0 : 0.5;
       this.twinkle = true;
       this.hasGlow = Math.random() < 0.25;
     }
@@ -149,12 +161,13 @@ class Star {
       this.opacity = this.baseOpacity * (0.5 + Math.sin(time * 0.002 + this.twinkleOffset) * 0.5);
     }
 
+    const isDark = document.documentElement.classList.contains('dark');
     if (this.hasGlow) {
       ctx.shadowBlur = 6;
-      ctx.shadowColor = '#0066cc';
+      ctx.shadowColor = isDark ? '#c9a84c' : '#0066cc';
     }
 
-    ctx.fillStyle = '#94a3b8';
+    ctx.fillStyle = isDark ? '#ffffff' : '#94a3b8';
     ctx.globalAlpha = this.opacity;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -218,6 +231,7 @@ class ShootingStar {
 
     const elapsed = currentTime - this.startTime;
     const progress = elapsed / this.duration;
+    const isDark = document.documentElement.classList.contains('dark');
 
     const currentX = this.x + Math.cos(this.angle) * this.speed * elapsed;
     const currentY = this.y + Math.sin(this.angle) * this.speed * elapsed;
@@ -228,8 +242,13 @@ class ShootingStar {
       currentY - Math.sin(this.angle) * this.length
     );
 
-    gradient.addColorStop(0, `rgba(100, 116, 139, ${0.6 * (1 - progress)})`);
-    gradient.addColorStop(1, 'rgba(100, 116, 139, 0)');
+    if (isDark) {
+      gradient.addColorStop(0, `rgba(255, 255, 255, ${1 - progress})`);
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    } else {
+      gradient.addColorStop(0, `rgba(100, 116, 139, ${0.6 * (1 - progress)})`);
+      gradient.addColorStop(1, 'rgba(100, 116, 139, 0)');
+    }
 
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 2;
