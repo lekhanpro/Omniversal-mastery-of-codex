@@ -1,157 +1,187 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import {
+  BarChart3,
+  BookOpenText,
+  Compass,
+  Copy,
+  Flame,
+  Hammer,
+  Home,
+  Map,
+  Menu,
+  Moon,
+  Sparkles,
+  Sun,
+  Telescope,
+  X,
+} from 'lucide-react';
 import { getIcon } from './Icons';
-import { domains } from '../data';
-import { Menu, X, Search, Grid, Lock, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import CosmicCanvas from './CosmicCanvas';
 import ScrollProgress from './ScrollProgress';
+import { useShareProgress } from '../contexts/ShareProgressContext';
+import { encodeSharePayload, masteryDomains, withShareParam } from '../utils/codex';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
+interface NavItem {
+  label: string;
+  to: string;
+  icon: React.ReactNode;
+}
+
+const mainNav: NavItem[] = [
+  { label: 'Home', to: '/', icon: <Home className="h-4 w-4" /> },
+  { label: 'Knowledge Map', to: '/map', icon: <Map className="h-4 w-4" /> },
+  { label: 'Oracle', to: '/oracle', icon: <Sparkles className="h-4 w-4" /> },
+  { label: 'Arena', to: '/arena', icon: <Flame className="h-4 w-4" /> },
+  { label: 'Grimoire', to: '/grimoire', icon: <BookOpenText className="h-4 w-4" /> },
+  { label: 'Observatory', to: '/observatory', icon: <Telescope className="h-4 w-4" /> },
+  { label: 'Forge', to: '/forge', icon: <Hammer className="h-4 w-4" /> },
+  { label: 'Cartography', to: '/cartography', icon: <Compass className="h-4 w-4" /> },
+  { label: 'Dashboard', to: '/dashboard', icon: <BarChart3 className="h-4 w-4" /> },
+];
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const location = useLocation();
   const { isDark, toggleTheme } = useTheme();
+  const { isReadOnly } = useShareProgress();
+
+  const totalSubjects = useMemo(
+    () => masteryDomains.reduce((sum, domain) => sum + domain.subdomains.reduce((acc, sub) => acc + sub.points.length, 0), 0),
+    []
+  );
+  const totalDomains = masteryDomains.length;
+
+  const copyShareUrl = async (): Promise<void> => {
+    const url = withShareParam(encodeSharePayload());
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      window.setTimeout(() => setShareCopied(false), 2000);
+    } catch {
+      window.prompt('Copy this share URL:', url);
+    }
+  };
+
+  const isActive = (target: string): boolean =>
+    target === '/' ? location.pathname === '/' : location.pathname.startsWith(target);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-gray-200 font-sans flex flex-col md:flex-row overflow-hidden relative">
+    <div className="relative flex min-h-[100dvh] bg-slate-50 text-slate-900 dark:bg-dark-bg dark:text-gray-100">
       <CosmicCanvas />
       <ScrollProgress />
-      {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-card border-b border-slate-200 dark:border-dark-border z-50">
-        <Link to="/" className="text-neon-blue font-mono font-bold tracking-wider">OMNIVERSAL CODEX</Link>
-        <div className="flex items-center gap-2">
-          <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors">
-            {isDark ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+
+      {isReadOnly && (
+        <div className="fixed left-1/2 top-2 z-[1001] -translate-x-1/2 rounded-full border border-[#c9a84c]/60 bg-black/80 px-4 py-1 text-xs tracking-wide text-[#e7cb8d] backdrop-blur">
+          Viewing Lekhan&apos;s Progress
+        </div>
+      )}
+
+      <header className="fixed left-0 right-0 top-0 z-[1000] flex h-14 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur md:hidden dark:border-dark-border dark:bg-black/90">
+        <button
+          type="button"
+          onClick={() => setSidebarOpen((prev) => !prev)}
+          className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-200 dark:hover:bg-white/10"
+          aria-label="Toggle navigation"
+        >
+          {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+        <Link to="/" className="font-mono text-sm tracking-[0.24em] text-[#c9a84c]">
+          CODEX
+        </Link>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={copyShareUrl}
+            className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+            aria-label="Share progress"
+          >
+            {shareCopied ? <Copy className="h-4 w-4 text-[#c9a84c]" /> : <Copy className="h-4 w-4" />}
           </button>
-          <button onClick={() => setSidebarOpen(!isSidebarOpen)}>
-            {isSidebarOpen ? <X className="text-neon-blue" /> : <Menu className="text-neon-blue" />}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="h-4 w-4 text-[#c9a84c]" /> : <Moon className="h-4 w-4" />}
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Sidebar */}
-      <aside 
-        className={`
-          fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-black/95 backdrop-blur-xl border-r border-slate-200 dark:border-dark-border shadow-lg
-          transform transition-transform duration-300 ease-in-out
-          md:relative md:translate-x-0
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
+      <aside
+        className={`fixed inset-y-0 left-0 z-[999] w-[290px] border-r border-slate-200 bg-white/90 backdrop-blur-xl transition-transform duration-300 dark:border-dark-border dark:bg-black/90 md:relative md:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
-        <div className="h-full flex flex-col">
-          <div className="p-6 border-b border-slate-200 dark:border-dark-border hidden md:flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold font-mono text-neon-blue tracking-widest">
-                <Link to="/">OMNIVERSAL CODEX</Link>
-              </h1>
-              <p className="text-xs text-slate-500 dark:text-gray-500 mt-1">v2.5.0 [ULTRA_EXPANDED]</p>
-            </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors">
-              {isDark ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+        <div className="flex h-full flex-col">
+          <div className="hidden items-center justify-between border-b border-slate-200 px-5 py-5 md:flex dark:border-dark-border">
+            <Link to="/" className="font-mono text-sm tracking-[0.28em] text-[#c9a84c]">
+              OMNIVERSAL CODEX
+            </Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="rounded-md p-2 text-slate-700 transition hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10"
+              aria-label="Toggle theme"
+            >
+              {isDark ? <Sun className="h-4 w-4 text-[#c9a84c]" /> : <Moon className="h-4 w-4" />}
             </button>
           </div>
 
-          <div className="p-4">
-             <Link 
-                to="/"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/' ? 'bg-neon-blue/10 border-neon-blue text-neon-blue' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <Grid className="w-5 h-5 mr-3" />
-                <span className="font-mono text-sm">Home</span>
-             </Link>
+          <div className="mt-16 flex-1 overflow-y-auto px-4 pb-4 md:mt-0">
+            <div className="mb-3 px-2 pt-4 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-gray-500">Navigation</div>
+            <div className="space-y-1.5">
+              {mainNav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm transition ${
+                    isActive(item.to)
+                      ? 'border-[#c9a84c]/60 bg-[#c9a84c]/10 text-[#c9a84c]'
+                      : 'border-transparent text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-white/10'
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
 
-             <div className="mb-2 text-xs font-bold text-slate-500 dark:text-gray-600 uppercase tracking-widest px-3">Features</div>
-              
-              <Link 
-                to="/knowledge-map"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/knowledge-map' ? 'bg-neon-purple/10 border-neon-purple text-neon-purple' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="mr-3">🗺️</span>
-                <span className="font-mono text-sm">Knowledge Map</span>
-             </Link>
+            <div className="mt-6 mb-3 px-2 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-gray-500">Domains</div>
+            <div className="space-y-1.5 pb-8">
+              {masteryDomains.map((domain) => (
+                <Link
+                  key={domain.id}
+                  to={`/domain/${domain.id}`}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition ${
+                    location.pathname === `/domain/${domain.id}`
+                      ? 'bg-[#c9a84c]/12 text-[#c9a84c]'
+                      : 'text-slate-600 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-[#c9a84c]">{getIcon(domain.icon, 'h-4 w-4')}</span>
+                  <span className="truncate">{domain.id}. {domain.title}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
 
-             <Link 
-                to="/oracle"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/oracle' ? 'bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="mr-3">🔮</span>
-                <span className="font-mono text-sm">Oracle</span>
-             </Link>
-
-             <Link 
-                to="/arena"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/arena' ? 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="mr-3">⚔️</span>
-                <span className="font-mono text-sm">Arena</span>
-             </Link>
-
-             <Link 
-                to="/grimoire"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-2 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/grimoire' ? 'bg-purple-500/10 border-purple-500 text-purple-600 dark:text-purple-400' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="mr-3">📖</span>
-                <span className="font-mono text-sm">Grimoire</span>
-             </Link>
-
-             <Link 
-                to="/dashboard"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center p-3 mb-4 rounded-lg transition-all duration-200 border border-transparent ${
-                  location.pathname === '/dashboard' ? 'bg-neon-blue/10 border-neon-blue text-neon-blue' : 'text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <span className="mr-3">📊</span>
-                <span className="font-mono text-sm">Dashboard</span>
-             </Link>
-
-             <div className="mb-2 text-xs font-bold text-slate-500 dark:text-gray-600 uppercase tracking-widest px-3">Domains</div>
-             
-             <div className="space-y-1 overflow-y-auto h-[calc(100vh-280px)] custom-scrollbar pr-2">
-                {domains.map((domain) => (
-                  <Link
-                    key={domain.id}
-                    to={`/domain/${domain.id}`}
-                    onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center p-2.5 rounded-md transition-colors text-sm ${
-                      location.pathname === `/domain/${domain.id}` 
-                        ? 'bg-blue-50 dark:bg-white/10 text-neon-blue' 
-                        : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-gray-200'
-                    } ${domain.isLocked ? 'opacity-50' : ''}`}
-                  >
-                    <div className="mr-3">{getIcon(domain.icon, "w-4 h-4")}</div>
-                    <span className="truncate">{domain.id}. {domain.title}</span>
-                    {domain.isLocked && <Lock className="w-3 h-3 ml-auto" />}
-                  </Link>
-                ))}
-             </div>
+          <div className="border-t border-slate-200 px-4 py-3 text-[11px] text-slate-600 dark:border-dark-border dark:text-gray-500">
+            CODEX v2.0 | {totalSubjects} Subjects | {totalDomains} Domains | Knowledge is the only infinity
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto overflow-x-hidden relative">
-         {children}
-      </main>
+      <main className="relative z-10 flex-1 overflow-x-hidden overflow-y-auto pt-14 md:pt-0">{children}</main>
     </div>
   );
 };

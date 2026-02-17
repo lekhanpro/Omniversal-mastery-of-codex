@@ -5,19 +5,21 @@ import { domains } from '../data';
 import { getIcon } from '../components/Icons';
 import Accordion from '../components/Accordion';
 import { ArrowLeft, ArrowRight, Box, Layers, Activity, BookOpen } from 'lucide-react';
+import { masteryDomains } from '../utils/codex';
 
 const DomainView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const domainId = parseInt(id || '0');
-  const domain = domains.find(d => d.id === domainId);
+  const domain = masteryDomains.find(d => d.id === domainId);
   const [activeTab, setActiveTab] = useState<'subjects' | 'resources'>('subjects');
 
   if (!domain || domain.isLocked) {
     return <Navigate to="/" />;
   }
 
+  const maxDomainId = masteryDomains[masteryDomains.length - 1]?.id ?? 17;
   const prevDomain = domainId > 1 ? domainId - 1 : null;
-  const nextDomain = domainId < 20 ? domainId + 1 : null;
+  const nextDomain = domainId < maxDomainId ? domainId + 1 : null;
 
   // Default resources if not provided
   const defaultResources = [

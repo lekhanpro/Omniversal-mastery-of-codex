@@ -1,48 +1,127 @@
 import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { HashRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import DomainView from './pages/DomainView';
+import LoadingScreen from './components/LoadingScreen';
+import { ShareProgressProvider } from './contexts/ShareProgressContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Arena from './pages/Arena';
-import Oracle from './pages/Oracle';
+import Cartography from './pages/Cartography';
+import Dashboard from './pages/Dashboard';
+import DomainView from './pages/DomainView';
+import Forge from './pages/Forge';
 import Grimoire from './pages/Grimoire';
-import KnowledgeMapNew from './pages/KnowledgeMapNew';
+import Home from './pages/Home';
+import KnowledgeMap from './pages/KnowledgeMap';
+import Observatory from './pages/Observatory';
+import Oracle from './pages/Oracle';
 
-// Scroll to top on route change
-const ScrollToTop = () => {
+const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [pathname]);
   return null;
 };
 
-// Redirect component for external HTML pages
-const ExternalRedirect: React.FC<{ url: string }> = ({ url }) => {
-  useEffect(() => {
-    window.location.href = url;
-  }, [url]);
-  return <div className="min-h-screen bg-black text-white flex items-center justify-center">Redirecting...</div>;
-};
+const RoutedApp: React.FC = () => (
+  <>
+    <ScrollToTop />
+    <LoadingScreen />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout>
+            <Home />
+          </Layout>
+        }
+      />
+      <Route
+        path="/domain/:id"
+        element={
+          <Layout>
+            <DomainView />
+          </Layout>
+        }
+      />
+      <Route
+        path="/map"
+        element={
+          <Layout>
+            <KnowledgeMap />
+          </Layout>
+        }
+      />
+      <Route path="/knowledge-map" element={<Navigate to="/map" replace />} />
+      <Route
+        path="/oracle"
+        element={
+          <Layout>
+            <Oracle />
+          </Layout>
+        }
+      />
+      <Route
+        path="/arena"
+        element={
+          <Layout>
+            <Arena />
+          </Layout>
+        }
+      />
+      <Route
+        path="/grimoire"
+        element={
+          <Layout>
+            <Grimoire />
+          </Layout>
+        }
+      />
+      <Route
+        path="/observatory"
+        element={
+          <Layout>
+            <Observatory />
+          </Layout>
+        }
+      />
+      <Route
+        path="/forge"
+        element={
+          <Layout>
+            <Forge />
+          </Layout>
+        }
+      />
+      <Route
+        path="/cartography"
+        element={
+          <Layout>
+            <Cartography />
+          </Layout>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <Layout>
+            <Dashboard />
+          </Layout>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </>
+);
 
-const App: React.FC = () => {
-  return (
-    <ThemeProvider>
+const App: React.FC = () => (
+  <ThemeProvider>
+    <ShareProgressProvider>
       <Router>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout><Home /></Layout>} />
-          <Route path="/domain/:id" element={<Layout><DomainView /></Layout>} />
-          <Route path="/knowledge-map" element={<Layout><KnowledgeMapNew /></Layout>} />
-          <Route path="/arena" element={<Arena />} />
-          <Route path="/oracle" element={<Oracle />} />
-          <Route path="/grimoire" element={<Grimoire />} />
-          <Route path="/dashboard" element={<ExternalRedirect url="/dashboard.html" />} />
-        </Routes>
+        <RoutedApp />
       </Router>
-    </ThemeProvider>
-  );
-};
+    </ShareProgressProvider>
+  </ThemeProvider>
+);
 
 export default App;

@@ -42,3 +42,27 @@ export interface DomainConnection {
   from: number;
   to: number;
 }
+
+export interface ArenaQuestion {
+  id: string;
+  domain: number;
+  question: string;
+  options: string[];
+  correct: string;
+  explanation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  relatedDomain?: number;
+}
+
+export interface GrimoireNote {
+  id: string;
+  title: string;
+  domain: number;
+  subjects: string[];
+  body: string;
+  masteryLevel: 1 | 2 | 3 | 4 | 5;
+  created: string;
+  lastEdited: string;
+  wordCount: number;
+  tags: string[];
+}

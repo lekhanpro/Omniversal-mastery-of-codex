@@ -1,266 +1,153 @@
 import React, { useEffect, useRef } from 'react';
 
-interface BlobAnchor {
+interface AnchorPoint {
   angle: number;
-  radiusOffset: number;
   freq: number;
   amp: number;
+  phase: number;
 }
 
-class Blob {
+interface Blob {
   x: number;
   y: number;
   vx: number;
   vy: number;
-  baseSize: number;
-  points: number;
-  anchors: BlobAnchor[];
-  colorSet: string[];
+  baseRadius: number;
+  anchors: AnchorPoint[];
+  hue: number;
   alpha: number;
-  timeOffset: number;
-
-  constructor(width: number, height: number) {
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
-    this.vx = (Math.random() - 0.5) * 0.15;
-    this.vy = (Math.random() - 0.5) * 0.15;
-    this.baseSize = 150 + Math.random() * 200;
-    this.points = 8;
-    this.anchors = [];
-    this.colorSet = this.getRandomColorSet();
-    const isDark = document.documentElement.classList.contains('dark');
-    this.alpha = isDark ? (0.12 + Math.random() * 0.13) : (0.08 + Math.random() * 0.08);
-    this.timeOffset = Math.random() * 1000;
-
-    for (let i = 0; i < this.points; i++) {
-      this.anchors.push({
-        angle: (i / this.points) * Math.PI * 2,
-        radiusOffset: Math.random() * 0.3 + 0.7,
-        freq: 0.0003 + Math.random() * 0.0005,
-        amp: 20 + Math.random() * 30
-      });
-    }
-  }
-
-  getRandomColorSet(): string[] {
-    const isDark = document.documentElement.classList.contains('dark');
-    if (isDark) {
-      const sets = [
-        ['#0a0030', '#1a0050', '#000820'],
-        ['#1a0800', '#300a00', '#1a0800'],
-        ['#001a10', '#003020', '#001a10']
-      ];
-      return sets[Math.floor(Math.random() * sets.length)];
-    } else {
-      const sets = [
-        ['#e0f2fe', '#bae6fd', '#f0f9ff'],
-        ['#fef3c7', '#fde68a', '#fffbeb'],
-        ['#dbeafe', '#bfdbfe', '#eff6ff']
-      ];
-      return sets[Math.floor(Math.random() * sets.length)];
-    }
-  }
-
-  update(width: number, height: number) {
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if (this.x < -this.baseSize || this.x > width + this.baseSize) this.vx *= -1;
-    if (this.y < -this.baseSize || this.y > height + this.baseSize) this.vy *= -1;
-  }
-
-  draw(ctx: CanvasRenderingContext2D, time: number) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-
-    const breathe = Math.sin(time * 0.0008 + this.timeOffset) * 0.15 + 1;
-    ctx.scale(breathe, breathe);
-
-    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.baseSize);
-    gradient.addColorStop(0, this.colorSet[0]);
-    gradient.addColorStop(0.5, this.colorSet[1]);
-    gradient.addColorStop(1, this.colorSet[2]);
-
-    ctx.fillStyle = gradient;
-    ctx.globalAlpha = this.alpha;
-
-    ctx.beginPath();
-    for (let i = 0; i <= this.points; i++) {
-      const anchor = this.anchors[i % this.points];
-      const morphOffset = Math.sin(time * anchor.freq + this.timeOffset) * anchor.amp;
-      const radius = this.baseSize * anchor.radiusOffset + morphOffset;
-
-      const x = Math.cos(anchor.angle) * radius;
-      const y = Math.sin(anchor.angle) * radius;
-
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        const prevAnchor = this.anchors[(i - 1) % this.points];
-        const prevMorph = Math.sin(time * prevAnchor.freq + this.timeOffset) * prevAnchor.amp;
-        const prevRadius = this.baseSize * prevAnchor.radiusOffset + prevMorph;
-        const prevX = Math.cos(prevAnchor.angle) * prevRadius;
-        const prevY = Math.sin(prevAnchor.angle) * prevRadius;
-
-        const cp1x = prevX + Math.cos(prevAnchor.angle + Math.PI / 2) * 50;
-        const cp1y = prevY + Math.sin(prevAnchor.angle + Math.PI / 2) * 50;
-        const cp2x = x - Math.cos(anchor.angle + Math.PI / 2) * 50;
-        const cp2y = y - Math.sin(anchor.angle + Math.PI / 2) * 50;
-
-        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-      }
-    }
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.restore();
-  }
+  foreground: boolean;
+  offset: number;
 }
 
-class Star {
+interface Star {
   x: number;
   y: number;
   radius: number;
-  opacity: number;
   baseOpacity: number;
-  twinkle: boolean;
   twinkleOffset: number;
-  hasGlow: boolean;
-
-  constructor(width: number, height: number, tier: 'tiny' | 'medium' | 'large') {
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
-    this.twinkleOffset = Math.random() * 1000;
-    const isDark = document.documentElement.classList.contains('dark');
-
-    if (tier === 'tiny') {
-      this.radius = 0.4;
-      this.opacity = isDark ? 0.4 : 0.2;
-      this.baseOpacity = isDark ? 0.4 : 0.2;
-      this.twinkle = false;
-      this.hasGlow = false;
-    } else if (tier === 'medium') {
-      this.radius = 0.8;
-      this.opacity = isDark ? 0.7 : 0.3;
-      this.baseOpacity = isDark ? 0.7 : 0.3;
-      this.twinkle = false;
-      this.hasGlow = false;
-    } else {
-      this.radius = 1.4;
-      this.baseOpacity = isDark ? 1.0 : 0.5;
-      this.opacity = isDark ? 1.0 : 0.5;
-      this.twinkle = true;
-      this.hasGlow = Math.random() < 0.25;
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D, time: number) {
-    ctx.save();
-
-    if (this.twinkle) {
-      this.opacity = this.baseOpacity * (0.5 + Math.sin(time * 0.002 + this.twinkleOffset) * 0.5);
-    }
-
-    const isDark = document.documentElement.classList.contains('dark');
-    if (this.hasGlow) {
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = isDark ? '#c9a84c' : '#0066cc';
-    }
-
-    ctx.fillStyle = isDark ? '#ffffff' : '#94a3b8';
-    ctx.globalAlpha = this.opacity;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.restore();
-  }
+  twinkleSpeed: number;
+  large: boolean;
+  goldGlow: boolean;
 }
 
-class ShootingStar {
+interface ShootingStar {
   active: boolean;
-  nextTime: number;
-  startTime: number;
-  duration: number;
+  nextStartAt: number;
   x: number;
   y: number;
-  angle: number;
-  length: number;
+  dirX: number;
+  dirY: number;
+  progress: number;
   speed: number;
-
-  constructor() {
-    this.active = false;
-    this.nextTime = 0;
-    this.startTime = 0;
-    this.duration = 800;
-    this.x = 0;
-    this.y = 0;
-    this.angle = 0;
-    this.length = 0;
-    this.speed = 0;
-  }
-
-  reset(currentTime: number) {
-    this.active = false;
-    this.nextTime = currentTime + (4000 + Math.random() * 4000);
-  }
-
-  start(currentTime: number, width: number, height: number) {
-    this.active = true;
-    this.startTime = currentTime;
-    this.duration = 800;
-    this.x = Math.random() * width;
-    this.y = Math.random() * height * 0.5;
-    this.angle = Math.random() * Math.PI / 4 + Math.PI / 6;
-    this.length = 100 + Math.random() * 100;
-    this.speed = 3 + Math.random() * 2;
-  }
-
-  update(currentTime: number, width: number, height: number) {
-    if (!this.active && currentTime >= this.nextTime) {
-      this.start(currentTime, width, height);
-    }
-
-    if (this.active && currentTime - this.startTime >= this.duration) {
-      this.reset(currentTime);
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D, currentTime: number) {
-    if (!this.active) return;
-
-    const elapsed = currentTime - this.startTime;
-    const progress = elapsed / this.duration;
-    const isDark = document.documentElement.classList.contains('dark');
-
-    const currentX = this.x + Math.cos(this.angle) * this.speed * elapsed;
-    const currentY = this.y + Math.sin(this.angle) * this.speed * elapsed;
-
-    const gradient = ctx.createLinearGradient(
-      currentX, currentY,
-      currentX - Math.cos(this.angle) * this.length,
-      currentY - Math.sin(this.angle) * this.length
-    );
-
-    if (isDark) {
-      gradient.addColorStop(0, `rgba(255, 255, 255, ${1 - progress})`);
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    } else {
-      gradient.addColorStop(0, `rgba(100, 116, 139, ${0.6 * (1 - progress)})`);
-      gradient.addColorStop(1, 'rgba(100, 116, 139, 0)');
-    }
-
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(currentX, currentY);
-    ctx.lineTo(
-      currentX - Math.cos(this.angle) * this.length,
-      currentY - Math.sin(this.angle) * this.length
-    );
-    ctx.stroke();
-  }
 }
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+const BLOB_COUNT = 6;
+const MAX_REPEL_DISTANCE = 300;
+const SHOOTING_STAR_POOL = 3;
+const SHOOTING_STAR_TRAVEL = 400;
+
+const randomInRange = (min: number, max: number): number => min + Math.random() * (max - min);
+
+const createAnchors = (): AnchorPoint[] =>
+  Array.from({ length: 8 }, (_, index) => ({
+    angle: (Math.PI * 2 * index) / 8,
+    freq: randomInRange(0.0003, 0.0009),
+    amp: randomInRange(20, 60),
+    phase: Math.random() * Math.PI * 2,
+  }));
+
+const createBlob = (width: number, height: number, foreground: boolean): Blob => ({
+  x: randomInRange(0, width),
+  y: randomInRange(0, height),
+  vx: randomInRange(-0.08, 0.08),
+  vy: randomInRange(-0.08, 0.08),
+  baseRadius: randomInRange(120, 220),
+  anchors: createAnchors(),
+  hue: randomInRange(200, 260),
+  alpha: foreground ? 0.18 : randomInRange(0.08, 0.14),
+  foreground,
+  offset: Math.random() * 1000,
+});
+
+const createStars = (width: number, height: number): Star[] => {
+  const stars: Star[] = [
+    ...Array.from({ length: 150 }, () => ({
+      x: randomInRange(0, width),
+      y: randomInRange(0, height),
+      radius: randomInRange(0.3, 0.8),
+      baseOpacity: randomInRange(0.25, 0.55),
+      twinkleOffset: Math.random() * Math.PI * 2,
+      twinkleSpeed: randomInRange(0.8, 1.8),
+      large: false,
+      goldGlow: false,
+    })),
+    ...Array.from({ length: 50 }, () => ({
+      x: randomInRange(0, width),
+      y: randomInRange(0, height),
+      radius: randomInRange(0.9, 1.4),
+      baseOpacity: randomInRange(0.45, 0.8),
+      twinkleOffset: Math.random() * Math.PI * 2,
+      twinkleSpeed: randomInRange(1.2, 2.3),
+      large: false,
+      goldGlow: false,
+    })),
+    ...Array.from({ length: 32 }, () => ({
+      x: randomInRange(0, width),
+      y: randomInRange(0, height),
+      radius: randomInRange(1.5, 2.5),
+      baseOpacity: randomInRange(0.55, 1),
+      twinkleOffset: Math.random() * Math.PI * 2,
+      twinkleSpeed: randomInRange(1.4, 2.8),
+      large: true,
+      goldGlow: false,
+    })),
+  ];
+
+  const largeStars = stars.filter((star) => star.large);
+  for (let index = 0; index < Math.min(10, largeStars.length); index += 1) {
+    largeStars[index].goldGlow = true;
+  }
+
+  return stars;
+};
+
+const createShootingStars = (): ShootingStar[] =>
+  Array.from({ length: SHOOTING_STAR_POOL }, () => ({
+    active: false,
+    nextStartAt: randomInRange(4000, 8000),
+    x: 0,
+    y: 0,
+    dirX: 0,
+    dirY: 0,
+    progress: 0,
+    speed: randomInRange(0.25, 0.45),
+  }));
+
+const drawSmoothClosedCurve = (ctx: CanvasRenderingContext2D, points: Point[]): void => {
+  if (points.length < 3) return;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let index = 0; index < points.length; index += 1) {
+    const p0 = points[(index - 1 + points.length) % points.length];
+    const p1 = points[index];
+    const p2 = points[(index + 1) % points.length];
+    const p3 = points[(index + 2) % points.length];
+
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+  }
+  ctx.closePath();
+};
 
 const CosmicCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -269,66 +156,192 @@ const CosmicCanvas: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    canvas.style.willChange = 'transform';
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const blobs: Blob[] = Array.from({ length: 8 }, () => new Blob(width, height));
-    const stars: Star[] = [
-      ...Array.from({ length: 60 }, () => new Star(width, height, 'tiny')),
-      ...Array.from({ length: 100 }, () => new Star(width, height, 'medium')),
-      ...Array.from({ length: 40 }, () => new Star(width, height, 'large'))
-    ];
-    const shootingStars: ShootingStar[] = Array.from({ length: 3 }, () => new ShootingStar());
-
-    let animationFrameId: number;
-    let lastTime = 0;
-
-    const animate = (currentTime: number) => {
-      ctx.clearRect(0, 0, width, height);
-
-      blobs.forEach(blob => {
-        blob.update(width, height);
-        blob.draw(ctx, currentTime);
-      });
-
-      stars.forEach(star => star.draw(ctx, currentTime));
-
-      shootingStars.forEach(star => {
-        star.update(currentTime, width, height);
-        star.draw(ctx, currentTime);
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    const handleResize = () => {
+    const resize = (): void => {
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    window.addEventListener('resize', handleResize);
-    animate(0);
+    resize();
+
+    const blobs: Blob[] = Array.from({ length: BLOB_COUNT }, (_, index) => createBlob(width, height, index === 0));
+    const stars = createStars(width, height);
+    const shootingStars = createShootingStars();
+
+    let raf = 0;
+    let lastFrame = 0;
+    let elapsed = 0;
+
+    const updateBlobRepulsion = (): void => {
+      for (let index = 0; index < blobs.length; index += 1) {
+        for (let other = index + 1; other < blobs.length; other += 1) {
+          const blobA = blobs[index];
+          const blobB = blobs[other];
+          const dx = blobB.x - blobA.x;
+          const dy = blobB.y - blobA.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance <= 0 || distance > MAX_REPEL_DISTANCE) continue;
+
+          const pushStrength = ((MAX_REPEL_DISTANCE - distance) / MAX_REPEL_DISTANCE) * 0.02;
+          const nx = dx / distance;
+          const ny = dy / distance;
+
+          blobA.vx -= nx * pushStrength;
+          blobA.vy -= ny * pushStrength;
+          blobB.vx += nx * pushStrength;
+          blobB.vy += ny * pushStrength;
+        }
+      }
+    };
+
+    const updateBlobs = (deltaTime: number): void => {
+      updateBlobRepulsion();
+      blobs.forEach((blob) => {
+        const speed = blob.foreground ? 1.8 : 1;
+        blob.x += blob.vx * deltaTime * speed;
+        blob.y += blob.vy * deltaTime * speed;
+        blob.vx *= 0.998;
+        blob.vy *= 0.998;
+
+        const boundary = blob.baseRadius * 1.1;
+        if (blob.x < -boundary || blob.x > width + boundary) blob.vx *= -1;
+        if (blob.y < -boundary || blob.y > height + boundary) blob.vy *= -1;
+      });
+    };
+
+    const drawBlobs = (time: number): void => {
+      blobs.forEach((blob) => {
+        const breathe = 1 + Math.sin(time * 0.0007 + blob.offset) * 0.13;
+        const points = blob.anchors.map((anchor) => {
+          const morph = Math.sin(time * anchor.freq + anchor.phase + blob.offset) * anchor.amp;
+          const radius = (blob.baseRadius + morph) * breathe;
+          return {
+            x: blob.x + Math.cos(anchor.angle) * radius,
+            y: blob.y + Math.sin(anchor.angle) * radius,
+          };
+        });
+
+        const gradient = context.createRadialGradient(blob.x, blob.y, blob.baseRadius * 0.15, blob.x, blob.y, blob.baseRadius * 1.2);
+        gradient.addColorStop(0, `hsla(${blob.hue}, 88%, 68%, ${blob.alpha})`);
+        gradient.addColorStop(0.5, `hsla(${blob.hue + 20}, 80%, 52%, ${blob.alpha * 0.8})`);
+        gradient.addColorStop(1, `hsla(${blob.hue + 40}, 75%, 30%, 0)`);
+
+        context.fillStyle = gradient;
+        drawSmoothClosedCurve(context, points);
+        context.fill();
+      });
+    };
+
+    const drawStars = (time: number): void => {
+      stars.forEach((star) => {
+        const twinkle = star.large
+          ? 0.55 + Math.sin(time * 0.0016 * star.twinkleSpeed + star.twinkleOffset) * 0.45
+          : 0.8 + Math.sin(time * 0.0009 * star.twinkleSpeed + star.twinkleOffset) * 0.2;
+
+        context.save();
+        context.globalAlpha = Math.max(0.05, star.baseOpacity * twinkle);
+        if (star.goldGlow) {
+          context.shadowBlur = 8;
+          context.shadowColor = '#c9a84c';
+        }
+        context.fillStyle = star.goldGlow ? '#f2dd9d' : '#eef3ff';
+        context.beginPath();
+        context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      });
+    };
+
+    const activateShootingStar = (star: ShootingStar): void => {
+      star.active = true;
+      star.progress = 0;
+      star.x = randomInRange(-80, width * 0.7);
+      star.y = randomInRange(-40, height * 0.45);
+      const angle = randomInRange(0.2, 0.52);
+      star.dirX = Math.cos(angle);
+      star.dirY = Math.sin(angle);
+      star.speed = randomInRange(0.26, 0.44);
+    };
+
+    const updateAndDrawShootingStars = (deltaTime: number): void => {
+      shootingStars.forEach((star) => {
+        if (!star.active && elapsed >= star.nextStartAt) {
+          activateShootingStar(star);
+        }
+        if (!star.active) return;
+
+        star.progress += star.speed * deltaTime;
+
+        const headX = star.x + star.dirX * star.progress;
+        const headY = star.y + star.dirY * star.progress;
+        const tailLength = 120;
+        const tailX = headX - star.dirX * tailLength;
+        const tailY = headY - star.dirY * tailLength;
+
+        const gradient = context.createLinearGradient(headX, headY, tailX, tailY);
+        gradient.addColorStop(0, 'rgba(244, 231, 194, 0.95)');
+        gradient.addColorStop(0.5, 'rgba(201, 168, 76, 0.55)');
+        gradient.addColorStop(1, 'rgba(201, 168, 76, 0)');
+
+        context.save();
+        context.strokeStyle = gradient;
+        context.lineWidth = 2;
+        context.beginPath();
+        context.moveTo(headX, headY);
+        context.lineTo(tailX, tailY);
+        context.stroke();
+        context.restore();
+
+        if (star.progress >= SHOOTING_STAR_TRAVEL) {
+          star.active = false;
+          star.nextStartAt = elapsed + randomInRange(4000, 8000);
+        }
+      });
+    };
+
+    const animate = (time: number): void => {
+      if (time - lastFrame < 1000 / 60) {
+        raf = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      const deltaTime = lastFrame === 0 ? 16.67 : time - lastFrame;
+      lastFrame = time;
+      elapsed += deltaTime;
+
+      context.clearRect(0, 0, width, height);
+      updateBlobs(deltaTime);
+      drawBlobs(time);
+      drawStars(time);
+      updateAndDrawShootingStars(deltaTime);
+
+      raf = window.requestAnimationFrame(animate);
+    };
+
+    raf = window.requestAnimationFrame(animate);
+    window.addEventListener('resize', resize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      window.cancelAnimationFrame(raf);
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0 }}
-    />
-  );
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden="true" />;
 };
 
 export default CosmicCanvas;

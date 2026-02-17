@@ -1,4 +1,4 @@
-import { Domain } from './types';
+import { ArenaQuestion, Domain } from './types';
 
 export const domains: Domain[] = [
   {
@@ -1442,3 +1442,64 @@ export const domains: Domain[] = [
     isLocked: false
   }
 ];
+
+const ARENA_DIFFICULTY: Array<'easy' | 'medium' | 'hard'> = [
+  'easy',
+  'medium',
+  'medium',
+  'hard',
+  'easy',
+  'medium',
+  'hard',
+  'hard',
+];
+
+const uniqOptions = (items: string[], fallback: string): string[] => {
+  const unique = [...new Set(items.filter(Boolean))];
+  while (unique.length < 4) {
+    unique.push(`${fallback} ${unique.length + 1}`);
+  }
+  return unique.slice(0, 4);
+};
+
+const createQuestionPrompt = (domainTitle: string, subdomainTitle: string, pillar: string, variant: number): string => {
+  const prompts = [
+    `In ${domainTitle}, which subdomain most directly governs "${pillar}"?`,
+    `If you want a strong foundation in ${domainTitle}, where should you begin first?`,
+    `Which subdomain best represents the operational core of this ${domainTitle} scenario?`,
+    `A practitioner in ${domainTitle} is troubleshooting "${pillar}". Which lens should they prioritize?`,
+    `Which area in ${domainTitle} typically produces the fastest practical improvement?`,
+    `In a cross-domain project, which ${domainTitle} subdomain offers the most stable anchor?`,
+    `When evaluating mastery depth in ${domainTitle}, which subdomain is the highest-signal checkpoint?`,
+    `Which subdomain most effectively translates ${domainTitle} theory into repeatable execution?`,
+  ];
+  return `${prompts[variant % prompts.length]} (${subdomainTitle})`;
+};
+
+export const arenaQuestions: ArenaQuestion[] = domains.slice(0, 17).flatMap((domain, domainIndex) => {
+  const related = domains[(domainIndex + 1) % 17];
+  return Array.from({ length: 8 }, (_, questionIndex) => {
+    const primarySub = domain.subdomains[questionIndex % domain.subdomains.length];
+    const secondarySub = domain.subdomains[(questionIndex + 1) % domain.subdomains.length];
+    const tertiarySub = domain.subdomains[(questionIndex + 2) % domain.subdomains.length];
+    const externalSub = related.subdomains[questionIndex % related.subdomains.length];
+    const pillar = domain.pillars[questionIndex % domain.pillars.length];
+
+    const correct = primarySub.title;
+    const options = uniqOptions(
+      [correct, secondarySub.title, tertiarySub.title, externalSub.title],
+      domain.title
+    );
+
+    return {
+      id: `D${domain.id}-Q${questionIndex + 1}`,
+      domain: domain.id,
+      question: createQuestionPrompt(domain.title, primarySub.title, pillar, questionIndex),
+      options,
+      correct,
+      explanation: `${primarySub.title} is the strongest answer because it directly addresses ${pillar.toLowerCase()} in ${domain.title}, while the other options are supporting or adjacent tracks.`,
+      difficulty: ARENA_DIFFICULTY[questionIndex],
+      relatedDomain: related.id,
+    };
+  });
+});

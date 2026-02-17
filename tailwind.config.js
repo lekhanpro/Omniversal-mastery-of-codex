@@ -2,34 +2,31 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./contexts/**/*.{js,ts,jsx,tsx}",
+    "./hooks/**/*.{js,ts,jsx,tsx}",
+    "./utils/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Space Grotesk', 'sans-serif'],
+        serif: ['Cinzel', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
         neon: {
-          blue: '#00f3ff',
-          purple: '#bc13fe',
-          green: '#0aff0a',
-        },
-        light: {
-          bg: '#f8fafc',
-          card: '#ffffff',
-          border: '#e2e8f0',
-          text: '#0f172a',
-          textSecondary: '#475569',
+          blue: '#44aaff',
+          purple: '#aa44ff',
+          green: '#44ff88',
         },
         dark: {
           bg: '#050505',
-          card: '#0a0a0a',
-          border: '#1f1f1f',
+          card: '#0e0e12',
+          border: '#1f1f24',
           text: '#e5e5e5',
           textSecondary: '#9ca3af',
         }
