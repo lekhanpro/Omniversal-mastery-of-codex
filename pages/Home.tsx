@@ -6,7 +6,7 @@ import { getIcon } from '../components/Icons';
 import QuotesRotator from '../components/QuotesRotator';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { useShareProgress } from '../contexts/ShareProgressContext';
-import { DOMAIN_COLORS, getAllDomainProgress, getDomainById, masteryDomains, readActivityLog } from '../utils/codex';
+import { DOMAIN_COLORS, getAllDomainProgress, getDomainById, masteryDomains } from '../utils/codex';
 
 interface CrossInsight {
   id: number;
@@ -66,7 +66,6 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState('');
   const [expandedDomainId, setExpandedDomainId] = useState<number | null>(null);
   const [activeInsightIndex, setActiveInsightIndex] = useState(0);
-  const [activityTicker, setActivityTicker] = useState<string[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const domainCardRefs = useRef<Array<HTMLElement | null>>([]);
 
@@ -128,22 +127,7 @@ const Home: React.FC = () => {
     return () => window.clearInterval(interval);
   }, [dailyInsights.length]);
 
-  useEffect(() => {
-    const loadTicker = (): void => {
-      const entries = readActivityLog().slice(-16).reverse();
-      const items = entries.map((entry) => {
-        const domainNames = entry.domainIds
-          .map((domainId) => getDomainById(domainId)?.title ?? `D${domainId}`)
-          .join(', ');
-        return `${new Date(entry.timestamp).toLocaleDateString()} - ${entry.type.toUpperCase()} - ${domainNames}`;
-      });
-      setActivityTicker(items.length > 0 ? items : ['No activity yet - begin with one subject and your pulse starts.']);
-    };
 
-    loadTicker();
-    window.addEventListener('storage', loadTicker);
-    return () => window.removeEventListener('storage', loadTicker);
-  }, []);
 
   const totalCompletion = domainProgress.reduce((sum, domain) => sum + domain.completion, 0) / Math.max(1, domainProgress.length);
 
@@ -325,15 +309,6 @@ const Home: React.FC = () => {
         <QuotesRotator />
       </section>
 
-      <div className="glass-panel-strong fixed bottom-0 left-0 right-0 z-20 overflow-hidden border-t border-[var(--codex-border)] py-2">
-        <div className="codex-pulse-ticker flex min-w-max items-center gap-6 px-4 text-xs text-[var(--codex-primary)]">
-          {[...activityTicker, ...activityTicker].map((item, index) => (
-            <span key={`${item}-${index}`} className="whitespace-nowrap">
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

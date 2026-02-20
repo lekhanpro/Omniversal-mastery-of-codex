@@ -71,7 +71,6 @@ const Accordion: React.FC<AccordionProps> = ({ topic, defaultOpen = false, index
       className="glass-panel relative overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:border-[var(--codex-primary)]/45"
       style={{ borderLeftColor: accent, borderLeftWidth: '4px' }}
     >
-      <span className="pointer-events-none absolute right-3 top-2 text-5xl font-bold text-[var(--codex-text-muted)]/20">{String(index + 1).padStart(2, '0')}</span>
 
       <button
         type="button"

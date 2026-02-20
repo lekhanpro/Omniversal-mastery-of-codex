@@ -35,14 +35,8 @@ interface NavItem {
 
 const mainNav: NavItem[] = [
   { label: 'Home', to: '/', icon: <Home className="h-4 w-4" /> },
-  { label: 'Knowledge Map', to: '/map', icon: <Map className="h-4 w-4" /> },
-  { label: 'Oracle', to: '/oracle', icon: <Sparkles className="h-4 w-4" /> },
-  { label: 'Arena', to: '/arena', icon: <Flame className="h-4 w-4" /> },
-  { label: 'Grimoire', to: '/grimoire', icon: <BookOpenText className="h-4 w-4" /> },
-  { label: 'Observatory', to: '/observatory', icon: <Telescope className="h-4 w-4" /> },
-  { label: 'Forge', to: '/forge', icon: <Hammer className="h-4 w-4" /> },
-  { label: 'Cartography', to: '/cartography', icon: <Compass className="h-4 w-4" /> },
-  { label: 'Dashboard', to: '/dashboard', icon: <BarChart3 className="h-4 w-4" /> },
+  { label: 'Codex Features', to: '/features', icon: <Compass className="h-4 w-4" /> },
+  { label: 'The Oracle', to: '/oracle', icon: <Sparkles className="h-4 w-4" /> },
 ];
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -120,9 +114,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       <aside
-        className={`glass-panel-strong fixed inset-y-0 left-0 z-[999] w-[304px] border-r border-[var(--codex-border)] transition-transform duration-300 md:relative md:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`glass-panel-strong fixed inset-y-0 left-0 z-[999] w-[304px] border-r border-[var(--codex-border)] transition-transform duration-300 md:relative md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-20 left-8 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(76,99,255,0.28),transparent_68%)]" />
@@ -159,11 +152,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`group flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${
-                    isActive(item.to)
+                  className={`group flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${isActive(item.to)
                       ? 'border-[var(--codex-primary)]/45 bg-[linear-gradient(135deg,rgba(76,99,255,0.18),rgba(201,168,76,0.14))] text-[var(--codex-text-strong)] shadow-[0_10px_24px_rgba(76,99,255,0.18)]'
                       : 'border-transparent text-[var(--codex-text)] hover:border-[var(--codex-border)] hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   <span className={`rounded-lg p-1 ${isActive(item.to) ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/10'}`}>
                     {item.icon}
@@ -179,11 +171,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={domain.id}
                   to={`/domain/${domain.id}`}
-                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition ${
-                    location.pathname === `/domain/${domain.id}`
+                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition ${location.pathname === `/domain/${domain.id}`
                       ? 'border-[var(--codex-primary)]/45 bg-white/20 text-[var(--codex-text-strong)]'
                       : 'border-transparent text-[var(--codex-text-soft)] hover:border-[var(--codex-border)] hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   <span className="text-[var(--codex-primary)]">{getIcon(domain.icon, 'h-4 w-4')}</span>
                   <span className="truncate">{domain.id}. {domain.title}</span>

@@ -11,6 +11,7 @@ import DomainView from './pages/DomainView';
 import Forge from './pages/Forge';
 import Grimoire from './pages/Grimoire';
 import Home from './pages/Home';
+import Features from './pages/Features';
 import KnowledgeMap from './pages/KnowledgeMap';
 import Observatory from './pages/Observatory';
 import Oracle from './pages/Oracle';
@@ -41,6 +42,14 @@ const RoutedApp: React.FC = () => (
         element={
           <Layout>
             <DomainView />
+          </Layout>
+        }
+      />
+      <Route
+        path="/features"
+        element={
+          <Layout>
+            <Features />
           </Layout>
         }
       />
