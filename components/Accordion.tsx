@@ -68,10 +68,10 @@ const Accordion: React.FC<AccordionProps> = ({ topic, defaultOpen = false, index
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl border border-dark-border/70 bg-dark-card/55 shadow-sm transition-all duration-300 hover:border-white/10"
+      className="glass-panel relative overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:border-[var(--codex-primary)]/45"
       style={{ borderLeftColor: accent, borderLeftWidth: '4px' }}
     >
-      <span className="pointer-events-none absolute right-3 top-2 text-5xl font-bold text-white/5">{String(index + 1).padStart(2, '0')}</span>
+      <span className="pointer-events-none absolute right-3 top-2 text-5xl font-bold text-[var(--codex-text-muted)]/20">{String(index + 1).padStart(2, '0')}</span>
 
       <button
         type="button"
@@ -79,14 +79,14 @@ const Accordion: React.FC<AccordionProps> = ({ topic, defaultOpen = false, index
         className="relative z-10 flex w-full items-center justify-between gap-4 px-4 py-4 text-left"
       >
         <div className="min-w-0">
-          <div className="font-mono text-xs uppercase tracking-[0.2em] text-gray-500">Subject Cluster {String(index + 1).padStart(2, '0')}</div>
-          <h3 className="mt-1 truncate text-lg font-semibold text-gray-100">{topic.title}</h3>
+          <div className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--codex-text-soft)]">Subject Cluster {String(index + 1).padStart(2, '0')}</div>
+          <h3 className="mt-1 truncate text-lg font-semibold text-[var(--codex-text-strong)]">{topic.title}</h3>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10">
             <svg viewBox="0 0 44 44" className="h-10 w-10 -rotate-90">
-              <circle cx="22" cy="22" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
+              <circle cx="22" cy="22" r={ringRadius} fill="none" stroke="rgba(127, 145, 184, 0.24)" strokeWidth="3" />
               <circle
                 cx="22"
                 cy="22"
@@ -99,12 +99,12 @@ const Accordion: React.FC<AccordionProps> = ({ topic, defaultOpen = false, index
                 strokeLinecap="round"
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-gray-300">
+            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-[var(--codex-text-soft)]">
               {checkedPoints.size}/{topic.points.length}
             </span>
           </div>
           <ChevronDown
-            className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+            className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
             style={{ color: accent }}
           />
         </div>
@@ -116,25 +116,25 @@ const Accordion: React.FC<AccordionProps> = ({ topic, defaultOpen = false, index
         transition={{ duration: 0.28, ease: [0.25, 0.8, 0.3, 1] }}
         className="overflow-hidden"
       >
-        <div ref={contentRef} className="border-t border-white/5 px-4 pb-4 pt-3">
+        <div ref={contentRef} className="border-t border-[var(--codex-border)] px-4 pb-4 pt-3">
           <ul className="grid gap-2 sm:grid-cols-2">
             {topic.points.map((point, pointIdx) => {
               const checked = checkedPoints.has(pointIdx);
               return (
                 <motion.li
                   key={point}
-                  className="subject-row rounded-md px-2 py-2 transition hover:bg-white/5 active:bg-white/10"
+                  className="subject-row rounded-lg px-2 py-2 transition hover:bg-white/10 active:bg-white/20"
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: pointIdx * 0.06, duration: 0.18 }}
                 >
-                  <label className="flex cursor-pointer items-start gap-2 text-sm text-gray-300">
+                  <label className="flex cursor-pointer items-start gap-2 text-sm text-[var(--codex-text)]">
                     <input
                       type="checkbox"
                       checked={checked}
                       disabled={isReadOnly}
                       onChange={() => togglePoint(pointIdx)}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-600 bg-transparent"
+                      className="mt-0.5 h-4 w-4 rounded border-[var(--codex-border)] bg-transparent"
                       style={{ accentColor: accent }}
                     />
                     <span className={checked ? 'text-[#c9a84c] line-through' : ''}>{point}</span>

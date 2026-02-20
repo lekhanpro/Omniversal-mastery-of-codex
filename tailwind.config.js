@@ -13,8 +13,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Space Grotesk', 'sans-serif'],
-        serif: ['Cinzel', 'serif'],
+        sans: ['Manrope', 'sans-serif'],
+        serif: ['Sora', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {

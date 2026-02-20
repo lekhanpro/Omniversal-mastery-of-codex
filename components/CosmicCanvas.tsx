@@ -62,22 +62,25 @@ const createAnchors = (): AnchorPoint[] =>
     phase: Math.random() * Math.PI * 2,
   }));
 
-const createBlob = (width: number, height: number, foreground: boolean): Blob => ({
+const createBlob = (width: number, height: number, foreground: boolean, isDark: boolean): Blob => ({
   x: randomInRange(0, width),
   y: randomInRange(0, height),
   vx: randomInRange(-0.08, 0.08),
   vy: randomInRange(-0.08, 0.08),
   baseRadius: randomInRange(120, 220),
   anchors: createAnchors(),
-  hue: randomInRange(200, 260),
-  alpha: foreground ? 0.18 : randomInRange(0.08, 0.14),
+  hue: isDark ? randomInRange(200, 270) : randomInRange(188, 248),
+  alpha: foreground ? (isDark ? 0.18 : 0.12) : randomInRange(isDark ? 0.08 : 0.04, isDark ? 0.14 : 0.1),
   foreground,
   offset: Math.random() * 1000,
 });
 
-const createStars = (width: number, height: number): Star[] => {
+const createStars = (width: number, height: number, isDark: boolean): Star[] => {
+  const smallCount = isDark ? 150 : 90;
+  const midCount = isDark ? 50 : 30;
+  const largeCount = isDark ? 32 : 16;
   const stars: Star[] = [
-    ...Array.from({ length: 150 }, () => ({
+    ...Array.from({ length: smallCount }, () => ({
       x: randomInRange(0, width),
       y: randomInRange(0, height),
       radius: randomInRange(0.3, 0.8),
@@ -87,7 +90,7 @@ const createStars = (width: number, height: number): Star[] => {
       large: false,
       goldGlow: false,
     })),
-    ...Array.from({ length: 50 }, () => ({
+    ...Array.from({ length: midCount }, () => ({
       x: randomInRange(0, width),
       y: randomInRange(0, height),
       radius: randomInRange(0.9, 1.4),
@@ -97,7 +100,7 @@ const createStars = (width: number, height: number): Star[] => {
       large: false,
       goldGlow: false,
     })),
-    ...Array.from({ length: 32 }, () => ({
+    ...Array.from({ length: largeCount }, () => ({
       x: randomInRange(0, width),
       y: randomInRange(0, height),
       radius: randomInRange(1.5, 2.5),
@@ -149,7 +152,11 @@ const drawSmoothClosedCurve = (ctx: CanvasRenderingContext2D, points: Point[]): 
   ctx.closePath();
 };
 
-const CosmicCanvas: React.FC = () => {
+interface CosmicCanvasProps {
+  isDark?: boolean;
+}
+
+const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ isDark = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -178,8 +185,8 @@ const CosmicCanvas: React.FC = () => {
 
     resize();
 
-    const blobs: Blob[] = Array.from({ length: BLOB_COUNT }, (_, index) => createBlob(width, height, index === 0));
-    const stars = createStars(width, height);
+    const blobs: Blob[] = Array.from({ length: BLOB_COUNT }, (_, index) => createBlob(width, height, index === 0, isDark));
+    const stars = createStars(width, height, isDark);
     const shootingStars = createShootingStars();
 
     let raf = 0;
@@ -236,9 +243,9 @@ const CosmicCanvas: React.FC = () => {
         });
 
         const gradient = context.createRadialGradient(blob.x, blob.y, blob.baseRadius * 0.15, blob.x, blob.y, blob.baseRadius * 1.2);
-        gradient.addColorStop(0, `hsla(${blob.hue}, 88%, 68%, ${blob.alpha})`);
-        gradient.addColorStop(0.5, `hsla(${blob.hue + 20}, 80%, 52%, ${blob.alpha * 0.8})`);
-        gradient.addColorStop(1, `hsla(${blob.hue + 40}, 75%, 30%, 0)`);
+        gradient.addColorStop(0, `hsla(${blob.hue}, ${isDark ? 88 : 70}%, ${isDark ? 68 : 62}%, ${blob.alpha})`);
+        gradient.addColorStop(0.5, `hsla(${blob.hue + 20}, ${isDark ? 80 : 65}%, ${isDark ? 52 : 58}%, ${blob.alpha * 0.8})`);
+        gradient.addColorStop(1, `hsla(${blob.hue + 40}, ${isDark ? 75 : 60}%, ${isDark ? 30 : 66}%, 0)`);
 
         context.fillStyle = gradient;
         drawSmoothClosedCurve(context, points);
@@ -258,7 +265,7 @@ const CosmicCanvas: React.FC = () => {
           context.shadowBlur = 8;
           context.shadowColor = '#c9a84c';
         }
-        context.fillStyle = star.goldGlow ? '#f2dd9d' : '#eef3ff';
+        context.fillStyle = star.goldGlow ? '#f2dd9d' : isDark ? '#eef3ff' : '#5a6db2';
         context.beginPath();
         context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         context.fill();
@@ -293,9 +300,9 @@ const CosmicCanvas: React.FC = () => {
         const tailY = headY - star.dirY * tailLength;
 
         const gradient = context.createLinearGradient(headX, headY, tailX, tailY);
-        gradient.addColorStop(0, 'rgba(244, 231, 194, 0.95)');
-        gradient.addColorStop(0.5, 'rgba(201, 168, 76, 0.55)');
-        gradient.addColorStop(1, 'rgba(201, 168, 76, 0)');
+        gradient.addColorStop(0, isDark ? 'rgba(244, 231, 194, 0.95)' : 'rgba(99, 124, 255, 0.95)');
+        gradient.addColorStop(0.5, isDark ? 'rgba(201, 168, 76, 0.55)' : 'rgba(118, 143, 255, 0.45)');
+        gradient.addColorStop(1, isDark ? 'rgba(201, 168, 76, 0)' : 'rgba(118, 143, 255, 0)');
 
         context.save();
         context.strokeStyle = gradient;
@@ -339,7 +346,7 @@ const CosmicCanvas: React.FC = () => {
       window.removeEventListener('resize', resize);
       window.cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [isDark]);
 
   return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden="true" />;
 };

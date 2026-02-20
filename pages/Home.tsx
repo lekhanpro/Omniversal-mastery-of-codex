@@ -135,7 +135,7 @@ const Home: React.FC = () => {
         const domainNames = entry.domainIds
           .map((domainId) => getDomainById(domainId)?.title ?? `D${domainId}`)
           .join(', ');
-        return `${new Date(entry.timestamp).toLocaleDateString()} · ${entry.type.toUpperCase()} · ${domainNames}`;
+        return `${new Date(entry.timestamp).toLocaleDateString()} - ${entry.type.toUpperCase()} - ${domainNames}`;
       });
       setActivityTicker(items.length > 0 ? items : ['No activity yet - begin with one subject and your pulse starts.']);
     };
@@ -149,43 +149,43 @@ const Home: React.FC = () => {
 
   return (
     <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 md:px-8 md:py-12">
-      <section className="mb-8 rounded-2xl border border-white/10 bg-black/55 p-6 backdrop-blur">
-        <h1 className="hero-shimmer font-cinzel text-3xl font-bold tracking-wide text-white md:text-5xl">
+      <section className="glass-panel mb-8 rounded-3xl p-6">
+        <h1 className="hero-shimmer font-cinzel text-3xl font-bold tracking-wide text-[var(--codex-text-strong)] md:text-5xl">
           Omniversal Mastery of Codex
         </h1>
-        <p className="mt-3 max-w-3xl text-sm text-gray-400 md:text-base">
-          Navigate your 20-domain mastery architecture. Use keyboard shortcuts: <span className="font-mono text-[#c9a84c]">1-0</span> jump to cards,
-          <span className="font-mono text-[#c9a84c]"> / </span> focus search, <span className="font-mono text-[#c9a84c]">Esc</span> clear.
+        <p className="mt-3 max-w-3xl text-sm text-[var(--codex-text-soft)] md:text-base">
+          Navigate your 20-domain mastery architecture. Use keyboard shortcuts: <span className="font-mono text-[var(--codex-primary)]">1-0</span> jump to cards,
+          <span className="font-mono text-[var(--codex-primary)]"> / </span> focus search, <span className="font-mono text-[var(--codex-primary)]">Esc</span> clear.
         </p>
-        <div className="mt-6 relative max-w-xl">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+        <div className="relative mt-6 max-w-xl">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--codex-text-muted)]" />
           <input
             ref={searchInputRef}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search domain, subdomain, concept..."
-            className="w-full rounded-full border border-white/10 bg-black/55 py-3 pl-10 pr-4 text-sm text-white outline-none ring-0 transition focus:border-[#c9a84c] focus:shadow-[0_0_0_1px_rgba(201,168,76,0.6)]"
+            className="w-full rounded-full border border-[var(--codex-border)] bg-[rgba(var(--codex-surface-rgb),0.54)] py-3 pl-10 pr-4 text-sm text-[var(--codex-text)] outline-none ring-0 transition focus:border-[var(--codex-primary)] focus:shadow-[0_0_0_2px_rgba(76,99,255,0.24)]"
           />
         </div>
       </section>
 
       {todayFocus && (
-        <section className="mb-8 rounded-2xl border border-[#c9a84c]/35 bg-[#0f0e08]/85 p-6">
-          <div className="mb-3 flex items-center gap-2 text-[#e4ca87]">
+        <section className="glass-panel mb-8 rounded-3xl border border-[var(--codex-primary)]/20 p-6">
+          <div className="mb-3 flex items-center gap-2 text-[var(--codex-primary)]">
             <Target className="h-4 w-4" />
             <h2 className="font-cinzel text-xl">Today&apos;s Focus</h2>
           </div>
-          <p className="mb-2 text-sm text-gray-300">
-            Lowest completion domain: <span className="font-semibold text-[#e4ca87]">{todayFocus.domain.title}</span> ({todayFocus.completion.toFixed(1)}%)
+          <p className="mb-2 text-sm text-[var(--codex-text)]">
+            Lowest completion domain: <span className="font-semibold text-[var(--codex-primary)]">{todayFocus.domain.title}</span> ({todayFocus.completion.toFixed(1)}%)
           </p>
-          <ul className="mb-4 list-disc space-y-1 pl-5 text-sm text-gray-300">
+          <ul className="mb-4 list-disc space-y-1 pl-5 text-sm text-[var(--codex-text)]">
             {todayFocus.subjects.map((subject) => (
               <li key={subject}>{subject}</li>
             ))}
           </ul>
           <Link
             to={`/domain/${todayFocus.domain.id}`}
-            className="inline-flex items-center rounded-md border border-[#c9a84c]/60 bg-[#c9a84c]/10 px-4 py-2 text-sm text-[#e4ca87] transition hover:bg-[#c9a84c]/20"
+            className="glass-button inline-flex items-center rounded-xl border border-[var(--codex-primary)]/45 bg-[var(--codex-primary)]/10 px-4 py-2 text-sm text-[var(--codex-primary)] transition hover:bg-[var(--codex-primary)]/20"
           >
             Begin Study
           </Link>
@@ -194,8 +194,8 @@ const Home: React.FC = () => {
 
       <section className="mb-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-cinzel text-2xl text-white">Domains</h2>
-          <span className="text-xs uppercase tracking-[0.2em] text-gray-500">{filteredDomains.length} visible</span>
+          <h2 className="font-cinzel text-2xl text-[var(--codex-text-strong)]">Domains</h2>
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--codex-text-soft)]">{filteredDomains.length} visible</span>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredDomains.map((domain, index) => {
@@ -210,7 +210,7 @@ const Home: React.FC = () => {
                   domainCardRefs.current[index] = element;
                 }}
                 layout
-                className="overflow-hidden rounded-xl border border-white/10 bg-black/55 backdrop-blur"
+                className="glass-panel overflow-hidden rounded-2xl"
               >
                 <button
                   type="button"
@@ -224,8 +224,8 @@ const Home: React.FC = () => {
                     {getIcon(domain.icon, 'h-5 w-5')}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-base font-semibold text-white">{domain.title}</h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-gray-400">{domain.shortDescription}</p>
+                    <h3 className="truncate text-base font-semibold text-[var(--codex-text-strong)]">{domain.title}</h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-[var(--codex-text-soft)]">{domain.shortDescription}</p>
                     <div className="mt-3 h-1.5 rounded-full bg-white/10">
                       <div className="h-full rounded-full" style={{ width: `${completion}%`, backgroundColor: accent }} />
                     </div>
@@ -237,17 +237,17 @@ const Home: React.FC = () => {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="border-t border-white/10 px-4 pb-4 pt-3"
+                      className="border-t border-[var(--codex-border)] px-4 pb-4 pt-3"
                     >
-                      <p className="mb-2 text-xs uppercase tracking-[0.2em] text-gray-500">Top Subdomains</p>
-                      <ul className="mb-3 space-y-1 text-sm text-gray-300">
+                      <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--codex-text-soft)]">Top Subdomains</p>
+                      <ul className="mb-3 space-y-1 text-sm text-[var(--codex-text)]">
                         {domain.subdomains.slice(0, 3).map((subdomain) => (
-                          <li key={subdomain.title}>• {subdomain.title}</li>
+                          <li key={subdomain.title}>* {subdomain.title}</li>
                         ))}
                       </ul>
                       <Link
                         to={`/domain/${domain.id}`}
-                        className="inline-flex rounded-md border border-white/20 px-3 py-1.5 text-xs uppercase tracking-wide text-gray-200 transition hover:border-[#c9a84c] hover:text-[#e4ca87]"
+                        className="glass-button inline-flex rounded-lg border px-3 py-1.5 text-xs uppercase tracking-wide text-[var(--codex-text)] transition hover:border-[var(--codex-primary)] hover:text-[var(--codex-primary)]"
                       >
                         Open Domain
                       </Link>
@@ -261,8 +261,8 @@ const Home: React.FC = () => {
       </section>
 
       <section className="mb-10 grid gap-6 xl:grid-cols-[1.3fr_1fr]">
-        <div className="rounded-xl border border-white/10 bg-black/55 p-5 backdrop-blur">
-          <div className="mb-3 flex items-center gap-2 text-[#e4ca87]">
+        <div className="glass-panel rounded-2xl p-5">
+          <div className="mb-3 flex items-center gap-2 text-[var(--codex-primary)]">
             <Sparkles className="h-4 w-4" />
             <h3 className="font-cinzel text-xl">Cross-Domain Insights</h3>
           </div>
@@ -272,22 +272,22 @@ const Home: React.FC = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="mb-4 text-sm text-gray-200"
+              className="mb-4 text-sm text-[var(--codex-text)]"
             >
               {dailyInsights[activeInsightIndex]?.bridge}
             </motion.p>
           </AnimatePresence>
           <div className="grid gap-2 sm:grid-cols-2">
             {dailyInsights.map((insight) => (
-              <div key={insight.id} className="rounded-md border border-white/10 bg-black/40 px-3 py-2 text-xs text-gray-300">
-                D{insight.leftDomain} ↔ D{insight.rightDomain}
+              <div key={insight.id} className="rounded-lg border border-[var(--codex-border)] bg-white/10 px-3 py-2 text-xs text-[var(--codex-text)]">
+                D{insight.leftDomain} - D{insight.rightDomain}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-black/55 p-5 backdrop-blur">
-          <h3 className="mb-3 font-cinzel text-xl text-white">Mastery Arc</h3>
+        <div className="glass-panel rounded-2xl p-5">
+          <h3 className="mb-3 font-cinzel text-xl text-[var(--codex-text-strong)]">Mastery Arc</h3>
           <div className="mx-auto w-full max-w-[340px]">
             <svg viewBox="0 0 360 220" className="w-full">
               <path d={arcPath(180, 180, 120, Math.PI, 0)} stroke="rgba(255,255,255,0.12)" strokeWidth="14" fill="none" />
@@ -296,7 +296,7 @@ const Home: React.FC = () => {
                 const gap = segment * 0.18;
                 const start = Math.PI - segment * index + gap / 2;
                 const end = Math.PI - segment * (index + 1) - gap / 2;
-                const alpha = 0.25 + domain.completion / 100 * 0.75;
+                const alpha = 0.25 + (domain.completion / 100) * 0.75;
                 const stroke = DOMAIN_COLORS[domain.domainId] ?? '#c9a84c';
                 return (
                   <path
@@ -312,7 +312,7 @@ const Home: React.FC = () => {
               <text x="180" y="168" textAnchor="middle" className="fill-[#e4ca87] font-cinzel text-[30px]">
                 {totalCompletion.toFixed(0)}%
               </text>
-              <text x="180" y="190" textAnchor="middle" className="fill-[#9ca3af] text-[11px] uppercase tracking-[0.25em]">
+              <text x="180" y="190" textAnchor="middle" className="fill-[var(--codex-text-soft)] text-[11px] uppercase tracking-[0.25em]">
                 Overall Mastery
               </text>
             </svg>
@@ -320,13 +320,13 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="mb-14 rounded-xl border border-white/10 bg-black/50 p-6">
-        <h3 className="mb-4 font-cinzel text-xl text-white">Codex Quotes</h3>
+      <section className="glass-panel mb-14 rounded-2xl p-6">
+        <h3 className="mb-4 font-cinzel text-xl text-[var(--codex-text-strong)]">Codex Quotes</h3>
         <QuotesRotator />
       </section>
 
-      <div className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden border-t border-[#c9a84c]/35 bg-black/90 py-2 backdrop-blur">
-        <div className="codex-pulse-ticker flex min-w-max items-center gap-6 px-4 text-xs text-[#d8be7a]">
+      <div className="glass-panel-strong fixed bottom-0 left-0 right-0 z-20 overflow-hidden border-t border-[var(--codex-border)] py-2">
+        <div className="codex-pulse-ticker flex min-w-max items-center gap-6 px-4 text-xs text-[var(--codex-primary)]">
           {[...activityTicker, ...activityTicker].map((item, index) => (
             <span key={`${item}-${index}`} className="whitespace-nowrap">
               {item}

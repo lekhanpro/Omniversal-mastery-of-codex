@@ -9,7 +9,6 @@ const KnowledgeMapNew: React.FC = () => {
   const navigate = useNavigate();
   const { isDark } = useTheme();
   const [hoveredDomain, setHoveredDomain] = useState<number | null>(null);
-  const [rotation, setRotation] = useState(0);
 
   const domainIcons: Record<number, string> = {
     1: '⚔️', 2: '🧠', 3: '💻', 4: '🤖', 5: '⚛️',
@@ -28,24 +27,15 @@ const KnowledgeMapNew: React.FC = () => {
     const updateSize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
+      render(ctx, canvas.width, canvas.height);
     };
     updateSize();
 
-    let animationId: number;
-    const animate = () => {
-      setRotation(prev => (prev + 0.2) % 360);
-      render(ctx, canvas.width, canvas.height);
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
     window.addEventListener('resize', updateSize);
     return () => {
-      cancelAnimationFrame(animationId);
       window.removeEventListener('resize', updateSize);
     };
-  }, [isDark, hoveredDomain, rotation]);
+  }, [isDark, hoveredDomain]);
 
   const render = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     // Clear canvas
@@ -60,13 +50,13 @@ const KnowledgeMapNew: React.FC = () => {
     ctx.strokeStyle = isDark ? 'rgba(201, 168, 76, 0.15)' : 'rgba(100, 116, 139, 0.2)';
     ctx.lineWidth = 1;
     for (let i = 0; i < 20; i++) {
-      const angle1 = ((i / 20) * Math.PI * 2) + (rotation * Math.PI / 180);
+      const angle1 = ((i / 20) * Math.PI * 2) - Math.PI / 2;
       const x1 = centerX + Math.cos(angle1) * radius;
       const y1 = centerY + Math.sin(angle1) * radius;
       
       // Connect to next 2 domains
       for (let j = 1; j <= 2; j++) {
-        const angle2 = (((i + j) / 20) * Math.PI * 2) + (rotation * Math.PI / 180);
+        const angle2 = (((i + j) / 20) * Math.PI * 2) - Math.PI / 2;
         const x2 = centerX + Math.cos(angle2) * radius;
         const y2 = centerY + Math.sin(angle2) * radius;
         
@@ -95,7 +85,7 @@ const KnowledgeMapNew: React.FC = () => {
 
     // Draw domain nodes
     domains.forEach((domain, index) => {
-      const angle = ((index / 20) * Math.PI * 2) + (rotation * Math.PI / 180) - Math.PI / 2;
+      const angle = ((index / 20) * Math.PI * 2) - Math.PI / 2;
       const x = centerX + Math.cos(angle) * radius;
       const y = centerY + Math.sin(angle) * radius;
 
@@ -147,7 +137,7 @@ const KnowledgeMapNew: React.FC = () => {
     const radius = Math.min(canvas.width, canvas.height) * 0.35;
 
     domains.forEach((domain, index) => {
-      const angle = ((index / 20) * Math.PI * 2) + (rotation * Math.PI / 180) - Math.PI / 2;
+      const angle = ((index / 20) * Math.PI * 2) - Math.PI / 2;
       const nodeX = centerX + Math.cos(angle) * radius;
       const nodeY = centerY + Math.sin(angle) * radius;
 
@@ -172,7 +162,7 @@ const KnowledgeMapNew: React.FC = () => {
 
     let found: number | null = null;
     domains.forEach((domain, index) => {
-      const angle = ((index / 20) * Math.PI * 2) + (rotation * Math.PI / 180) - Math.PI / 2;
+      const angle = ((index / 20) * Math.PI * 2) - Math.PI / 2;
       const nodeX = centerX + Math.cos(angle) * radius;
       const nodeY = centerY + Math.sin(angle) * radius;
 

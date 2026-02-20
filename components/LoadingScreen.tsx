@@ -26,7 +26,7 @@ const LoadingScreen: React.FC = () => {
       initial={{ opacity: 1 }}
       animate={{ opacity: fadeOut ? 0 : 1 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="fixed inset-0 z-[1200] flex flex-col items-center justify-center gap-8 bg-black"
+      className="fixed inset-0 z-[1200] flex flex-col items-center justify-center gap-8 bg-[var(--codex-bg)] backdrop-blur-3xl"
     >
       <svg viewBox="0 0 220 220" className="h-28 w-28">
         <motion.path
@@ -42,7 +42,7 @@ const LoadingScreen: React.FC = () => {
         />
       </svg>
 
-      <div className="h-2 w-64 overflow-hidden rounded-full border border-[#c9a84c]/40 bg-black/40">
+      <div className="h-2 w-64 overflow-hidden rounded-full border border-[var(--codex-gold)]/40 bg-[var(--codex-text)]/10">
         <motion.div
           className="h-full bg-gradient-to-r from-[#7f6426] via-[#c9a84c] to-[#f6dc93]"
           initial={{ width: 0 }}
