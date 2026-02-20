@@ -343,9 +343,9 @@ const Oracle: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border md:min-h-[100dvh]">
-      <div className="grid min-h-[inherit] grid-cols-1 md:grid-cols-[260px_1fr_240px]">
-        <aside className={`glass-panel-strong fixed inset-y-0 left-0 z-30 w-[260px] border-r p-4 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <div className="glass-panel relative h-[calc(100dvh-4rem)] md:h-[calc(100dvh-2rem)] md:m-4 overflow-hidden rounded-2xl border">
+      <div className="grid h-full grid-cols-1 md:grid-cols-[260px_1fr_240px]">
+        <aside className={`glass-panel-strong h-full absolute inset-y-0 left-0 z-30 w-[260px] border-r p-4 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-4 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Domains</h2><button type="button" className="md:hidden" onClick={() => setLeftOpen(false)}><ChevronLeft className="h-4 w-4" /></button></div>
           <div className="mb-4 space-y-1 overflow-y-auto">{masteryDomains.map((entry) => <button key={entry.id} type="button" onClick={() => { setDomainId(entry.id); setLeftOpen(false); }} className={`w-full rounded-md px-3 py-2 text-left text-sm ${entry.id === domainId ? 'border border-[#c9a84c]/70 bg-[#c9a84c]/15 text-[#e4ca87]' : 'text-gray-300 hover:bg-white/10'}`}>D{entry.id}. {entry.title}</button>)}</div>
           <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-gray-500"><span>Sessions</span><button type="button" className="rounded border border-white/20 px-2 py-1 text-[10px]" onClick={() => { setMessages([]); setInput(''); setApiStatus('New session ready'); }}>New</button></div>
@@ -387,7 +387,7 @@ const Oracle: React.FC = () => {
           </footer>
         </main>
 
-        <aside className={`glass-panel-strong fixed inset-y-0 right-0 z-30 w-[240px] border-l p-4 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <aside className={`glass-panel-strong h-full absolute inset-y-0 right-0 z-30 w-[240px] border-l p-4 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="mb-4 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Oracle Intel</h2><button type="button" className="md:hidden" onClick={() => setRightOpen(false)}><ChevronRight className="h-4 w-4" /></button></div>
           <div className="space-y-4 text-xs">
             <div className="rounded border border-white/10 bg-black/50 p-3"><div className="mb-1 uppercase tracking-[0.2em] text-gray-500">Token Counter</div><div className="font-mono text-lg text-[#e4ca87]">{tokenCount}</div>{challengeSeconds > 0 && <div className="mt-2 text-[11px] text-red-300">Challenge: {Math.floor(challengeSeconds / 60)}:{String(challengeSeconds % 60).padStart(2, '0')}</div>}{apiStatus && <div className="mt-2 text-[11px] text-gray-400">{apiStatus}</div>}</div>

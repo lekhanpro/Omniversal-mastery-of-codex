@@ -252,9 +252,9 @@ const Grimoire: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel relative min-h-[calc(100dvh-3.5rem)] overflow-hidden rounded-2xl border md:min-h-[100dvh]">
-      <div className="grid min-h-[inherit] grid-cols-1 md:grid-cols-[220px_1fr_220px]">
-        <aside className={`glass-panel-strong fixed inset-y-0 left-0 z-30 w-[220px] border-r p-3 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <div className="glass-panel relative h-[calc(100dvh-4rem)] md:h-[calc(100dvh-2rem)] md:m-4 overflow-hidden rounded-2xl border">
+      <div className="grid h-full grid-cols-1 md:grid-cols-[220px_1fr_220px]">
+        <aside className={`glass-panel-strong h-full absolute inset-y-0 left-0 z-30 w-[220px] border-r p-3 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-3 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Grimoire</h2><button type="button" onClick={() => setLeftOpen(false)} className="md:hidden"><ChevronLeft className="h-4 w-4" /></button></div>
           <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search notes..." className="mb-3 w-full rounded border border-white/15 bg-black/55 px-2 py-1.5 text-xs text-white outline-none focus:border-[#c9a84c]" />
           <div className="mb-3 flex gap-1 text-[10px]"><button type="button" onClick={exportAllNotes} className="flex items-center gap-1 rounded border border-white/20 px-2 py-1"><Download className="h-3 w-3" /> JSON</button><button type="button" onClick={exportCurrentHtml} className="flex items-center gap-1 rounded border border-white/20 px-2 py-1"><NotebookPen className="h-3 w-3" /> HTML</button><label className="flex cursor-pointer items-center gap-1 rounded border border-white/20 px-2 py-1"><Import className="h-3 w-3" /> Import<input type="file" accept=".json" className="hidden" onChange={importNotes} /></label></div>
@@ -325,7 +325,7 @@ const Grimoire: React.FC = () => {
           )}
         </main>
 
-        <aside className={`glass-panel-strong fixed inset-y-0 right-0 z-30 w-[220px] border-l p-3 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <aside className={`glass-panel-strong h-full absolute inset-y-0 right-0 z-30 w-[220px] border-l p-3 transition-transform md:static md:translate-x-0 ${rightOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="mb-3 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Intelligence</h2><button type="button" onClick={() => setRightOpen(false)} className="md:hidden"><ChevronRight className="h-4 w-4" /></button></div>
           <div className="space-y-3 text-xs">
             <div className="rounded border border-white/10 bg-black/50 p-2"><div className="mb-1 uppercase tracking-[0.2em] text-gray-500">Connections</div>{relatedByTag.map((note) => <button key={note.id} type="button" onClick={() => setSelectedId(note.id)} className="block text-left text-gray-300 hover:text-[#e4ca87]">{note.title}</button>)}{relatedByTag.length === 0 && <span className="text-gray-500">No shared tags yet.</span>}</div>
