@@ -72,7 +72,7 @@ const featuresList = [
     },
 ];
 
-const MotionLink = motion(Link);
+
 
 const Features: React.FC = () => {
     return (
@@ -88,34 +88,38 @@ const Features: React.FC = () => {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {featuresList.map((feature, idx) => (
-                    <MotionLink
+                    <motion.div
                         key={feature.path}
-                        to={feature.path}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="group glass-panel flex h-full flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all hover:border-[var(--codex-primary)]/45 hover:-translate-y-1 hover:shadow-lg"
+                        className="h-full"
                     >
-                        <div>
-                            <div
-                                className="mb-4 inline-flex items-center justify-center rounded-xl p-3"
-                                style={{ backgroundColor: `${feature.color}15`, color: feature.color }}
-                            >
-                                {feature.icon}
+                        <Link
+                            to={feature.path}
+                            className="group glass-panel flex h-full flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all hover:border-[var(--codex-primary)]/45 hover:-translate-y-1 hover:shadow-lg"
+                        >
+                            <div>
+                                <div
+                                    className="mb-4 inline-flex items-center justify-center rounded-xl p-3"
+                                    style={{ backgroundColor: `${feature.color}15`, color: feature.color }}
+                                >
+                                    {feature.icon}
+                                </div>
+                                <h2 className="mb-2 font-cinzel text-xl font-bold text-[var(--codex-text-strong)] group-hover:text-[var(--codex-primary)] transition-colors">
+                                    {feature.name}
+                                </h2>
+                                <p className="mb-6 text-sm text-[var(--codex-text-soft)]">
+                                    {feature.description}
+                                </p>
                             </div>
-                            <h2 className="mb-2 font-cinzel text-xl font-bold text-[var(--codex-text-strong)] group-hover:text-[var(--codex-primary)] transition-colors">
-                                {feature.name}
-                            </h2>
-                            <p className="mb-6 text-sm text-[var(--codex-text-soft)]">
-                                {feature.description}
-                            </p>
-                        </div>
 
-                        <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-[var(--codex-text-muted)] group-hover:text-[var(--codex-primary)] transition-colors">
-                            <span>EXPLORE</span>
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </MotionLink>
+                            <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-[var(--codex-text-muted)] group-hover:text-[var(--codex-primary)] transition-colors">
+                                <span>EXPLORE</span>
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </div>
+                        </Link>
+                    </motion.div>
                 ))}
             </div>
         </div>
