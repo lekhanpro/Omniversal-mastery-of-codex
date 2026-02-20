@@ -118,9 +118,7 @@ const playBell = (): void => {
 
 const Oracle: React.FC = () => {
   const runtime = readOracleRuntime();
-  const storedKey = localStorage.getItem('codex_groq_key') ?? '';
-  const envKey = (import.meta.env.VITE_GROQ_API_KEY as string | undefined) ?? '';
-  const initialKey = storedKey || envKey;
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
 
   const [domainId, setDomainId] = useState(runtime?.domainId ?? masteryDomains[0]?.id ?? 1);
   const [messages, setMessages] = useState<Message[]>(runtime?.messages ?? []);
@@ -128,9 +126,6 @@ const Oracle: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
-  const [showKeyModal, setShowKeyModal] = useState(!initialKey);
-  const [apiKey, setApiKey] = useState(initialKey);
-  const [keyDraft, setKeyDraft] = useState(initialKey);
   const [apiStatus, setApiStatus] = useState<string>('');
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [challengeSeconds, setChallengeSeconds] = useState(0);
@@ -247,8 +242,7 @@ const Oracle: React.FC = () => {
 
   const sendToOracle = async (prompt: string, challenge = false): Promise<void> => {
     if (!apiKey) {
-      setShowKeyModal(true);
-      setApiStatus('API key required.');
+      setApiStatus('API key required. Provide VITE_GROQ_API_KEY in .env.');
       return;
     }
     const trimmedPrompt = prompt.trim();
@@ -343,7 +337,7 @@ const Oracle: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel relative h-[calc(100dvh-4rem)] md:h-[calc(100dvh-2rem)] md:m-4 overflow-hidden rounded-2xl border">
+    <div className="glass-panel relative flex-1 md:m-4 overflow-hidden rounded-2xl border">
       <div className="grid h-full grid-cols-1 md:grid-cols-[260px_1fr_240px]">
         <aside className={`glass-panel-strong h-full absolute inset-y-0 left-0 z-30 w-[260px] border-r p-4 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-4 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Domains</h2><button type="button" className="md:hidden" onClick={() => setLeftOpen(false)}><ChevronLeft className="h-4 w-4" /></button></div>
@@ -356,7 +350,7 @@ const Oracle: React.FC = () => {
           <header className="glass-panel flex items-center justify-between border-b px-3 py-3 md:px-5">
             <div className="flex items-center gap-2 md:hidden"><button type="button" onClick={() => setLeftOpen(true)} className="rounded p-2 hover:bg-white/10"><FolderOpen className="h-4 w-4" /></button><button type="button" onClick={() => setRightOpen(true)} className="rounded p-2 hover:bg-white/10"><MessageSquareMore className="h-4 w-4" /></button></div>
             <div className="flex min-w-0 items-center gap-2"><span className="truncate rounded-full border border-[#c9a84c]/55 bg-[#c9a84c]/10 px-2 py-1 text-xs text-[#e4ca87]">{domain?.title}</span><span className="hidden rounded-full border border-white/20 px-2 py-1 text-xs text-gray-400 md:inline">{CONFIG.model}</span></div>
-            <div className="flex items-center gap-2"><button type="button" onClick={() => void sendToOracle('challenge', true)} className="rounded border border-[#c9a84c]/65 bg-[#c9a84c]/10 px-3 py-1.5 text-xs text-[#e4ca87]">Challenge Me</button><button type="button" onClick={() => setShowKeyModal(true)} className="rounded border border-white/20 p-1.5"><KeyRound className="h-4 w-4" /></button></div>
+            <div className="flex items-center gap-2"><button type="button" onClick={() => void sendToOracle('challenge', true)} className="rounded border border-[#c9a84c]/65 bg-[#c9a84c]/10 px-3 py-1.5 text-xs text-[#e4ca87]">Challenge Me</button></div>
           </header>
 
           <div ref={chatRef} className="flex-1 space-y-4 overflow-y-auto px-3 py-4 md:px-5">
@@ -398,18 +392,6 @@ const Oracle: React.FC = () => {
         </aside>
       </div>
 
-      <AnimatePresence>
-        {showKeyModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-40 flex items-center justify-center bg-black/70 p-4 backdrop-blur">
-            <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 16, opacity: 0 }} className="w-full max-w-md rounded-2xl border border-white/15 bg-black/85 p-5">
-              <h3 className="mb-2 font-cinzel text-xl text-[#e4ca87]">Groq API Key</h3>
-              <p className="mb-3 text-sm text-gray-400">Paste your key. It will be stored locally as <code>codex_groq_key</code>.</p>
-              <input value={keyDraft} onChange={(event) => setKeyDraft(event.target.value)} placeholder="gsk_..." className="mb-4 w-full rounded border border-white/15 bg-black/60 px-3 py-2 text-sm text-white outline-none focus:border-[#c9a84c]" />
-              <div className="flex justify-end gap-2"><button type="button" onClick={() => setShowKeyModal(false)} className="rounded border border-white/15 px-3 py-1.5 text-sm text-gray-300">Later</button><button type="button" onClick={() => { const clean = keyDraft.trim(); if (!clean) return; localStorage.setItem('codex_groq_key', clean); setApiKey(clean); setApiStatus('API key saved'); setShowKeyModal(false); }} className="rounded border border-[#c9a84c]/70 bg-[#c9a84c]/12 px-3 py-1.5 text-sm text-[#e4ca87]">Save Key</button></div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

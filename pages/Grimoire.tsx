@@ -252,7 +252,7 @@ const Grimoire: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel relative h-[calc(100dvh-4rem)] md:h-[calc(100dvh-2rem)] md:m-4 overflow-hidden rounded-2xl border">
+    <div className="glass-panel relative flex-1 md:m-4 overflow-hidden rounded-2xl border">
       <div className="grid h-full grid-cols-1 md:grid-cols-[220px_1fr_220px]">
         <aside className={`glass-panel-strong h-full absolute inset-y-0 left-0 z-30 w-[220px] border-r p-3 transition-transform md:static md:translate-x-0 ${leftOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="mb-3 flex items-center justify-between"><h2 className="font-cinzel text-xl text-[#e4ca87]">Grimoire</h2><button type="button" onClick={() => setLeftOpen(false)} className="md:hidden"><ChevronLeft className="h-4 w-4" /></button></div>

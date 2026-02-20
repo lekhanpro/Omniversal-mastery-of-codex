@@ -153,8 +153,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   key={item.to}
                   to={item.to}
                   className={`group flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm transition ${isActive(item.to)
-                      ? 'border-[var(--codex-primary)]/45 bg-[linear-gradient(135deg,rgba(76,99,255,0.18),rgba(201,168,76,0.14))] text-[var(--codex-text-strong)] shadow-[0_10px_24px_rgba(76,99,255,0.18)]'
-                      : 'border-transparent text-[var(--codex-text)] hover:border-[var(--codex-border)] hover:bg-white/10'
+                    ? 'border-[var(--codex-primary)]/45 bg-[linear-gradient(135deg,rgba(76,99,255,0.18),rgba(201,168,76,0.14))] text-[var(--codex-text-strong)] shadow-[0_10px_24px_rgba(76,99,255,0.18)]'
+                    : 'border-transparent text-[var(--codex-text)] hover:border-[var(--codex-border)] hover:bg-white/10'
                     }`}
                 >
                   <span className={`rounded-lg p-1 ${isActive(item.to) ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/10'}`}>
@@ -172,8 +172,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   key={domain.id}
                   to={`/domain/${domain.id}`}
                   className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition ${location.pathname === `/domain/${domain.id}`
-                      ? 'border-[var(--codex-primary)]/45 bg-white/20 text-[var(--codex-text-strong)]'
-                      : 'border-transparent text-[var(--codex-text-soft)] hover:border-[var(--codex-border)] hover:bg-white/10'
+                    ? 'border-[var(--codex-primary)]/45 bg-white/20 text-[var(--codex-text-strong)]'
+                    : 'border-transparent text-[var(--codex-text-soft)] hover:border-[var(--codex-border)] hover:bg-white/10'
                     }`}
                 >
                   <span className="text-[var(--codex-primary)]">{getIcon(domain.icon, 'h-4 w-4')}</span>
@@ -189,7 +189,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="relative z-10 flex-1 overflow-x-hidden overflow-y-auto pt-16 md:pt-0">{children}</main>
+      <main className="relative z-10 flex flex-1 flex-col overflow-x-hidden pt-16 md:pt-0">{children}</main>
     </div>
   );
 };
